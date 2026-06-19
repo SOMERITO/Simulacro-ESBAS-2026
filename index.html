@@ -9,6 +9,7 @@
             --bg-main: #f8fafc;
             --primary-red: #dc2626;
             --primary-red-hover: #b91c1c;
+            --primary-orange: #f97316; /* Color neutral para selecciÃ³n */
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-color: rgba(226, 232, 240, 0.9);
@@ -33,9 +34,7 @@
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
-        /* =========================================
-           TOAST NOTIFICATIONS (Alertas Elegantes)
-           ========================================= */
+        /* TOAST NOTIFICATIONS */
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
         .toast {
             background: white; border-left: 4px solid var(--primary-red); color: var(--text-dark);
@@ -48,7 +47,7 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Navegación y Estado Cloud */
+        /* NavegaciÃ³n y Estado Cloud */
         nav {
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
@@ -75,28 +74,24 @@
         
         .global-counter { background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: 600; border: 1px solid var(--border-color); }
 
-        /* Flashcards con Animación Escalonada */
+        /* Flashcards Repositorio */
         .flashcard-wrapper { perspective: 1000px; margin-bottom: 1.5rem; cursor: pointer; border-radius: 16px; animation: slideUpFade 0.4s ease forwards; opacity: 0; transform: translateY(20px); }
         @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
-        
         .flashcard { display: grid; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--shadow-card); }
         .flashcard-wrapper.flipped .flashcard { transform: rotateY(180deg); }
         .flashcard-front, .flashcard-back { grid-area: 1 / 1 / 2 / 2; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
         .flashcard-front { position: relative; }
         .flashcard-back { transform: rotateY(180deg); background: rgba(220, 38, 38, 0.03); border: 2px solid rgba(220, 38, 38, 0.2); text-align: center; align-items: center; }
-        
         .q-number-badge { position: absolute; top: 1.5rem; left: 1.5rem; background: rgba(220,38,38,0.1); color: var(--primary-red); font-weight: 700; font-size: 0.85rem; padding: 0.3rem 0.6rem; border-radius: 6px; letter-spacing: 0.5px; }
-
         .flip-hint { margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 
-        /* Filtros y Badges */
+        /* Filtros */
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
         .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 999px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
         .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
         .badge-count { background: #e2e8f0; color: var(--text-dark); font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 700; }
         .filter-btn.active .badge-count { background: rgba(255,255,255,0.25); color: white; }
-
         .lesson-filters { display: none; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); justify-content: center; }
         .lesson-filters.active { display: flex; animation: fadeIn 0.3s; }
         .lesson-btn { background: rgba(226, 232, 240, 0.5); border: 1px solid transparent; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); display: flex; align-items: center; gap: 0.3rem;}
@@ -122,34 +117,57 @@
         .tag { background: #fee2e2; color: var(--primary-red); padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; }
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
         .options-list { list-style: none; margin-top: 1rem; }
-        .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
-        .option-item:hover { border-color: var(--primary-red); background: #fef2f2; }
-        .option-item.selected { border-color: var(--primary-red); background: #fef2f2; font-weight: 500; }
-        .option-item.correct { background: #d1fae5; border-color: var(--success); color: #065f46; }
-        .option-item.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
         
-        .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
+        /* Opciones Simulador */
+        .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
+        .option-item:hover { border-color: var(--primary-orange); background: #fff7ed; }
+        
+        /* SelecciÃ³n Neutral Naranja para el Examen */
+        .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
+        .option-item.selected strong { color: var(--primary-orange) !important; }
+
+        /* Simulación UI Paginada */
+        .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
+        .sim-card { display: none; animation: fadeIn 0.3s ease; }
+        .sim-card.active { display: block; }
+        .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+
+        /* Dashboard de Resultados AnalÃ­ticos */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
+        .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .m-precision { color: #3b82f6; } .m-correct { color: var(--success); } .m-error { color: var(--error); } .m-blank { color: #f59e0b; }
+        
+        .detailed-review { display: flex; flex-direction: column; gap: 1rem; text-align: left;}
+        .review-item { padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .review-item.is-correct { border-left: 5px solid var(--success); }
+        .review-item.is-incorrect { border-left: 5px solid var(--error); }
+        .review-item.is-blank { border-left: 5px solid #f59e0b; }
+        
+        .r-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-dark); }
+        .r-ans { margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; }
+        .r-ans.user-wrong { background: #fee2e2; color: #991b1b; border: 1px dashed var(--error); }
+        .r-ans.user-right { background: #d1fae5; color: #065f46; border: 1px dashed var(--success); }
+        .r-ans.actual-correct { background: #f8fafc; color: var(--success); font-weight: 600; border: 1px solid #e2e8f0;}
+
+        /* Tabla CRUD */
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border-radius: 8px; overflow: hidden; }
         th, td { padding: 0.85rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
 
-        /* =========================================
-           MODAL WIZARD Y ALTERNATIVAS CLICKABLES
-           ========================================= */
+        /* MODAL WIZARD */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; }
         .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); }
         .modal-close:hover { color: var(--error); transform: scale(1.1) rotate(90deg); }
-
         .form-step { display: none; animation: fadeIn 0.3s; }
         .form-step.active { display: block; }
-
         .wizard-progress { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
         .wizard-dot { height: 6px; flex: 1; background: #e2e8f0; border-radius: 999px; transition: background 0.3s; }
         .wizard-dot.active { background: var(--primary-red); }
-
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group.full-width { grid-column: 1 / -1; }
@@ -158,29 +176,20 @@
         input:focus, select:focus, textarea:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
         
         .alts-vertical { display: flex; flex-direction: column; gap: 0.75rem; background: rgba(241, 245, 249, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
-        
-        /* FILAS INTERACTIVAS (Toda la fila es clickable) */
-        .alt-row { 
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; 
-            border: 1px solid var(--border-color); border-radius: 8px; background: white;
-            cursor: pointer; transition: all 0.2s;
-        }
+        .alt-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; background: white; cursor: pointer; transition: all 0.2s; }
         .alt-row:hover { border-color: rgba(220, 38, 38, 0.4); transform: translateX(4px); }
         .alt-row:has(input:checked) { border-color: var(--success); background: rgba(16, 185, 129, 0.05); transform: translateX(8px); box-shadow: -4px 0 0 var(--success);}
-        
         .alt-row input[type="radio"] { width: 1.25rem; height: 1.25rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
         .alt-label { font-weight: 700; color: var(--text-muted); width: 1.5rem; font-size: 1.1rem; text-align: center; }
         .alt-row:has(input:checked) .alt-label { color: var(--success); }
-        
         .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; }
         .alt-row input[type="text"]:focus { border: none; background: transparent; }
-
         .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
-
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem;}
 
-        @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -201,7 +210,6 @@
 
 <div class="container">
     
-    <!-- VISTA: REPOSITORIO -->
     <div id="view-repo" class="view-section active">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
@@ -209,15 +217,9 @@
                     Banco de Preguntas 
                     <span class="global-counter" id="global-count-badge">0 Preguntas</span>
                 </h2>
-                <button class="btn" onclick="openModal('new')">
-                    <span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta
-                </button>
+                <button class="btn" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta</button>
             </div>
-            
-            <div class="filter-group" id="moduleFilters">
-                <!-- Se inyectan por JS para los contadores -->
-            </div>
-
+            <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
                 <input type="text" id="searchInput" placeholder="Buscar palabras clave en la pregunta..." onkeyup="renderRepo()">
@@ -226,7 +228,6 @@
         <div id="repo-container"></div>
     </div>
 
-    <!-- VISTA: SIMULACIÓN -->
     <div id="view-sim" class="view-section">
         <div id="sim-setup" class="card">
             <h2 class="card-header">Configurar Simulador de Examen</h2>
@@ -253,18 +254,54 @@
         <div id="sim-active" style="display: none;">
             <div class="sim-controls">
                 <span id="sim-progress" style="font-weight: 600; color: var(--primary-red);">Pregunta 1 de X</span>
-                <button class="btn" onclick="finishSimulation()">Finalizar y Entregar</button>
+                <button class="btn btn-outline" style="color:var(--error); border-color:var(--error);" onclick="cancelSimulation()">Cancelar Examen</button>
             </div>
-            <div id="sim-questions-container"></div>
-            <div id="sim-results" class="card" style="display: none; text-align: center;">
-                <h2 class="card-header">Calificación Final</h2>
-                <h1 id="sim-score" style="font-size: 4rem; color: var(--primary-red); margin: 1rem 0;">0/0</h1>
-                <button class="btn" onclick="document.getElementById('sim-active').style.display='none'; document.getElementById('sim-setup').style.display='block';">Nueva Simulación</button>
+            
+            <div id="sim-questions-container">
+                </div>
+            
+            <div class="sim-nav-footer">
+                <button class="btn btn-outline" id="btn-sim-prev" onclick="navigateSim(-1)">← Anterior</button>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn" id="btn-sim-next" onclick="navigateSim(1)">Siguiente ➝</button>
+                    <button class="btn" id="btn-sim-finish" style="background:var(--success); display:none;" onclick="finishSimulation()">Entregar Examen ✔</button>
+                </div>
             </div>
+        </div>
+
+        <div id="sim-results" style="display: none;">
+            <div class="card" style="text-align: center;">
+                <h2 class="card-header" style="justify-content: center;">Resultados del Examen</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value m-precision" id="res-precision">0%</div>
+                        <div class="metric-label">Precisión</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value m-correct" id="res-correct">0</div>
+                        <div class="metric-label">Aciertos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value m-error" id="res-error">0</div>
+                        <div class="metric-label">Errores</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value m-blank" id="res-blank">0</div>
+                        <div class="metric-label">Sin responder</div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block';">Volver a Configurar Examen</button>
+            </div>
+            
+            <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark);">Desglose de Preguntas</h3>
+            <div id="sim-detailed-review" class="detailed-review">
+                </div>
+            <br><br>
         </div>
     </div>
 
-    <!-- VISTA: BASE DE DATOS -->
     <div id="view-config" class="view-section">
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem;">
@@ -283,9 +320,6 @@
     </div>
 </div>
 
-<!-- ======================================================= -->
-<!-- MODAL WIZARD DE REGISTRO -->
-<!-- ======================================================= -->
 <div id="modal-form" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" type="button" onclick="closeModal()">×</button>
@@ -300,7 +334,6 @@
         <form id="questionForm" onsubmit="saveQuestion(event)">
             <input type="hidden" id="q-id">
             
-            <!-- FASE 1 -->
             <div id="step-1" class="form-step active">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 1: Ubicación</h3>
                 <div class="form-grid">
@@ -327,7 +360,6 @@
                 </div>
             </div>
 
-            <!-- FASE 2 -->
             <div id="step-2" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 2: Enunciado</h3>
                 <div class="form-group full-width">
@@ -340,7 +372,6 @@
                 </div>
             </div>
 
-            <!-- FASE 3 -->
             <div id="step-3" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 3: Alternativas de Respuesta</h3>
                 <div class="form-group full-width alts-vertical">
@@ -385,8 +416,12 @@
     const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
     let questionBank = [];
+    
+    // Variables Simulación
     let currentSimulationQuestions = [];
     let userAnswers = {};
+    let currentSimIndex = 0;
+
     let activeModuleFilter = 'all';
     let activeLessonFilter = 'all';
 
@@ -415,30 +450,19 @@
 
     // INDICES Y CONTADORES
     function updateIndexesAndCounters() {
-        // Ordenar y asignar ID visual (Pregunta #1, #2...)
         questionBank.sort((a,b) => {
             if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
             return parseInt(a.leccion_num) - parseInt(b.leccion_num);
         });
         questionBank.forEach((q, i) => q.display_num = i + 1);
 
-        // Contador Global
         document.getElementById('global-count-badge').innerText = `${questionBank.length} Preguntas`;
 
-        // Botones de Modulos (con conteo)
         const modContainer = document.getElementById('moduleFilters');
-        modContainer.innerHTML = `
-            <button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">
-                Todos <span class="badge-count">${questionBank.length}</span>
-            </button>
-        `;
+        modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${questionBank.length}</span></button>`;
         ['Módulo I', 'Módulo II', 'Módulo III'].forEach(mod => {
             const count = questionBank.filter(q => q.modulo === mod).length;
-            modContainer.innerHTML += `
-                <button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">
-                    ${mod} <span class="badge-count">${count}</span>
-                </button>
-            `;
+            modContainer.innerHTML += `<button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">${mod} <span class="badge-count">${count}</span></button>`;
         });
     }
 
@@ -461,15 +485,14 @@
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
-    // WIZARD LOGIC
+    // WIZARD
     function goToStep(step) {
         if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value)) {
-            showToast("Completa el Módulo y el N° de Lección para continuar.", "error"); return;
+            showToast("Completa el Módulo y el N° de Lección.", "error"); return;
         }
         if (step === 3 && !document.getElementById('q-text').value) {
-            showToast("Redacta la pregunta para continuar.", "error"); return;
+            showToast("Redacta la pregunta.", "error"); return;
         }
-
         document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
         document.getElementById(`step-${step}`).classList.add('active');
         document.querySelectorAll('.wizard-dot').forEach((el, index) => {
@@ -481,7 +504,7 @@
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
-        updateIndexesAndCounters(); // Refrescar visuales botones
+        updateIndexesAndCounters(); 
 
         const lessonContainer = document.getElementById('lessonFiltersContainer');
         if(moduleName === 'all') {
@@ -529,7 +552,7 @@
             const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const correctText = q.opciones[q.respuesta];
-            const delay = i * 0.05; // Animacion escalonada
+            const delay = i * 0.05; 
 
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
@@ -551,9 +574,7 @@
         });
     }
 
-    // ==========================================
     // MODAL Y GUARDADO
-    // ==========================================
     function openModal(mode, id = null) {
         document.getElementById('modal-form').classList.add('active');
         goToStep(1); 
@@ -603,7 +624,7 @@
     function saveQuestion(e) {
         e.preventDefault();
         
-        // Anti-Duplicados Validation
+        // Anti-Duplicados
         const optA = document.getElementById('q-opt-a').value.trim();
         const optB = document.getElementById('q-opt-b').value.trim();
         const optC = document.getElementById('q-opt-c').value.trim();
@@ -611,12 +632,11 @@
         const setOpts = new Set([optA, optB, optC, optD].map(o => o.toLowerCase()));
         
         if (setOpts.size < 4) {
-            showToast("Error: Tienes dos o más alternativas con el mismo texto. Corrígelas.", "error");
-            return;
+            showToast("Tienes dos o más alternativas idénticas. Corrígelo.", "error"); return;
         }
 
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
-        if(!checkedRadio) { showToast("Selecciona la alternativa correcta en los círculos.", "error"); return; }
+        if(!checkedRadio) { showToast("Selecciona la alternativa correcta.", "error"); return; }
 
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
@@ -643,9 +663,7 @@
         syncWithJSONBin(true); 
     }
 
-    // ==========================================
     // TABLA CRUD
-    // ==========================================
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
@@ -676,7 +694,7 @@
     }
 
     // ==========================================
-    // SIMULACIÓN (ALEATORIA)
+    // SIMULACIÓN (UNA POR UNA Y RESULTADOS)
     // ==========================================
     function updateSimLessonDropdown(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
@@ -701,7 +719,7 @@
             return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
         
-        // Fisher-Yates Shuffle
+        // Desordenar las preguntas aleatoriamente (Fisher-Yates)
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -710,6 +728,7 @@
         let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
         currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
         userAnswers = {};
+        currentSimIndex = 0; // Iniciar en la primera
 
         if(currentSimulationQuestions.length === 0) { showToast("No hay preguntas registradas para esta configuración.", "error"); return; }
 
@@ -717,22 +736,25 @@
         document.getElementById('sim-active').style.display = 'block';
         document.getElementById('sim-results').style.display = 'none';
         
+        renderSimulationQuestions();
+        showSimQuestion(0);
+    }
+
+    function renderSimulationQuestions() {
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
-        document.getElementById('sim-progress').innerText = `${currentSimulationQuestions.length} Preguntas en el Examen`;
 
         currentSimulationQuestions.forEach((q, index) => {
             container.innerHTML += `
-                <div class="card" id="sim-q-${q.id}">
-                    <div style="display:flex; justify-content:space-between;">
-                        <span style="font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem;">Examen - Q${index + 1}</span>
-                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.2rem 0.6rem; border-radius:6px;">Pregunta Original #${q.display_num}</span>
+                <div class="card sim-card" id="sim-q-card-${index}">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta}</span>
+                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.3rem 0.7rem; border-radius:8px; font-size:0.85rem; flex-shrink:0; margin-left:1rem;">Pregunta Original #${q.display_num}</span>
                     </div>
-                    <div style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem; margin-top:0.5rem;">${q.pregunta}</div>
                     <ul class="options-list">
                         ${Object.entries(q.opciones).map(([key, text]) => `
                             <li class="option-item sim-opt-${q.id}" onclick="selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
-                                <strong style="margin-right: 10px;">${key.toUpperCase()})</strong> ${text}
+                                <strong style="margin-right: 10px; color:var(--text-muted);">${key.toUpperCase()})</strong> ${text}
                             </li>
                         `).join('')}
                     </ul>
@@ -741,36 +763,106 @@
         });
     }
 
+    function showSimQuestion(index) {
+        document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`sim-q-card-${index}`).classList.add('active');
+        
+        document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
+        
+        // Manejo de botones de PaginaciÃ³n
+        document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+        
+        if (index === currentSimulationQuestions.length - 1) {
+            document.getElementById('btn-sim-next').style.display = 'none';
+            document.getElementById('btn-sim-finish').style.display = 'inline-flex';
+        } else {
+            document.getElementById('btn-sim-next').style.display = 'inline-flex';
+            document.getElementById('btn-sim-finish').style.display = 'none';
+        }
+    }
+
+    function navigateSim(direction) {
+        const nextIndex = currentSimIndex + direction;
+        if(nextIndex >= 0 && nextIndex < currentSimulationQuestions.length) {
+            currentSimIndex = nextIndex;
+            showSimQuestion(currentSimIndex);
+        }
+    }
+
     function selectAnswer(questionId, selectedKey) {
         userAnswers[questionId] = selectedKey;
         document.querySelectorAll(`.sim-opt-${questionId}`).forEach(el => el.classList.remove('selected'));
         document.getElementById(`opt-${questionId}-${selectedKey}`).classList.add('selected');
     }
 
-    function finishSimulation() {
-        if(Object.keys(userAnswers).length < currentSimulationQuestions.length) {
-            if(!confirm("Faltan preguntas por responder. ¿Entregar de todos modos?")) return;
+    function cancelSimulation() {
+        if(confirm("¿Seguro que deseas cancelar el examen? Perderás el progreso.")) {
+            document.getElementById('sim-active').style.display = 'none';
+            document.getElementById('sim-setup').style.display = 'block';
         }
-
-        let score = 0;
-        currentSimulationQuestions.forEach(q => {
-            const correct = q.respuesta;
-            const userSelected = userAnswers[q.id];
-            document.querySelectorAll(`.sim-opt-${q.id}`).forEach(el => el.style.pointerEvents = 'none');
-            const correctEl = document.getElementById(`opt-${q.id}-${correct}`);
-            if(correctEl) correctEl.classList.add('correct');
-            if(userSelected === correct) score++;
-            else if (userSelected) document.getElementById(`opt-${q.id}-${userSelected}`).classList.add('incorrect');
-        });
-
-        document.getElementById('sim-score').innerText = `${score} / ${currentSimulationQuestions.length}`;
-        document.getElementById('sim-results').style.display = 'block';
-        window.scrollTo(0, document.body.scrollHeight);
     }
 
-    // ==========================================
-    // JSONBIN SYNC & CLOUD STATUS
-    // ==========================================
+    function finishSimulation() {
+        const total = currentSimulationQuestions.length;
+        const answered = Object.keys(userAnswers).length;
+
+        if(answered < total) {
+            if(!confirm(`Te faltan ${total - answered} preguntas por responder. ¿Entregar de todos modos?`)) return;
+        }
+
+        let correctCount = 0;
+        let errorCount = 0;
+        let blankCount = 0;
+        let reviewHTML = '';
+
+        currentSimulationQuestions.forEach((q, index) => {
+            const correct = q.respuesta;
+            const userSelected = userAnswers[q.id];
+            
+            let statusClass = 'is-blank';
+            let icon = '⚠️';
+            let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
+
+            if (!userSelected) {
+                blankCount++;
+            } else if (userSelected === correct) {
+                correctCount++;
+                statusClass = 'is-correct';
+                icon = '✅';
+                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            } else {
+                errorCount++;
+                statusClass = 'is-incorrect';
+                icon = '❌';
+                userAnswerText = `<div class="r-ans user-wrong">Marcaste incorrectamente: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            }
+
+            reviewHTML += `
+                <div class="review-item ${statusClass}">
+                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.display_num}): ${q.pregunta}</div>
+                    ${userAnswerText}
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${correct.toUpperCase()}) ${q.opciones[correct]}</strong></div>
+                </div>
+            `;
+        });
+
+        // Calcular y mostrar mÃ©tricas
+        const precision = Math.round((correctCount / total) * 100);
+        document.getElementById('res-precision').innerText = `${precision}%`;
+        document.getElementById('res-correct').innerText = correctCount;
+        document.getElementById('res-error').innerText = errorCount;
+        document.getElementById('res-blank').innerText = blankCount;
+
+        // Inyectar el reporte detallado
+        document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
+
+        // Cambiar Vistas
+        document.getElementById('sim-active').style.display = 'none';
+        document.getElementById('sim-results').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    // CLOUD SYNC
     function setCloudStatus(status) {
         const indicator = document.getElementById('cloud-indicator');
         indicator.className = 'cloud-status ' + status;
@@ -807,7 +899,6 @@
             if(response.ok) {
                 setCloudStatus('success');
                 if(!isAutoSync) showToast("Sincronización manual exitosa.");
-                else showToast("Cambio guardado en la nube.");
             } else { throw new Error("API Error"); }
         } catch (error) {
             console.error(error); setCloudStatus('error');
