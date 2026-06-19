@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Simulador y Repositorio</title>
+    <title>ESBAS - Sistema de Evaluación</title>
     <style>
         :root {
             --bg-main: #f8fafc;
@@ -28,6 +28,14 @@
             background-image: radial-gradient(circle at top right, rgba(220, 38, 38, 0.05) 0%, transparent 40%),
                               radial-gradient(circle at bottom left, rgba(220, 38, 38, 0.05) 0%, transparent 40%);
             color: var(--text-dark); min-height: 100vh; background-attachment: fixed;
+            transition: filter 0.2s ease;
+        }
+
+        /* TRUCO ANTI-COPIA / ANTI-CAPTURA */
+        body.blurred-protection {
+            filter: blur(20px) grayscale(50%);
+            pointer-events: none;
+            user-select: none;
         }
 
         input[type="number"]::-webkit-outer-spin-button,
@@ -47,10 +55,11 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Navegación y Estado Cloud */
+        /* Navegación (Oculta por defecto hasta loguearse) */
         nav {
+            display: none; /* Se activa por JS */
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-            padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 2rem; justify-content: space-between; align-items: center;
             color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
         .nav-brand { display: flex; align-items: center; gap: 1.5rem; }
@@ -63,15 +72,33 @@
         .nav-links button { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 0.5rem 1rem; margin-left: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .nav-links button.active, .nav-links button:hover { background: white; color: var(--primary-red); border-color: white; transform: translateY(-2px); }
 
-        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; display: none; }
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas */
-        .card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card); position: relative; }
+        /* =========================================
+           PANTALLA DE LOGIN
+           ========================================= */
+        #login-wrapper {
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background: var(--bg-main); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
+        }
+        .login-box {
+            background: white; padding: 3rem; border-radius: 16px; box-shadow: var(--shadow-card);
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color);
+        }
+        .login-box h1 { color: var(--primary-red); margin-bottom: 0.5rem; font-size: 1.8rem; }
+        .login-box p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+        .login-form-group { margin-bottom: 1.5rem; text-align: left; }
+        .login-form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); font-size: 0.9rem;}
+        .login-form-group input { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 1rem; transition: border-color 0.2s;}
+        .login-form-group input:focus { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .btn-login { width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 1rem; }
+
+        /* Tarjetas Base */
+        .card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card); position: relative; }
         .card-header { border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 600; color: var(--primary-red); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;}
-        
         .global-counter { background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: 600; border: 1px solid var(--border-color); }
 
         /* Flashcards Repositorio */
@@ -112,7 +139,6 @@
         .btn-edit { background: #f59e0b; color: white; }
         .btn-delete { background: var(--error); color: white; }
 
-        /* Estilos Internos de Tarjeta */
         .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; margin-top: 2rem; font-size: 0.8rem; }
         .tag { background: #fee2e2; color: var(--primary-red); padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; }
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
@@ -121,18 +147,16 @@
         /* Opciones Simulador */
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--primary-orange); background: #fff7ed; }
-        
-        /* Selección Neutral Naranja para el Examen */
         .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
         .option-item.selected strong { color: var(--primary-orange) !important; }
 
-        /* Simulación UI Paginada */
+        /* Simulación UI */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
         .sim-card { display: none; animation: fadeIn 0.3s ease; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados Analíticos */
+        /* Dashboard de Resultados */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
         .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -144,7 +168,6 @@
         .review-item.is-correct { border-left: 5px solid var(--success); }
         .review-item.is-incorrect { border-left: 5px solid var(--error); }
         .review-item.is-blank { border-left: 5px solid #f59e0b; }
-        
         .r-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-dark); }
         .r-ans { margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; }
         .r-ans.user-wrong { background: #fee2e2; color: #991b1b; border: 1px dashed var(--error); }
@@ -158,7 +181,7 @@
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
 
         /* MODAL WIZARD */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; }
         .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); }
@@ -172,7 +195,7 @@
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-group label { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
-        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); background: #f8fafc; }
+        input[type="text"], input[type="number"], select, textarea, input[type="password"] { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); background: #f8fafc; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
         
         .alts-vertical { display: flex; flex-direction: column; gap: 0.75rem; background: rgba(241, 245, 249, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
@@ -196,7 +219,25 @@
 
 <div id="toast-container"></div>
 
-<nav>
+<div id="login-wrapper">
+    <div class="login-box">
+        <h1>🚒 ESBAS 2026</h1>
+        <p>Sistema de Entrenamiento y Evaluación</p>
+        <form onsubmit="handleLogin(event)">
+            <div class="login-form-group">
+                <label>Usuario</label>
+                <input type="text" id="login-user" placeholder="Ej: JCARRANZA" required autocomplete="off">
+            </div>
+            <div class="login-form-group">
+                <label>Contraseña</label>
+                <input type="password" id="login-pass" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-login">Ingresar al Sistema</button>
+        </form>
+    </div>
+</div>
+
+<nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-title">🚒 ESBAS 2026</div>
         <div id="cloud-indicator" class="cloud-status success">☁️ Sincronizado</div>
@@ -205,17 +246,17 @@
         <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
         <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
         <button onclick="switchView('config')" id="btn-config">Base de Datos</button>
+        <button onclick="logout()" style="border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);">Salir</button>
     </div>
 </nav>
 
-<div class="container">
+<div class="container" id="main-container">
     
     <div id="view-repo" class="view-section active">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
                 <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
-                    Banco de Preguntas 
-                    <span class="global-counter" id="global-count-badge">0 Preguntas</span>
+                    Banco de Preguntas <span class="global-counter" id="global-count-badge">0 Preguntas</span>
                 </h2>
                 <button class="btn" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta</button>
             </div>
@@ -256,10 +297,7 @@
                 <span id="sim-progress" style="font-weight: 600; color: var(--primary-red);">Pregunta 1 de X</span>
                 <button class="btn btn-outline" style="color:var(--error); border-color:var(--error);" onclick="cancelSimulation()">Cancelar Examen</button>
             </div>
-            
-            <div id="sim-questions-container">
-                </div>
-            
+            <div id="sim-questions-container"></div>
             <div class="sim-nav-footer">
                 <button class="btn btn-outline" id="btn-sim-prev" onclick="navigateSim(-1)">← Anterior</button>
                 <div style="display:flex; gap:0.5rem;">
@@ -272,32 +310,16 @@
         <div id="sim-results" style="display: none;">
             <div class="card" style="text-align: center;">
                 <h2 class="card-header" style="justify-content: center;">Resultados del Examen</h2>
-                
                 <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-value m-precision" id="res-precision">0%</div>
-                        <div class="metric-label">Precisión</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value m-correct" id="res-correct">0</div>
-                        <div class="metric-label">Aciertos</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value m-error" id="res-error">0</div>
-                        <div class="metric-label">Errores</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value m-blank" id="res-blank">0</div>
-                        <div class="metric-label">Sin responder</div>
-                    </div>
+                    <div class="metric-card"><div class="metric-value m-precision" id="res-precision">0%</div><div class="metric-label">Precisión</div></div>
+                    <div class="metric-card"><div class="metric-value m-correct" id="res-correct">0</div><div class="metric-label">Aciertos</div></div>
+                    <div class="metric-card"><div class="metric-value m-error" id="res-error">0</div><div class="metric-label">Errores</div></div>
+                    <div class="metric-card"><div class="metric-value m-blank" id="res-blank">0</div><div class="metric-label">Sin responder</div></div>
                 </div>
-
                 <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block';">Volver a Configurar Examen</button>
             </div>
-            
             <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark);">Desglose de Preguntas</h3>
-            <div id="sim-detailed-review" class="detailed-review">
-                </div>
+            <div id="sim-detailed-review" class="detailed-review"></div>
             <br><br>
         </div>
     </div>
@@ -310,9 +332,7 @@
             </div>
             <div class="table-container">
                 <table id="questionsTable">
-                    <thead>
-                        <tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
-                    </thead>
+                    <thead><tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr></thead>
                     <tbody id="table-body"></tbody>
                 </table>
             </div>
@@ -380,27 +400,10 @@
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 3: Alternativas de Respuesta</h3>
                 <div class="form-group full-width alts-vertical">
                     <label style="color: var(--primary-red); margin-bottom: -0.5rem; font-size: 0.95rem;">Selecciona el círculo izquierdo de la correcta:</label>
-                    
-                    <label class="alt-row">
-                        <input type="radio" name="q-correct" value="a" required>
-                        <span class="alt-label">A</span>
-                        <input type="text" id="q-opt-a" required placeholder="Redacta la opción A...">
-                    </label>
-                    <label class="alt-row">
-                        <input type="radio" name="q-correct" value="b" required>
-                        <span class="alt-label">B</span>
-                        <input type="text" id="q-opt-b" required placeholder="Redacta la opción B...">
-                    </label>
-                    <label class="alt-row">
-                        <input type="radio" name="q-correct" value="c" required>
-                        <span class="alt-label">C</span>
-                        <input type="text" id="q-opt-c" required placeholder="Redacta la opción C...">
-                    </label>
-                    <label class="alt-row">
-                        <input type="radio" name="q-correct" value="d" required>
-                        <span class="alt-label">D</span>
-                        <input type="text" id="q-opt-d" required placeholder="Redacta la opción D...">
-                    </label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="a" required><span class="alt-label">A</span><input type="text" id="q-opt-a" required placeholder="Redacta la opción A..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="b" required><span class="alt-label">B</span><input type="text" id="q-opt-b" required placeholder="Redacta la opción B..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="c" required><span class="alt-label">C</span><input type="text" id="q-opt-c" required placeholder="Redacta la opción C..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="d" required><span class="alt-label">D</span><input type="text" id="q-opt-d" required placeholder="Redacta la opción D..."></label>
                 </div>
                 <div class="wizard-footer">
                     <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Atrás</button>
@@ -413,6 +416,48 @@
 
 <script>
     // ==========================================
+    // USUARIOS Y LOGIN (ValidaciÃ³n Local por ahora)
+    // ==========================================
+    const AUTH_USERS = {
+        "JCARRANZA": "bomberos2026",
+        "ADMIN": "admin123"
+    };
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('login-user').value.trim().toUpperCase();
+        const pass = document.getElementById('login-pass').value.trim();
+
+        if (AUTH_USERS[user] && AUTH_USERS[user] === pass) {
+            document.getElementById('login-wrapper').style.display = 'none';
+            document.getElementById('main-nav').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'block';
+            showToast(`Bienvenido al sistema, ${user}`);
+            fetchFromJSONBin();
+        } else {
+            showToast("Usuario o contraseña incorrectos.", "error");
+        }
+    }
+
+    function logout() {
+        document.getElementById('login-wrapper').style.display = 'flex';
+        document.getElementById('main-nav').style.display = 'none';
+        document.getElementById('main-container').style.display = 'none';
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+    }
+
+    // ==========================================
+    // TRUCO ANTI-CAPTURA (BLUR ON FOCUS LOST)
+    // ==========================================
+    window.addEventListener('blur', () => {
+        document.body.classList.add('blurred-protection');
+    });
+    window.addEventListener('focus', () => {
+        document.body.classList.remove('blurred-protection');
+    });
+
+    // ==========================================
     // CONFIGURACIÓN API JSONBIN
     // ==========================================
     const JSONBIN_API_KEY = '$2a$10$7PwFegDVLzoS8bJTQPdA7.27bk7D4odCTFnynWW1NkB5H6.PBt.nm';
@@ -420,8 +465,6 @@
     const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
     let questionBank = [];
-    
-    // Variables Simulación
     let currentSimulationQuestions = [];
     let userAnswers = {};
     let currentSimIndex = 0;
@@ -432,17 +475,15 @@
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
 
-    // TOASTS
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.innerHTML = type === 'success' ? `✅ ${message}` : `⚠️ ${message}`;
         container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4500); // Dar un poco mÃ¡s de tiempo para leer errores
+        setTimeout(() => toast.remove(), 4500); 
     }
 
-    // NAVEGACIÓN
     function switchView(viewName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
@@ -452,9 +493,7 @@
         if(viewName === 'config') renderTable();
     }
 
-    // ORDEN Y CONTADORES
     function updateIndexesAndCounters() {
-        // Ordenar por MÃ³dulo -> LecciÃ³n -> NÂ° de Pregunta Manual
         questionBank.sort((a,b) => {
             if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
             if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num) - parseInt(b.leccion_num);
@@ -471,7 +510,6 @@
         });
     }
 
-    // MEMORIA FORMULARIO Y AUTO-INCREMENTO
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -490,11 +528,9 @@
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
-    // Generar el siguiente nÃºmero disponible para una lecciÃ³n
     function autoIncrementQuestionNumber() {
         const mod = document.getElementById('q-module').value;
         const lec = document.getElementById('q-lesson').value.trim();
-        // Solo autocompletamos si estamos en modo "Nuevo" (ID oculto vacÃ­o)
         if (!document.getElementById('q-id').value && mod && lec) {
             const questionsInLesson = questionBank.filter(q => q.modulo === mod && q.leccion_num.toString() === lec);
             if (questionsInLesson.length === 0) {
@@ -506,7 +542,6 @@
         }
     }
 
-    // WIZARD
     function goToStep(step) {
         if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value || !document.getElementById('q-num').value)) {
             showToast("Completa el Módulo, Lección y N° de Pregunta.", "error"); return;
@@ -521,7 +556,6 @@
         });
     }
 
-    // REPOSITORIO Y FILTROS
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
@@ -574,7 +608,7 @@
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const correctText = q.opciones[q.respuesta];
             const delay = i * 0.05; 
-            const pNum = q.pregunta_num || "?"; // Numero asignado manualmente
+            const pNum = q.pregunta_num || "?"; 
 
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
@@ -596,7 +630,6 @@
         });
     }
 
-    // MODAL Y GUARDADO
     function openModal(mode, id = null) {
         document.getElementById('modal-form').classList.add('active');
         goToStep(1); 
@@ -609,7 +642,7 @@
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
                 document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
-                autoIncrementQuestionNumber(); // Setear numero automÃ¡tico
+                autoIncrementQuestionNumber(); 
             } else {
                 document.getElementById('q-module').value = '';
                 document.getElementById('q-lesson').value = '';
@@ -653,9 +686,6 @@
         const currentLessonNum = document.getElementById('q-lesson').value;
         const currentQNum = document.getElementById('q-num').value;
         
-        // V A L I D A C I O N E S   A N T I - D U P L I C A D O S
-        
-        // 1. Alternativas Duplicadas
         const optA = document.getElementById('q-opt-a').value.trim();
         const optB = document.getElementById('q-opt-b').value.trim();
         const optC = document.getElementById('q-opt-c').value.trim();
@@ -667,15 +697,13 @@
             return; 
         }
 
-        // 2. Pregunta Duplicada (Mismo enunciado)
         const qText = document.getElementById('q-text').value.trim();
         const isQDuplicate = questionBank.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && q.id !== id);
         if (isQDuplicate) {
             if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
         }
 
-        // 3. Número de Pregunta Duplicada en la misma lección
-        const isNumDuplicate = questionBank.some(q => q.modulo === currentModule && q.leccion_num === currentLessonNum && q.pregunta_num === currentQNum && q.id !== id);
+        const isNumDuplicate = questionBank.some(q => q.modulo === currentModule && q.leccion_num.toString() === currentLessonNum.toString() && q.pregunta_num.toString() === currentQNum.toString() && q.id !== id);
         if(isNumDuplicate) {
             if(!confirm(`⚠️ Ya existe la Pregunta #${currentQNum} en la Lección ${currentLessonNum}. ¿Deseas sobreescribir ese número de orden?`)) return;
         }
@@ -706,7 +734,6 @@
         syncWithJSONBin(true); 
     }
 
-    // TABLA CRUD
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
@@ -737,9 +764,6 @@
         }
     }
 
-    // ==========================================
-    // SIMULACIÓN (UNA POR UNA Y RESULTADOS)
-    // ==========================================
     function updateSimLessonDropdown(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
@@ -763,7 +787,6 @@
             return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
         
-        // Desordenar las preguntas aleatoriamente (Fisher-Yates)
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -812,7 +835,6 @@
         document.getElementById(`sim-q-card-${index}`).classList.add('active');
         
         document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
-        
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
         
         if (index === currentSimulationQuestions.length - 1) {
@@ -921,7 +943,7 @@
             setModuleFilter('all');
             renderTable();
             setCloudStatus('success');
-            showToast("Base de datos cargada correctamente.");
+            // showToast("Base de datos cargada correctamente."); // Opcional
         } catch (error) {
             console.error("Error:", error); setCloudStatus('error');
             showToast("Error al conectar con la nube.", "error");
@@ -945,8 +967,6 @@
             if(!isAutoSync) showToast("Fallo en la sincronización manual.", "error");
         }
     }
-
-    fetchFromJSONBin();
 
 </script>
 </body>
