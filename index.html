@@ -20,129 +20,91 @@
             --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
         body {
             background-color: var(--bg-main);
             background-image: radial-gradient(circle at top right, rgba(220, 38, 38, 0.05) 0%, transparent 40%),
                               radial-gradient(circle at bottom left, rgba(220, 38, 38, 0.05) 0%, transparent 40%);
-            color: var(--text-dark);
-            min-height: 100vh;
-            background-attachment: fixed;
+            color: var(--text-dark); min-height: 100vh; background-attachment: fixed;
         }
 
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
+        /* =========================================
+           TOAST NOTIFICATIONS (Alertas Elegantes)
+           ========================================= */
+        #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast {
+            background: white; border-left: 4px solid var(--primary-red); color: var(--text-dark);
+            padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 0.75rem;
+            animation: slideInRight 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards, fadeOut 0.3s ease 3.7s forwards;
+        }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--error); }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
         /* Navegación y Estado Cloud */
         nav {
-            background: var(--glass-nav);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+            color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
-
         .nav-brand { display: flex; align-items: center; gap: 1.5rem; }
         .brand-title { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
-        
-        .cloud-status {
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.3rem 0.8rem;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.3s ease;
-        }
+        .cloud-status { font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 0.4rem; transition: all 0.3s ease; }
         .cloud-status.syncing { background: #f59e0b; color: white; }
         .cloud-status.success { background: var(--success); color: white; }
         .cloud-status.error { background: var(--error); color: white; }
 
-        .nav-links button {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            margin-left: 0.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .nav-links button.active, .nav-links button:hover {
-            background: white;
-            color: var(--primary-red);
-            border-color: white;
-            transform: translateY(-2px);
-        }
+        .nav-links button { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 0.5rem 1rem; margin-left: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .nav-links button.active, .nav-links button:hover { background: white; color: var(--primary-red); border-color: white; transform: translateY(-2px); }
 
         .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas y UI Base */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-card);
-            position: relative;
-        }
-        .card-header {
-            border-bottom: 2px solid var(--primary-red);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            color: var(--primary-red);
-            font-size: 1.2rem;
-        }
+        /* Tarjetas */
+        .card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card); position: relative; }
+        .card-header { border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 600; color: var(--primary-red); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;}
+        
+        .global-counter { background: #f1f5f9; color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: 600; border: 1px solid var(--border-color); }
 
-        /* Flashcards */
-        .flashcard-wrapper { perspective: 1000px; margin-bottom: 1.5rem; cursor: pointer; border-radius: 16px; }
+        /* Flashcards con Animación Escalonada */
+        .flashcard-wrapper { perspective: 1000px; margin-bottom: 1.5rem; cursor: pointer; border-radius: 16px; animation: slideUpFade 0.4s ease forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+        
         .flashcard { display: grid; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--shadow-card); }
         .flashcard-wrapper.flipped .flashcard { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back {
-            grid-area: 1 / 1 / 2 / 2; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem;
-            display: flex; flex-direction: column; justify-content: center;
-        }
+        .flashcard-front, .flashcard-back { grid-area: 1 / 1 / 2 / 2; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
         .flashcard-front { position: relative; }
         .flashcard-back { transform: rotateY(180deg); background: rgba(220, 38, 38, 0.03); border: 2px solid rgba(220, 38, 38, 0.2); text-align: center; align-items: center; }
+        
+        .q-number-badge { position: absolute; top: 1.5rem; left: 1.5rem; background: rgba(220,38,38,0.1); color: var(--primary-red); font-weight: 700; font-size: 0.85rem; padding: 0.3rem 0.6rem; border-radius: 6px; letter-spacing: 0.5px; }
+
         .flip-hint { margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 
-        /* Filtros */
+        /* Filtros y Badges */
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
-        .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 999px; font-weight: 600; color: var(--text-muted); }
+        .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 999px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
         .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+        .badge-count { background: #e2e8f0; color: var(--text-dark); font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 700; }
+        .filter-btn.active .badge-count { background: rgba(255,255,255,0.25); color: white; }
+
         .lesson-filters { display: none; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); justify-content: center; }
         .lesson-filters.active { display: flex; animation: fadeIn 0.3s; }
-        .lesson-btn { background: rgba(226, 232, 240, 0.5); border: 1px solid transparent; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
+        .lesson-btn { background: rgba(226, 232, 240, 0.5); border: 1px solid transparent; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); display: flex; align-items: center; gap: 0.3rem;}
         .lesson-btn.active { background: rgba(220, 38, 38, 0.15); color: var(--primary-red); border-color: rgba(220, 38, 38, 0.3); font-weight: 600; }
+        .lesson-btn.active .badge-count { background: var(--primary-red); color: white; }
 
         /* Botones Generales */
-        button { cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); outline: none; }
+        button { cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); outline: none; }
         button:active { transform: scale(0.95) !important; }
         .btn { background-color: var(--primary-red); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;}
         .btn:hover { background-color: var(--primary-red-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(220,38,38,0.3); }
@@ -156,7 +118,7 @@
         .btn-delete { background: var(--error); color: white; }
 
         /* Estilos Internos de Tarjeta */
-        .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.8rem; }
+        .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; margin-top: 2rem; font-size: 0.8rem; }
         .tag { background: #fee2e2; color: var(--primary-red); padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; }
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
         .options-list { list-style: none; margin-top: 1rem; }
@@ -173,7 +135,7 @@
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
 
         /* =========================================
-           MODAL WIZARD (Tres Partes)
+           MODAL WIZARD Y ALTERNATIVAS CLICKABLES
            ========================================= */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
         .modal-overlay.active { display: flex; }
@@ -181,11 +143,9 @@
         .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); }
         .modal-close:hover { color: var(--error); transform: scale(1.1) rotate(90deg); }
 
-        /* Fases del Wizard */
         .form-step { display: none; animation: fadeIn 0.3s; }
         .form-step.active { display: block; }
 
-        /* Progress Bar Simple */
         .wizard-progress { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
         .wizard-dot { height: 6px; flex: 1; background: #e2e8f0; border-radius: 999px; transition: background 0.3s; }
         .wizard-dot.active { background: var(--primary-red); }
@@ -197,16 +157,35 @@
         input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); background: #f8fafc; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
         
-        .alts-vertical { display: flex; flex-direction: column; gap: 1rem; background: rgba(241, 245, 249, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
-        .alt-row { display: flex; align-items: center; gap: 0.75rem; }
-        .alt-row input[type="radio"] { width: 1.5rem; height: 1.5rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
-        .alt-label { font-weight: 700; color: var(--text-dark); width: 1.5rem; font-size: 1.1rem; text-align: center; }
+        .alts-vertical { display: flex; flex-direction: column; gap: 0.75rem; background: rgba(241, 245, 249, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
+        
+        /* FILAS INTERACTIVAS (Toda la fila es clickable) */
+        .alt-row { 
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; 
+            border: 1px solid var(--border-color); border-radius: 8px; background: white;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .alt-row:hover { border-color: rgba(220, 38, 38, 0.4); transform: translateX(4px); }
+        .alt-row:has(input:checked) { border-color: var(--success); background: rgba(16, 185, 129, 0.05); transform: translateX(8px); box-shadow: -4px 0 0 var(--success);}
+        
+        .alt-row input[type="radio"] { width: 1.25rem; height: 1.25rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
+        .alt-label { font-weight: 700; color: var(--text-muted); width: 1.5rem; font-size: 1.1rem; text-align: center; }
+        .alt-row:has(input:checked) .alt-label { color: var(--success); }
+        
+        .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; }
+        .alt-row input[type="text"]:focus { border: none; background: transparent; }
+
         .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem;}
 
         @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+
+<div id="toast-container"></div>
 
 <nav>
     <div class="nav-brand">
@@ -222,20 +201,21 @@
 
 <div class="container">
     
+    <!-- VISTA: REPOSITORIO -->
     <div id="view-repo" class="view-section active">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
-                <h2 style="color: var(--text-dark); font-size: 1.2rem;">Banco de Preguntas</h2>
+                <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                    Banco de Preguntas 
+                    <span class="global-counter" id="global-count-badge">0 Preguntas</span>
+                </h2>
                 <button class="btn" onclick="openModal('new')">
                     <span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta
                 </button>
             </div>
             
             <div class="filter-group" id="moduleFilters">
-                <button class="filter-btn active" onclick="setModuleFilter('all')">Todos los Módulos</button>
-                <button class="filter-btn" onclick="setModuleFilter('Módulo I')">Módulo I</button>
-                <button class="filter-btn" onclick="setModuleFilter('Módulo II')">Módulo II</button>
-                <button class="filter-btn" onclick="setModuleFilter('Módulo III')">Módulo III</button>
+                <!-- Se inyectan por JS para los contadores -->
             </div>
 
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
@@ -246,6 +226,7 @@
         <div id="repo-container"></div>
     </div>
 
+    <!-- VISTA: SIMULACIÓN -->
     <div id="view-sim" class="view-section">
         <div id="sim-setup" class="card">
             <h2 class="card-header">Configurar Simulador de Examen</h2>
@@ -266,7 +247,7 @@
                     </select>
                 </div>
             </div>
-            <button class="btn" onclick="startSimulation()">Iniciar Simulación</button>
+            <button class="btn" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
         </div>
 
         <div id="sim-active" style="display: none;">
@@ -283,6 +264,7 @@
         </div>
     </div>
 
+    <!-- VISTA: BASE DE DATOS -->
     <div id="view-config" class="view-section">
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem;">
@@ -292,7 +274,7 @@
             <div class="table-container">
                 <table id="questionsTable">
                     <thead>
-                        <tr><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
+                        <tr><th>ID</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
@@ -301,6 +283,9 @@
     </div>
 </div>
 
+<!-- ======================================================= -->
+<!-- MODAL WIZARD DE REGISTRO -->
+<!-- ======================================================= -->
 <div id="modal-form" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" type="button" onclick="closeModal()">×</button>
@@ -315,6 +300,7 @@
         <form id="questionForm" onsubmit="saveQuestion(event)">
             <input type="hidden" id="q-id">
             
+            <!-- FASE 1 -->
             <div id="step-1" class="form-step active">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 1: Ubicación</h3>
                 <div class="form-grid">
@@ -341,6 +327,7 @@
                 </div>
             </div>
 
+            <!-- FASE 2 -->
             <div id="step-2" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 2: Enunciado</h3>
                 <div class="form-group full-width">
@@ -353,35 +340,36 @@
                 </div>
             </div>
 
+            <!-- FASE 3 -->
             <div id="step-3" class="form-step">
-                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 3: Respuestas</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 3: Alternativas de Respuesta</h3>
                 <div class="form-group full-width alts-vertical">
-                    <label style="color: var(--primary-red); margin-bottom: -0.5rem; font-size: 0.95rem;">Selecciona el círculo izquierdo de la respuesta correcta:</label>
+                    <label style="color: var(--primary-red); margin-bottom: -0.5rem; font-size: 0.95rem;">Selecciona el círculo izquierdo de la correcta:</label>
                     
-                    <div class="alt-row">
-                        <input type="radio" name="q-correct" value="a" required title="Marcar como correcta">
+                    <label class="alt-row">
+                        <input type="radio" name="q-correct" value="a" required>
                         <span class="alt-label">A</span>
                         <input type="text" id="q-opt-a" required placeholder="Redacta la opción A...">
-                    </div>
-                    <div class="alt-row">
-                        <input type="radio" name="q-correct" value="b" required title="Marcar como correcta">
+                    </label>
+                    <label class="alt-row">
+                        <input type="radio" name="q-correct" value="b" required>
                         <span class="alt-label">B</span>
                         <input type="text" id="q-opt-b" required placeholder="Redacta la opción B...">
-                    </div>
-                    <div class="alt-row">
-                        <input type="radio" name="q-correct" value="c" required title="Marcar como correcta">
+                    </label>
+                    <label class="alt-row">
+                        <input type="radio" name="q-correct" value="c" required>
                         <span class="alt-label">C</span>
                         <input type="text" id="q-opt-c" required placeholder="Redacta la opción C...">
-                    </div>
-                    <div class="alt-row">
-                        <input type="radio" name="q-correct" value="d" required title="Marcar como correcta">
+                    </label>
+                    <label class="alt-row">
+                        <input type="radio" name="q-correct" value="d" required>
                         <span class="alt-label">D</span>
                         <input type="text" id="q-opt-d" required placeholder="Redacta la opción D...">
-                    </div>
+                    </label>
                 </div>
                 <div class="wizard-footer">
                     <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Atrás</button>
-                    <button type="submit" class="btn" id="btn-save" style="background: var(--success);">✔ Guardar Tarjeta</button>
+                    <button type="submit" class="btn" id="btn-save" style="background: var(--success);">✔ Guardar Pregunta</button>
                 </div>
             </div>
         </form>
@@ -402,16 +390,20 @@
     let activeModuleFilter = 'all';
     let activeLessonFilter = 'all';
 
-    // Memoria para Data Entry
-    let formMemory = {
-        lastModule: '',
-        'Módulo I': { num: '', name: '' },
-        'Módulo II': { num: '', name: '' },
-        'Módulo III': { num: '', name: '' }
-    };
-
+    let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
 
+    // TOASTS
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? `✅ ${message}` : `⚠️ ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    // NAVEGACIÓN
     function switchView(viewName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
@@ -421,9 +413,36 @@
         if(viewName === 'config') renderTable();
     }
 
-    // ==========================================
-    // LÓGICA DE MEMORIA Y AUTOCOMPLETADO
-    // ==========================================
+    // INDICES Y CONTADORES
+    function updateIndexesAndCounters() {
+        // Ordenar y asignar ID visual (Pregunta #1, #2...)
+        questionBank.sort((a,b) => {
+            if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
+            return parseInt(a.leccion_num) - parseInt(b.leccion_num);
+        });
+        questionBank.forEach((q, i) => q.display_num = i + 1);
+
+        // Contador Global
+        document.getElementById('global-count-badge').innerText = `${questionBank.length} Preguntas`;
+
+        // Botones de Modulos (con conteo)
+        const modContainer = document.getElementById('moduleFilters');
+        modContainer.innerHTML = `
+            <button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">
+                Todos <span class="badge-count">${questionBank.length}</span>
+            </button>
+        `;
+        ['Módulo I', 'Módulo II', 'Módulo III'].forEach(mod => {
+            const count = questionBank.filter(q => q.modulo === mod).length;
+            modContainer.innerHTML += `
+                <button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">
+                    ${mod} <span class="badge-count">${count}</span>
+                </button>
+            `;
+        });
+    }
+
+    // MEMORIA FORMULARIO
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -438,58 +457,42 @@
     function autoFillLessonName() {
         const numInput = document.getElementById('q-lesson').value.trim();
         if(!numInput) return;
-        
-        // Buscar en la base de datos local si ya existe el nombre para ese numero
         const existing = questionBank.find(q => q.leccion_num.toString().replace(/\D/g, '') === numInput && q.leccion_nombre.trim() !== '');
-        if(existing) {
-            document.getElementById('q-lesson-name').value = existing.leccion_nombre;
-        }
+        if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
-    // ==========================================
-    // LÓGICA WIZARD (3 PASOS)
-    // ==========================================
+    // WIZARD LOGIC
     function goToStep(step) {
-        // Validaciones rÃ¡pidas de HTML5 antes de avanzar
-        if (step === 2) {
-            if(!document.getElementById('q-module').value || !document.getElementById('q-lesson').value) {
-                alert("Completa el Módulo y el N° de Lección para continuar."); return;
-            }
+        if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value)) {
+            showToast("Completa el Módulo y el N° de Lección para continuar.", "error"); return;
         }
-        if (step === 3) {
-            if(!document.getElementById('q-text').value) {
-                alert("Redacta la pregunta para continuar."); return;
-            }
+        if (step === 3 && !document.getElementById('q-text').value) {
+            showToast("Redacta la pregunta para continuar.", "error"); return;
         }
 
         document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
         document.getElementById(`step-${step}`).classList.add('active');
-        
         document.querySelectorAll('.wizard-dot').forEach((el, index) => {
-            if(index < step) el.classList.add('active');
-            else el.classList.remove('active');
+            if(index < step) el.classList.add('active'); else el.classList.remove('active');
         });
     }
 
-    // ==========================================
     // REPOSITORIO Y FILTROS
-    // ==========================================
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
-        document.querySelectorAll('#moduleFilters .filter-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if(btn.innerText.includes(moduleName) || (moduleName === 'all' && btn.innerText.includes('Todos'))) btn.classList.add('active');
-        });
+        updateIndexesAndCounters(); // Refrescar visuales botones
 
         const lessonContainer = document.getElementById('lessonFiltersContainer');
         if(moduleName === 'all') {
             lessonContainer.classList.remove('active');
         } else {
             const range = moduleLessonsMap[moduleName];
-            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas</button>`;
+            const modCount = questionBank.filter(q => q.modulo === moduleName).length;
+            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas <span class="badge-count">${modCount}</span></button>`;
             for(let i = range.start; i <= range.end; i++) {
-                html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i}</button>`;
+                const count = questionBank.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+                html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i} <span class="badge-count">${count}</span></button>`;
             }
             lessonContainer.innerHTML = html;
             lessonContainer.classList.add('active');
@@ -518,26 +521,28 @@
         });
 
         if (filtered.length === 0) {
-            container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay preguntas que coincidan con estos filtros.</p>`;
+            container.innerHTML = `<div class="empty-state"><text>📂</text><h3>Sin resultados</h3><p>No hay preguntas registradas en este filtro.</p></div>`;
             return;
         }
 
-        filtered.forEach(q => {
+        filtered.forEach((q, i) => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const correctText = q.opciones[q.respuesta];
+            const delay = i * 0.05; // Animacion escalonada
 
             container.innerHTML += `
-                <div class="flashcard-wrapper" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard">
                         <div class="flashcard-front">
+                            <span class="q-number-badge">Pregunta #${q.display_num}</span>
                             <button class="btn-card-edit" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>
                             <div class="meta-tags"><span class="tag">${q.modulo}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
                             <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta}</div>
-                            <div class="flip-hint"><span>👆</span> Haz clic para voltear y ver la respuesta</div>
+                            <div class="flip-hint"><span>👆</span> Clic para voltear</div>
                         </div>
                         <div class="flashcard-back">
-                            <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Respuesta Correcta</div>
+                            <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Pregunta #${q.display_num} | Clave Correcta</div>
                             <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">${q.respuesta.toUpperCase()}) ${correctText}</div>
                         </div>
                     </div>
@@ -547,17 +552,16 @@
     }
 
     // ==========================================
-    // LÓGICA DEL MODAL
+    // MODAL Y GUARDADO
     // ==========================================
     function openModal(mode, id = null) {
         document.getElementById('modal-form').classList.add('active');
-        goToStep(1); // Siempre inicia en el paso 1
+        goToStep(1); 
         
         if (mode === 'new') {
             document.getElementById('modal-title').innerText = "Registrar Pregunta";
             document.getElementById('q-id').value = '';
             
-            // Lógica Expresa: Mantener memoria de Módulo/Lección, pero BORRAR lo demás.
             if (formMemory.lastModule !== '') {
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
@@ -568,7 +572,6 @@
                 document.getElementById('q-lesson-name').value = '';
             }
             
-            // Limpieza estricta de Pregunta y Alternativas
             document.getElementById('q-text').value = '';
             document.getElementById('q-opt-a').value = '';
             document.getElementById('q-opt-b').value = '';
@@ -600,8 +603,20 @@
     function saveQuestion(e) {
         e.preventDefault();
         
+        // Anti-Duplicados Validation
+        const optA = document.getElementById('q-opt-a').value.trim();
+        const optB = document.getElementById('q-opt-b').value.trim();
+        const optC = document.getElementById('q-opt-c').value.trim();
+        const optD = document.getElementById('q-opt-d').value.trim();
+        const setOpts = new Set([optA, optB, optC, optD].map(o => o.toLowerCase()));
+        
+        if (setOpts.size < 4) {
+            showToast("Error: Tienes dos o más alternativas con el mismo texto. Corrígelas.", "error");
+            return;
+        }
+
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
-        if(!checkedRadio) { alert("Selecciona la alternativa correcta."); return; }
+        if(!checkedRadio) { showToast("Selecciona la alternativa correcta en los círculos.", "error"); return; }
 
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
@@ -609,17 +624,9 @@
 
         const id = document.getElementById('q-id').value || Date.now().toString();
         const nuevaPregunta = {
-            id: id,
-            modulo: currentModule,
-            leccion_num: currentLessonNum, 
-            leccion_nombre: currentLessonName,
+            id: id, modulo: currentModule, leccion_num: currentLessonNum, leccion_nombre: currentLessonName,
             pregunta: document.getElementById('q-text').value,
-            opciones: {
-                a: document.getElementById('q-opt-a').value,
-                b: document.getElementById('q-opt-b').value,
-                c: document.getElementById('q-opt-c').value,
-                d: document.getElementById('q-opt-d').value
-            },
+            opciones: { a: optA, b: optB, c: optC, d: optD },
             respuesta: checkedRadio.value
         };
 
@@ -631,9 +638,8 @@
         formMemory[currentModule].num = currentLessonNum;
         formMemory[currentModule].name = currentLessonName;
 
-        closeModal();
-        renderRepo();
-        renderTable();
+        updateIndexesAndCounters();
+        closeModal(); renderRepo(); renderTable();
         syncWithJSONBin(true); 
     }
 
@@ -648,6 +654,7 @@
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             tbody.innerHTML += `
                 <tr>
+                    <td style="font-weight:700; color:var(--primary-red);">#${q.display_num}</td>
                     <td><span class="tag">${q.modulo}</span></td>
                     <td>${lessonBadge}</td>
                     <td>${q.pregunta.substring(0, 50)}...</td>
@@ -663,12 +670,13 @@
     function deleteQuestion(id) {
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
             questionBank = questionBank.filter(q => q.id !== id);
+            updateIndexesAndCounters();
             renderTable(); renderRepo(); syncWithJSONBin(true); 
         }
     }
 
     // ==========================================
-    // SIMULACIÓN
+    // SIMULACIÓN (ALEATORIA)
     // ==========================================
     function updateSimLessonDropdown(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
@@ -679,7 +687,8 @@
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
         for(let i = range.start; i <= range.end; i++) {
-            lessonSelect.innerHTML += `<option value="${i}">Lección ${i}</option>`;
+            const count = questionBank.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+            if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
         }
     }
 
@@ -692,6 +701,7 @@
             return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
         
+        // Fisher-Yates Shuffle
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -701,7 +711,7 @@
         currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
         userAnswers = {};
 
-        if(currentSimulationQuestions.length === 0) { alert("No hay preguntas registradas para esta configuración."); return; }
+        if(currentSimulationQuestions.length === 0) { showToast("No hay preguntas registradas para esta configuración.", "error"); return; }
 
         document.getElementById('sim-setup').style.display = 'none';
         document.getElementById('sim-active').style.display = 'block';
@@ -709,13 +719,16 @@
         
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
-        document.getElementById('sim-progress').innerText = `${currentSimulationQuestions.length} Preguntas en total`;
+        document.getElementById('sim-progress').innerText = `${currentSimulationQuestions.length} Preguntas en el Examen`;
 
         currentSimulationQuestions.forEach((q, index) => {
             container.innerHTML += `
                 <div class="card" id="sim-q-${q.id}">
-                    <div style="font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem;">Pregunta ${index + 1}</div>
-                    <div style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem;">${q.pregunta}</div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem;">Examen - Q${index + 1}</span>
+                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.2rem 0.6rem; border-radius:6px;">Pregunta Original #${q.display_num}</span>
+                    </div>
+                    <div style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem; margin-top:0.5rem;">${q.pregunta}</div>
                     <ul class="options-list">
                         ${Object.entries(q.opciones).map(([key, text]) => `
                             <li class="option-item sim-opt-${q.id}" onclick="selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
@@ -772,10 +785,14 @@
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
             if(data.record && Array.isArray(data.record)) questionBank = data.record;
-            renderRepo(); renderTable();
+            updateIndexesAndCounters();
+            setModuleFilter('all');
+            renderTable();
             setCloudStatus('success');
+            showToast("Base de datos cargada correctamente.");
         } catch (error) {
             console.error("Error:", error); setCloudStatus('error');
+            showToast("Error al conectar con la nube.", "error");
         }
     }
 
@@ -789,15 +806,16 @@
             });
             if(response.ok) {
                 setCloudStatus('success');
+                if(!isAutoSync) showToast("Sincronización manual exitosa.");
+                else showToast("Cambio guardado en la nube.");
             } else { throw new Error("API Error"); }
         } catch (error) {
             console.error(error); setCloudStatus('error');
-            if(!isAutoSync) alert("Error al sincronizar.");
+            if(!isAutoSync) showToast("Fallo en la sincronización manual.", "error");
         }
     }
 
     fetchFromJSONBin();
-    switchView('repo');
 
 </script>
 </body>
