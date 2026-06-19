@@ -28,19 +28,26 @@
             background-image: radial-gradient(circle at top right, rgba(220, 38, 38, 0.05) 0%, transparent 40%),
                               radial-gradient(circle at bottom left, rgba(220, 38, 38, 0.05) 0%, transparent 40%);
             color: var(--text-dark); min-height: 100vh; background-attachment: fixed;
-            transition: filter 0.2s ease;
-        }
-
-        /* TRUCO ANTI-COPIA / ANTI-CAPTURA */
-        body.blurred-protection {
-            filter: blur(20px) grayscale(50%);
-            pointer-events: none;
-            user-select: none;
         }
 
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
+
+        /* =========================================
+           SISTEMA ANTI-CAPTURA (PANTALLA NEGRA)
+           ========================================= */
+        #security-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000000; z-index: 9999999; flex-direction: column;
+            justify-content: center; align-items: center; color: var(--error); text-align: center;
+        }
+        #security-overlay h1 { font-size: 3rem; margin-bottom: 1rem; text-transform: uppercase; }
+        #security-overlay p { font-size: 1.2rem; color: #ffffff; max-width: 600px; line-height: 1.5;}
+        
+        body.security-breach #security-overlay { display: flex; }
+        body.security-breach > *:not(#security-overlay) { opacity: 0 !important; pointer-events: none; }
+        body.security-breach { background: #000; overflow: hidden; }
 
         /* TOAST NOTIFICATIONS */
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
@@ -55,9 +62,9 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Navegación (Oculta por defecto hasta loguearse) */
+        /* NAVEGACION */
         nav {
-            display: none; /* Se activa por JS */
+            display: none; 
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             padding: 1rem 2rem; justify-content: space-between; align-items: center;
             color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
@@ -77,9 +84,7 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* =========================================
-           PANTALLA DE LOGIN
-           ========================================= */
+        /* PANTALLA DE LOGIN */
         #login-wrapper {
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
             background: var(--bg-main); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
@@ -144,19 +149,18 @@
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
         .options-list { list-style: none; margin-top: 1rem; }
         
-        /* Opciones Simulador */
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--primary-orange); background: #fff7ed; }
         .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
         .option-item.selected strong { color: var(--primary-orange) !important; }
 
-        /* Simulación UI */
+        /* Simulación UI Paginada */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
         .sim-card { display: none; animation: fadeIn 0.3s ease; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados */
+        /* Dashboard de Resultados Analíticos */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
         .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -211,6 +215,9 @@
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem;}
 
+        /* Ocultar elementos para usuarios estÃ¡ndar */
+        body:not(.role-admin) .admin-only { display: none !important; }
+
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
     </style>
@@ -218,6 +225,11 @@
 <body>
 
 <div id="toast-container"></div>
+
+<div id="security-overlay">
+    <h1>🚫 ACCESO DENEGADO</h1>
+    <p>El uso de herramientas de captura, grabación de pantalla o cambio de ventanas durante la revisión de material está <b>estrictamente prohibido</b> por políticas de seguridad del ESBAS.</p>
+</div>
 
 <div id="login-wrapper">
     <div class="login-box">
@@ -240,12 +252,13 @@
 <nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-title">🚒 ESBAS 2026</div>
-        <div id="cloud-indicator" class="cloud-status success">☁️ Sincronizado</div>
+        <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
     </div>
     <div class="nav-links">
         <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
         <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
-        <button onclick="switchView('config')" id="btn-config">Base de Datos</button>
+        <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
+        <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: #f59e0b; color: #f59e0b;">Usuarios</button>
         <button onclick="logout()" style="border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);">Salir</button>
     </div>
 </nav>
@@ -258,7 +271,7 @@
                 <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
                     Banco de Preguntas <span class="global-counter" id="global-count-badge">0 Preguntas</span>
                 </h2>
-                <button class="btn" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta</button>
+                <button class="btn admin-only" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal;">+</span> Agregar Pregunta</button>
             </div>
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
@@ -324,7 +337,7 @@
         </div>
     </div>
 
-    <div id="view-config" class="view-section">
+    <div id="view-config" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem;">
                 <h2 style="color: var(--primary-red);">Gestión de Base de Datos</h2>
@@ -334,6 +347,39 @@
                 <table id="questionsTable">
                     <thead><tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr></thead>
                     <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-users" class="view-section admin-only">
+        <div class="card">
+            <div class="filter-header" style="border-bottom: 2px solid #f59e0b; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                <h2 style="color: #f59e0b;">Gestión de Accesos (Usuarios)</h2>
+            </div>
+            <form onsubmit="saveUser(event)" style="display:flex; gap:1rem; margin-bottom: 2rem; align-items:flex-end; flex-wrap:wrap;">
+                <div class="form-group" style="flex:1;">
+                    <label>Nuevo Usuario (Ej: JPPEREZ)</label>
+                    <input type="text" id="u-name" required autocomplete="off" style="text-transform: uppercase;">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Contraseña Asignada</label>
+                    <input type="text" id="u-pass" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="u-role" required>
+                        <option value="estudiante">Estudiante (Solo Lectura/Examen)</option>
+                        <option value="admin">Propietario / Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="background:#f59e0b;">+ Añadir</button>
+            </form>
+
+            <div class="table-container">
+                <table id="usersTable">
+                    <thead><tr><th>Usuario</th><th>Contraseña</th><th>Nivel de Acceso</th><th style="width: 100px;">Acciones</th></tr></thead>
+                    <tbody id="users-body"></tbody>
                 </table>
             </div>
         </div>
@@ -402,7 +448,7 @@
                     <label style="color: var(--primary-red); margin-bottom: -0.5rem; font-size: 0.95rem;">Selecciona el círculo izquierdo de la correcta:</label>
                     <label class="alt-row"><input type="radio" name="q-correct" value="a" required><span class="alt-label">A</span><input type="text" id="q-opt-a" required placeholder="Redacta la opción A..."></label>
                     <label class="alt-row"><input type="radio" name="q-correct" value="b" required><span class="alt-label">B</span><input type="text" id="q-opt-b" required placeholder="Redacta la opción B..."></label>
-                    <label class="alt-row"><input type="radio" name="q-correct" value="c" required><span class="alt-label">C</span><input type="text" id="q-opt-c" required placeholder="Redacta la opción C..."></label>
+                    <label class="row"><input type="radio" name="q-correct" value="c" required><span class="alt-label">C</span><input type="text" id="q-opt-c" required placeholder="Redacta la opción C..."></label>
                     <label class="alt-row"><input type="radio" name="q-correct" value="d" required><span class="alt-label">D</span><input type="text" id="q-opt-d" required placeholder="Redacta la opción D..."></label>
                 </div>
                 <div class="wizard-footer">
@@ -416,55 +462,22 @@
 
 <script>
     // ==========================================
-    // USUARIOS Y LOGIN (ValidaciÃ³n Local por ahora)
-    // ==========================================
-    const AUTH_USERS = {
-        "JCARRANZA": "bomberos2026",
-        "ADMIN": "admin123"
-    };
-
-    function handleLogin(e) {
-        e.preventDefault();
-        const user = document.getElementById('login-user').value.trim().toUpperCase();
-        const pass = document.getElementById('login-pass').value.trim();
-
-        if (AUTH_USERS[user] && AUTH_USERS[user] === pass) {
-            document.getElementById('login-wrapper').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
-            document.getElementById('main-container').style.display = 'block';
-            showToast(`Bienvenido al sistema, ${user}`);
-            fetchFromJSONBin();
-        } else {
-            showToast("Usuario o contraseña incorrectos.", "error");
-        }
-    }
-
-    function logout() {
-        document.getElementById('login-wrapper').style.display = 'flex';
-        document.getElementById('main-nav').style.display = 'none';
-        document.getElementById('main-container').style.display = 'none';
-        document.getElementById('login-user').value = '';
-        document.getElementById('login-pass').value = '';
-    }
-
-    // ==========================================
-    // TRUCO ANTI-CAPTURA (BLUR ON FOCUS LOST)
-    // ==========================================
-    window.addEventListener('blur', () => {
-        document.body.classList.add('blurred-protection');
-    });
-    window.addEventListener('focus', () => {
-        document.body.classList.remove('blurred-protection');
-    });
-
-    // ==========================================
     // CONFIGURACIÓN API JSONBIN
     // ==========================================
     const JSONBIN_API_KEY = '$2a$10$7PwFegDVLzoS8bJTQPdA7.27bk7D4odCTFnynWW1NkB5H6.PBt.nm';
     const JSONBIN_BIN_ID = '6a347e63f5f4af5e290be257';
     const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
-    let questionBank = [];
+    let appData = {
+        questions: [],
+        users: [
+            { user: "JCARRANZA", pass: "bomberos2026", role: "admin" } // Usuario Maestro por defecto
+        ]
+    };
+    
+    let currentUser = null;
+
+    // Variables Simulación
     let currentSimulationQuestions = [];
     let userAnswers = {};
     let currentSimIndex = 0;
@@ -475,6 +488,28 @@
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
 
+    // ==========================================
+    // SEGURIDAD ANTI-CAPTURA (BLUR & TECLADO)
+    // ==========================================
+    const triggerSecurity = () => document.body.classList.add('security-breach');
+    const removeSecurity = () => document.body.classList.remove('security-breach');
+
+    // Detectar cuando abren la herramienta de recortes o cambian de ventana
+    window.addEventListener('blur', triggerSecurity);
+    window.addEventListener('focus', removeSecurity);
+
+    // Detectar si presionan PrintScreen
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') {
+            triggerSecurity();
+            navigator.clipboard.writeText("🚫 ACCIÓN DENEGADA: El contenido del ESBAS está protegido y la copia está prohibida.");
+            showToast("Captura bloqueada. Contenido protegido.", "error");
+            setTimeout(removeSecurity, 3000);
+        }
+    });
+
+
+    // TOASTS
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -484,6 +519,97 @@
         setTimeout(() => toast.remove(), 4500); 
     }
 
+    // ==========================================
+    // LOGIN & GESTION DE USUARIOS
+    // ==========================================
+    function handleLogin(e) {
+        e.preventDefault();
+        const inputUser = document.getElementById('login-user').value.trim().toUpperCase();
+        const inputPass = document.getElementById('login-pass').value.trim();
+
+        // Si la data aÃºn no carga, advertir (aunque ya deberÃ­a por el fetch inicial oculto)
+        if(appData.users.length === 0) {
+            showToast("Conectando a la base de datos... intenta en 3 segundos.", "error"); return;
+        }
+
+        const validUser = appData.users.find(u => u.user === inputUser && u.pass === inputPass);
+
+        if (validUser) {
+            currentUser = validUser;
+            document.getElementById('login-wrapper').style.display = 'none';
+            document.getElementById('main-nav').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'block';
+            
+            // Asignar clase al body para ocultar/mostrar elementos de admin
+            if (currentUser.role === 'admin') {
+                document.body.classList.add('role-admin');
+            } else {
+                document.body.classList.remove('role-admin');
+            }
+
+            showToast(`Bienvenido al sistema, ${validUser.user}`);
+            renderRepo();
+        } else {
+            showToast("Usuario o contraseña incorrectos.", "error");
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        document.body.classList.remove('role-admin');
+        document.getElementById('login-wrapper').style.display = 'flex';
+        document.getElementById('main-nav').style.display = 'none';
+        document.getElementById('main-container').style.display = 'none';
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+    }
+
+    function renderUsers() {
+        const tbody = document.getElementById('users-body');
+        tbody.innerHTML = '';
+        appData.users.forEach(u => {
+            const roleBadge = u.role === 'admin' ? '<span style="color:#f59e0b; font-weight:700;">Admin</span>' : 'Estudiante';
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:700;">${u.user}</td>
+                    <td style="font-family:monospace; color:var(--text-muted);">${u.pass}</td>
+                    <td>${roleBadge}</td>
+                    <td>
+                        ${u.user !== 'JCARRANZA' ? `<button class="action-btn btn-delete" onclick="deleteUser('${u.user}')">Borrar</button>` : '<i style="font-size:0.8rem; color:var(--text-muted);">Protegido</i>'}
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function saveUser(e) {
+        e.preventDefault();
+        const username = document.getElementById('u-name').value.trim().toUpperCase();
+        const password = document.getElementById('u-pass').value.trim();
+        const role = document.getElementById('u-role').value;
+
+        if(appData.users.some(u => u.user === username)) {
+            showToast("Ese nombre de usuario ya existe.", "error"); return;
+        }
+
+        appData.users.push({ user: username, pass: password, role: role });
+        renderUsers();
+        syncWithJSONBin(true);
+        document.getElementById('u-name').value = '';
+        document.getElementById('u-pass').value = '';
+        showToast("Usuario registrado correctamente.");
+    }
+
+    function deleteUser(username) {
+        if(confirm(`¿Eliminar acceso del usuario ${username}?`)) {
+            appData.users = appData.users.filter(u => u.user !== username);
+            renderUsers();
+            syncWithJSONBin(true);
+        }
+    }
+
+
+    // NAVEGACIÓN
     function switchView(viewName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
@@ -491,25 +617,28 @@
         document.getElementById(`btn-${viewName}`).classList.add('active');
         if(viewName === 'repo') renderRepo();
         if(viewName === 'config') renderTable();
+        if(viewName === 'users') renderUsers();
     }
 
+    // ORDEN Y CONTADORES
     function updateIndexesAndCounters() {
-        questionBank.sort((a,b) => {
+        appData.questions.sort((a,b) => {
             if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
             if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num) - parseInt(b.leccion_num);
             return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
         });
 
-        document.getElementById('global-count-badge').innerText = `${questionBank.length} Preguntas`;
+        document.getElementById('global-count-badge').innerText = `${appData.questions.length} Preguntas`;
 
         const modContainer = document.getElementById('moduleFilters');
-        modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${questionBank.length}</span></button>`;
+        modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${appData.questions.length}</span></button>`;
         ['Módulo I', 'Módulo II', 'Módulo III'].forEach(mod => {
-            const count = questionBank.filter(q => q.modulo === mod).length;
+            const count = appData.questions.filter(q => q.modulo === mod).length;
             modContainer.innerHTML += `<button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">${mod} <span class="badge-count">${count}</span></button>`;
         });
     }
 
+    // MEMORIA FORMULARIO Y AUTO-INCREMENTO
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -524,7 +653,7 @@
     function autoFillLessonName() {
         const numInput = document.getElementById('q-lesson').value.trim();
         if(!numInput) return;
-        const existing = questionBank.find(q => q.leccion_num.toString().replace(/\D/g, '') === numInput && q.leccion_nombre.trim() !== '');
+        const existing = appData.questions.find(q => q.leccion_num.toString().replace(/\D/g, '') === numInput && q.leccion_nombre.trim() !== '');
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
@@ -532,7 +661,7 @@
         const mod = document.getElementById('q-module').value;
         const lec = document.getElementById('q-lesson').value.trim();
         if (!document.getElementById('q-id').value && mod && lec) {
-            const questionsInLesson = questionBank.filter(q => q.modulo === mod && q.leccion_num.toString() === lec);
+            const questionsInLesson = appData.questions.filter(q => q.modulo === mod && q.leccion_num.toString() === lec);
             if (questionsInLesson.length === 0) {
                 document.getElementById('q-num').value = 1;
             } else {
@@ -542,6 +671,7 @@
         }
     }
 
+    // WIZARD
     function goToStep(step) {
         if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value || !document.getElementById('q-num').value)) {
             showToast("Completa el Módulo, Lección y N° de Pregunta.", "error"); return;
@@ -556,6 +686,7 @@
         });
     }
 
+    // REPOSITORIO Y FILTROS
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
@@ -566,10 +697,10 @@
             lessonContainer.classList.remove('active');
         } else {
             const range = moduleLessonsMap[moduleName];
-            const modCount = questionBank.filter(q => q.modulo === moduleName).length;
+            const modCount = appData.questions.filter(q => q.modulo === moduleName).length;
             let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas <span class="badge-count">${modCount}</span></button>`;
             for(let i = range.start; i <= range.end; i++) {
-                const count = questionBank.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+                const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
                 html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i} <span class="badge-count">${count}</span></button>`;
             }
             lessonContainer.innerHTML = html;
@@ -590,7 +721,7 @@
         const searchTxt = document.getElementById('searchInput').value.toLowerCase();
         container.innerHTML = '';
 
-        const filtered = questionBank.filter(q => {
+        const filtered = appData.questions.filter(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
             const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
@@ -609,13 +740,16 @@
             const correctText = q.opciones[q.respuesta];
             const delay = i * 0.05; 
             const pNum = q.pregunta_num || "?"; 
+            
+            // Boton de ediciÃ³n solo si es admin (ocultado por css body:not(.role-admin))
+            const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>`;
 
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard">
                         <div class="flashcard-front">
                             <span class="q-number-badge">Pregunta #${pNum}</span>
-                            <button class="btn-card-edit" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>
+                            ${editBtn}
                             <div class="meta-tags"><span class="tag">${q.modulo}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
                             <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta}</div>
                             <div class="flip-hint"><span>👆</span> Clic para voltear</div>
@@ -630,6 +764,7 @@
         });
     }
 
+    // MODAL Y GUARDADO
     function openModal(mode, id = null) {
         document.getElementById('modal-form').classList.add('active');
         goToStep(1); 
@@ -659,7 +794,7 @@
 
         } else if (mode === 'edit' && id) {
             document.getElementById('modal-title').innerText = "Modificar Tarjeta";
-            const q = questionBank.find(item => item.id === id);
+            const q = appData.questions.find(item => item.id === id);
             if(q) {
                 document.getElementById('q-id').value = q.id;
                 document.getElementById('q-module').value = q.modulo;
@@ -698,12 +833,12 @@
         }
 
         const qText = document.getElementById('q-text').value.trim();
-        const isQDuplicate = questionBank.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && q.id !== id);
+        const isQDuplicate = appData.questions.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && q.id !== id);
         if (isQDuplicate) {
             if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
         }
 
-        const isNumDuplicate = questionBank.some(q => q.modulo === currentModule && q.leccion_num.toString() === currentLessonNum.toString() && q.pregunta_num.toString() === currentQNum.toString() && q.id !== id);
+        const isNumDuplicate = appData.questions.some(q => q.modulo === currentModule && q.leccion_num.toString() === currentLessonNum.toString() && q.pregunta_num.toString() === currentQNum.toString() && q.id !== id);
         if(isNumDuplicate) {
             if(!confirm(`⚠️ Ya existe la Pregunta #${currentQNum} en la Lección ${currentLessonNum}. ¿Deseas sobreescribir ese número de orden?`)) return;
         }
@@ -721,9 +856,9 @@
             respuesta: checkedRadio.value
         };
 
-        const existingIndex = questionBank.findIndex(q => q.id === id);
-        if(existingIndex >= 0) questionBank[existingIndex] = nuevaPregunta;
-        else questionBank.push(nuevaPregunta);
+        const existingIndex = appData.questions.findIndex(q => q.id === id);
+        if(existingIndex >= 0) appData.questions[existingIndex] = nuevaPregunta;
+        else appData.questions.push(nuevaPregunta);
 
         formMemory.lastModule = currentModule;
         formMemory[currentModule].num = currentLessonNum;
@@ -737,7 +872,7 @@
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
-        questionBank.forEach(q => {
+        appData.questions.forEach(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, '');
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const pNum = q.pregunta_num || '?';
@@ -758,12 +893,15 @@
 
     function deleteQuestion(id) {
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
-            questionBank = questionBank.filter(q => q.id !== id);
+            appData.questions = appData.questions.filter(q => q.id !== id);
             updateIndexesAndCounters();
             renderTable(); renderRepo(); syncWithJSONBin(true); 
         }
     }
 
+    // ==========================================
+    // SIMULACIÓN 
+    // ==========================================
     function updateSimLessonDropdown(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
@@ -773,7 +911,7 @@
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
         for(let i = range.start; i <= range.end; i++) {
-            const count = questionBank.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+            const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
             if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
         }
     }
@@ -782,7 +920,7 @@
         const modFilter = document.getElementById('sim-module').value;
         const lessonFilter = document.getElementById('sim-lesson').value;
         
-        let pool = questionBank.filter(q => {
+        let pool = appData.questions.filter(q => {
             const qNumRaw = q.leccion_num.toString().replace(/\D/g, '');
             return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
@@ -875,30 +1013,19 @@
             if(!confirm(`Te faltan ${total - answered} preguntas por responder. ¿Entregar de todos modos?`)) return;
         }
 
-        let correctCount = 0;
-        let errorCount = 0;
-        let blankCount = 0;
-        let reviewHTML = '';
+        let correctCount = 0; let errorCount = 0; let blankCount = 0; let reviewHTML = '';
 
         currentSimulationQuestions.forEach((q, index) => {
-            const correct = q.respuesta;
-            const userSelected = userAnswers[q.id];
-            
-            let statusClass = 'is-blank';
-            let icon = '⚠️';
-            let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
+            const correct = q.respuesta; const userSelected = userAnswers[q.id];
+            let statusClass = 'is-blank'; let icon = '⚠️'; let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
 
             if (!userSelected) {
                 blankCount++;
             } else if (userSelected === correct) {
-                correctCount++;
-                statusClass = 'is-correct';
-                icon = '✅';
+                correctCount++; statusClass = 'is-correct'; icon = '✅';
                 userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
             } else {
-                errorCount++;
-                statusClass = 'is-incorrect';
-                icon = '❌';
+                errorCount++; statusClass = 'is-incorrect'; icon = '❌';
                 userAnswerText = `<div class="r-ans user-wrong">Marcaste incorrectamente: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
             }
 
@@ -916,7 +1043,6 @@
         document.getElementById('res-correct').innerText = correctCount;
         document.getElementById('res-error').innerText = errorCount;
         document.getElementById('res-blank').innerText = blankCount;
-
         document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
 
         document.getElementById('sim-active').style.display = 'none';
@@ -924,13 +1050,16 @@
         window.scrollTo(0, 0);
     }
 
-    // CLOUD SYNC
+    // ==========================================
+    // CLOUD SYNC & MIGRACION JSONBIN
+    // ==========================================
     function setCloudStatus(status) {
-        const indicator = document.getElementById('cloud-indicator');
-        indicator.className = 'cloud-status ' + status;
-        if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
-        if(status === 'syncing') indicator.innerHTML = '🔄 Guardando...';
-        if(status === 'error') indicator.innerHTML = '⚠️ Error Nube';
+        document.querySelectorAll('.cloud-status').forEach(indicator => {
+            indicator.className = 'cloud-status admin-only ' + status;
+            if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
+            if(status === 'syncing') indicator.innerHTML = '🔄 Guardando...';
+            if(status === 'error') indicator.innerHTML = '⚠️ Error Nube';
+        });
     }
 
     async function fetchFromJSONBin() {
@@ -938,15 +1067,25 @@
             setCloudStatus('syncing');
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
-            if(data.record && Array.isArray(data.record)) questionBank = data.record;
+            
+            // LÃ³gica de MigraciÃ³n: Si viene como Array (viejo formato), convertir a Objeto
+            if (Array.isArray(data.record)) {
+                appData.questions = data.record;
+                // appData.users ya tiene el maestro por defecto arriba
+                syncWithJSONBin(true); // Actualiza la nube al nuevo formato objeto
+            } else if (data.record && data.record.questions) {
+                appData = data.record;
+            }
+
             updateIndexesAndCounters();
             setModuleFilter('all');
             renderTable();
+            if(document.getElementById('view-users').classList.contains('active')) renderUsers();
+            
             setCloudStatus('success');
-            // showToast("Base de datos cargada correctamente."); // Opcional
         } catch (error) {
             console.error("Error:", error); setCloudStatus('error');
-            showToast("Error al conectar con la nube.", "error");
+            showToast("Error de conexión a la base de datos.", "error");
         }
     }
 
@@ -956,7 +1095,7 @@
             const response = await fetch(JSONBIN_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-                body: JSON.stringify(questionBank)
+                body: JSON.stringify(appData)
             });
             if(response.ok) {
                 setCloudStatus('success');
@@ -967,6 +1106,9 @@
             if(!isAutoSync) showToast("Fallo en la sincronización manual.", "error");
         }
     }
+
+    // Inicializar (Descarga silenciosa en background antes del login)
+    fetchFromJSONBin();
 
 </script>
 </body>
