@@ -390,17 +390,39 @@
             cursor: not-allowed;
         }
         
+        /* Contenedor Vertical de Alternativas con Radio Buttons */
         .alts-vertical {
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            background: rgba(241, 245, 249, 0.5);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
-        .correct-answer-box {
-            background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 12px;
-            border: 1px dashed var(--success); grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem;
+        .alt-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        .correct-answer-box select { border-color: var(--success); background: white; font-weight: 600; color: var(--success); cursor: pointer; }
+
+        .alt-row input[type="radio"] {
+            width: 1.5rem;
+            height: 1.5rem;
+            cursor: pointer;
+            accent-color: var(--success);
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .alt-label {
+            font-weight: 700;
+            color: var(--text-dark);
+            width: 1.5rem;
+            font-size: 1.1rem;
+            text-align: center;
+        }
 
         @media (max-width: 480px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -529,7 +551,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>Módulo del ESBAS</label>
-                    <select id="q-module" required>
+                    <select id="q-module" required onchange="handleModuleMemory(this.value)">
                         <option value="" disabled selected>Selecciona un módulo...</option>
                         <option value="Módulo I">Módulo I</option>
                         <option value="Módulo II">Módulo II</option>
@@ -545,8 +567,7 @@
                 <div class="form-group full-width">
                     <label>Nombre de la Lección (Opcional)</label>
                     <input type="text" id="q-lesson-name" list="lesson-names-list" placeholder="Empieza a escribir para sugerencias..." autocomplete="off">
-                    <datalist id="lesson-names-list">
-                        </datalist>
+                    <datalist id="lesson-names-list"></datalist>
                 </div>
 
                 <div class="form-group full-width">
@@ -555,32 +576,31 @@
                 </div>
 
                 <div class="form-group full-width alts-vertical">
-                    <div>
-                        <label>Alternativa A</label>
-                        <input type="text" id="q-opt-a" required>
+                    <label style="color: var(--primary-red); margin-bottom: -0.5rem;">Alternativas (Marca el círculo izquierdo de la correcta)</label>
+                    
+                    <div class="alt-row">
+                        <input type="radio" name="q-correct" value="a" required title="Marcar como correcta">
+                        <span class="alt-label">A</span>
+                        <input type="text" id="q-opt-a" required placeholder="Redacta la opción A...">
                     </div>
-                    <div>
-                        <label>Alternativa B</label>
-                        <input type="text" id="q-opt-b" required>
+                    
+                    <div class="alt-row">
+                        <input type="radio" name="q-correct" value="b" required title="Marcar como correcta">
+                        <span class="alt-label">B</span>
+                        <input type="text" id="q-opt-b" required placeholder="Redacta la opción B...">
                     </div>
-                    <div>
-                        <label>Alternativa C</label>
-                        <input type="text" id="q-opt-c" required>
+                    
+                    <div class="alt-row">
+                        <input type="radio" name="q-correct" value="c" required title="Marcar como correcta">
+                        <span class="alt-label">C</span>
+                        <input type="text" id="q-opt-c" required placeholder="Redacta la opción C...">
                     </div>
-                    <div>
-                        <label>Alternativa D</label>
-                        <input type="text" id="q-opt-d" required>
+                    
+                    <div class="alt-row">
+                        <input type="radio" name="q-correct" value="d" required title="Marcar como correcta">
+                        <span class="alt-label">D</span>
+                        <input type="text" id="q-opt-d" required placeholder="Redacta la opción D...">
                     </div>
-                </div>
-
-                <div class="correct-answer-box">
-                    <label style="color: var(--success); margin-bottom: 0; white-space: nowrap;">Clave Correcta:</label>
-                    <select id="q-correct" required>
-                        <option value="a">Alternativa A</option>
-                        <option value="b">Alternativa B</option>
-                        <option value="c">Alternativa C</option>
-                        <option value="d">Alternativa D</option>
-                    </select>
                 </div>
             </div>
 
@@ -606,6 +626,14 @@
     let activeModuleFilter = 'all';
     let activeLessonFilter = 'all';
 
+    // Memoria para el Data Entry rápido
+    let formMemory = {
+        lastModule: '',
+        'Módulo I': { num: '', name: '' },
+        'Módulo II': { num: '', name: '' },
+        'Módulo III': { num: '', name: '' }
+    };
+
     // Diccionario de lecciones por Módulo (Reglas del ESBAS)
     const moduleLessonsMap = {
         'Módulo I': { start: 1, end: 9 },     
@@ -628,7 +656,7 @@
     }
 
     // ==========================================
-    // LÓGICA DE DATALIST (MEMORIA DE LECCIONES)
+    // LÓGICA DE MEMORIA Y DATALIST
     // ==========================================
     function updateLessonDatalist() {
         const datalist = document.getElementById('lesson-names-list');
@@ -637,6 +665,19 @@
             .filter(name => name && name.trim() !== ''))];
         
         datalist.innerHTML = uniqueNames.map(name => `<option value="${name}">`).join('');
+    }
+
+    function handleModuleMemory(selectedModule) {
+        if (!selectedModule) return;
+        // Restaurar la memoria de ese modulo especifico si existe
+        if (formMemory[selectedModule].num !== '') {
+            document.getElementById('q-lesson').value = formMemory[selectedModule].num;
+            document.getElementById('q-lesson-name').value = formMemory[selectedModule].name;
+        } else {
+            // Si no hay memoria, lo dejamos limpio
+            document.getElementById('q-lesson').value = '';
+            document.getElementById('q-lesson-name').value = '';
+        }
     }
 
     // ==========================================
@@ -741,6 +782,14 @@
             document.getElementById('modal-title').innerText = "Registrar Nueva Pregunta";
             document.getElementById('questionForm').reset();
             document.getElementById('q-id').value = '';
+            
+            // Si hay memoria del ultimo modulo usado, cargarlo
+            if (formMemory.lastModule !== '') {
+                document.getElementById('q-module').value = formMemory.lastModule;
+                document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
+                document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
+            }
+
         } else if (mode === 'edit' && id) {
             document.getElementById('modal-title').innerText = "Modificar Tarjeta";
             const q = questionBank.find(item => item.id === id);
@@ -754,7 +803,10 @@
                 document.getElementById('q-opt-b').value = q.opciones.b;
                 document.getElementById('q-opt-c').value = q.opciones.c;
                 document.getElementById('q-opt-d').value = q.opciones.d;
-                document.getElementById('q-correct').value = q.respuesta;
+                
+                // Marcar el radio button correcto
+                const correctRadio = document.querySelector(`input[name="q-correct"][value="${q.respuesta}"]`);
+                if(correctRadio) correctRadio.checked = true;
             }
         }
     }
@@ -766,12 +818,23 @@
     function saveQuestion(e) {
         e.preventDefault();
         
+        // Obtener cual radio button se marcó como correcto
+        const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
+        if(!checkedRadio) {
+            alert("Por favor, marca cuál de las alternativas es la correcta seleccionando el círculo.");
+            return;
+        }
+
+        const currentModule = document.getElementById('q-module').value;
+        const currentLessonNum = document.getElementById('q-lesson').value;
+        const currentLessonName = document.getElementById('q-lesson-name').value;
+
         const id = document.getElementById('q-id').value || Date.now().toString();
         const nuevaPregunta = {
             id: id,
-            modulo: document.getElementById('q-module').value,
-            leccion_num: document.getElementById('q-lesson').value, 
-            leccion_nombre: document.getElementById('q-lesson-name').value,
+            modulo: currentModule,
+            leccion_num: currentLessonNum, 
+            leccion_nombre: currentLessonName,
             pregunta: document.getElementById('q-text').value,
             opciones: {
                 a: document.getElementById('q-opt-a').value,
@@ -779,7 +842,7 @@
                 c: document.getElementById('q-opt-c').value,
                 d: document.getElementById('q-opt-d').value
             },
-            respuesta: document.getElementById('q-correct').value
+            respuesta: checkedRadio.value
         };
 
         const existingIndex = questionBank.findIndex(q => q.id === id);
@@ -788,6 +851,11 @@
         } else {
             questionBank.push(nuevaPregunta);
         }
+
+        // Actualizar la memoria con lo que se acaba de guardar
+        formMemory.lastModule = currentModule;
+        formMemory[currentModule].num = currentLessonNum;
+        formMemory[currentModule].name = currentLessonName;
 
         updateLessonDatalist(); 
         closeModal();
@@ -885,11 +953,6 @@
         if(currentSimulationQuestions.length === 0) {
             alert("No hay preguntas registradas para la configuración seleccionada.");
             return;
-        }
-
-        // Opcional: Advertencia en consola si no hay suficientes preguntas registradas aún
-        if(pool.length < targetCount) {
-            console.warn(`Se requerían ${targetCount} preguntas, pero solo hay ${pool.length} registradas. Iniciando con las disponibles.`);
         }
 
         document.getElementById('sim-setup').style.display = 'none';
