@@ -9,7 +9,7 @@
             --bg-main: #f8fafc;
             --primary-red: #dc2626;
             --primary-red-hover: #b91c1c;
-            --primary-orange: #f97316; /* Color neutral para selecciÃ³n */
+            --primary-orange: #f97316; 
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-color: rgba(226, 232, 240, 0.9);
@@ -47,7 +47,7 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* NavegaciÃ³n y Estado Cloud */
+        /* Navegación y Estado Cloud */
         nav {
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
@@ -122,7 +122,7 @@
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--primary-orange); background: #fff7ed; }
         
-        /* SelecciÃ³n Neutral Naranja para el Examen */
+        /* Selección Neutral Naranja para el Examen */
         .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
         .option-item.selected strong { color: var(--primary-orange) !important; }
 
@@ -132,7 +132,7 @@
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados AnalÃ­ticos */
+        /* Dashboard de Resultados Analíticos */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
         .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -182,7 +182,7 @@
         .alt-row input[type="radio"] { width: 1.25rem; height: 1.25rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
         .alt-label { font-weight: 700; color: var(--text-muted); width: 1.5rem; font-size: 1.1rem; text-align: center; }
         .alt-row:has(input:checked) .alt-label { color: var(--success); }
-        .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; }
+        .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; width: 100%;}
         .alt-row input[type="text"]:focus { border: none; background: transparent; }
         .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
@@ -311,7 +311,7 @@
             <div class="table-container">
                 <table id="questionsTable">
                     <thead>
-                        <tr><th>ID</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
+                        <tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
@@ -335,11 +335,11 @@
             <input type="hidden" id="q-id">
             
             <div id="step-1" class="form-step active">
-                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 1: Ubicación</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 1: Ubicación y Orden</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Módulo del ESBAS</label>
-                        <select id="q-module" required onchange="handleModuleMemory(this.value)">
+                        <select id="q-module" required onchange="handleModuleMemory(this.value); autoIncrementQuestionNumber();">
                             <option value="" disabled selected>Selecciona un módulo...</option>
                             <option value="Módulo I">Módulo I</option>
                             <option value="Módulo II">Módulo II</option>
@@ -348,11 +348,15 @@
                     </div>
                     <div class="form-group">
                         <label>Lección (N°)</label>
-                        <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName()">
+                        <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName(); autoIncrementQuestionNumber();">
                     </div>
-                    <div class="form-group full-width">
-                        <label>Lección</label>
-                        <input type="text" id="q-lesson-name" placeholder="Nombre de la lección (Autocompletado automático)" autocomplete="off">
+                    <div class="form-group">
+                        <label>Lección (Nombre)</label>
+                        <input type="text" id="q-lesson-name" placeholder="Ej: Rescate en Ascensores" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>N° de Pregunta</label>
+                        <input type="number" id="q-num" placeholder="Ej: 1" min="1" required>
                     </div>
                 </div>
                 <div class="wizard-footer" style="justify-content: flex-end;">
@@ -435,7 +439,7 @@
         toast.className = `toast ${type}`;
         toast.innerHTML = type === 'success' ? `✅ ${message}` : `⚠️ ${message}`;
         container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
+        setTimeout(() => toast.remove(), 4500); // Dar un poco mÃ¡s de tiempo para leer errores
     }
 
     // NAVEGACIÓN
@@ -448,13 +452,14 @@
         if(viewName === 'config') renderTable();
     }
 
-    // INDICES Y CONTADORES
+    // ORDEN Y CONTADORES
     function updateIndexesAndCounters() {
+        // Ordenar por MÃ³dulo -> LecciÃ³n -> NÂ° de Pregunta Manual
         questionBank.sort((a,b) => {
             if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
-            return parseInt(a.leccion_num) - parseInt(b.leccion_num);
+            if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num) - parseInt(b.leccion_num);
+            return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
         });
-        questionBank.forEach((q, i) => q.display_num = i + 1);
 
         document.getElementById('global-count-badge').innerText = `${questionBank.length} Preguntas`;
 
@@ -466,7 +471,7 @@
         });
     }
 
-    // MEMORIA FORMULARIO
+    // MEMORIA FORMULARIO Y AUTO-INCREMENTO
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -485,10 +490,26 @@
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
+    // Generar el siguiente nÃºmero disponible para una lecciÃ³n
+    function autoIncrementQuestionNumber() {
+        const mod = document.getElementById('q-module').value;
+        const lec = document.getElementById('q-lesson').value.trim();
+        // Solo autocompletamos si estamos en modo "Nuevo" (ID oculto vacÃ­o)
+        if (!document.getElementById('q-id').value && mod && lec) {
+            const questionsInLesson = questionBank.filter(q => q.modulo === mod && q.leccion_num.toString() === lec);
+            if (questionsInLesson.length === 0) {
+                document.getElementById('q-num').value = 1;
+            } else {
+                const maxNum = Math.max(...questionsInLesson.map(q => parseInt(q.pregunta_num) || 0));
+                document.getElementById('q-num').value = maxNum + 1;
+            }
+        }
+    }
+
     // WIZARD
     function goToStep(step) {
-        if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value)) {
-            showToast("Completa el Módulo y el N° de Lección.", "error"); return;
+        if (step === 2 && (!document.getElementById('q-module').value || !document.getElementById('q-lesson').value || !document.getElementById('q-num').value)) {
+            showToast("Completa el Módulo, Lección y N° de Pregunta.", "error"); return;
         }
         if (step === 3 && !document.getElementById('q-text').value) {
             showToast("Redacta la pregunta.", "error"); return;
@@ -553,19 +574,20 @@
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const correctText = q.opciones[q.respuesta];
             const delay = i * 0.05; 
+            const pNum = q.pregunta_num || "?"; // Numero asignado manualmente
 
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard">
                         <div class="flashcard-front">
-                            <span class="q-number-badge">Pregunta #${q.display_num}</span>
+                            <span class="q-number-badge">Pregunta #${pNum}</span>
                             <button class="btn-card-edit" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>
                             <div class="meta-tags"><span class="tag">${q.modulo}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
                             <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta}</div>
                             <div class="flip-hint"><span>👆</span> Clic para voltear</div>
                         </div>
                         <div class="flashcard-back">
-                            <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Pregunta #${q.display_num} | Clave Correcta</div>
+                            <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Pregunta #${pNum} | Clave Correcta</div>
                             <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">${q.respuesta.toUpperCase()}) ${correctText}</div>
                         </div>
                     </div>
@@ -587,10 +609,12 @@
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
                 document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
+                autoIncrementQuestionNumber(); // Setear numero automÃ¡tico
             } else {
                 document.getElementById('q-module').value = '';
                 document.getElementById('q-lesson').value = '';
                 document.getElementById('q-lesson-name').value = '';
+                document.getElementById('q-num').value = '';
             }
             
             document.getElementById('q-text').value = '';
@@ -608,6 +632,7 @@
                 document.getElementById('q-module').value = q.modulo;
                 document.getElementById('q-lesson').value = q.leccion_num.toString().replace(/\D/g, ''); 
                 document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
+                document.getElementById('q-num').value = q.pregunta_num || '';
                 document.getElementById('q-text').value = q.pregunta;
                 document.getElementById('q-opt-a').value = q.opciones.a;
                 document.getElementById('q-opt-b').value = q.opciones.b;
@@ -623,29 +648,47 @@
 
     function saveQuestion(e) {
         e.preventDefault();
+        const id = document.getElementById('q-id').value || Date.now().toString();
+        const currentModule = document.getElementById('q-module').value;
+        const currentLessonNum = document.getElementById('q-lesson').value;
+        const currentQNum = document.getElementById('q-num').value;
         
-        // Anti-Duplicados
+        // V A L I D A C I O N E S   A N T I - D U P L I C A D O S
+        
+        // 1. Alternativas Duplicadas
         const optA = document.getElementById('q-opt-a').value.trim();
         const optB = document.getElementById('q-opt-b').value.trim();
         const optC = document.getElementById('q-opt-c').value.trim();
         const optD = document.getElementById('q-opt-d').value.trim();
-        const setOpts = new Set([optA, optB, optC, optD].map(o => o.toLowerCase()));
         
-        if (setOpts.size < 4) {
-            showToast("Tienes dos o más alternativas idénticas. Corrígelo.", "error"); return;
+        const optsLower = [optA, optB, optC, optD].map(o => o.toLowerCase());
+        if (new Set(optsLower).size < 4) {
+            showToast("ERROR: Tienes alternativas con texto idéntico. Corrígelas para continuar.", "error"); 
+            return; 
+        }
+
+        // 2. Pregunta Duplicada (Mismo enunciado)
+        const qText = document.getElementById('q-text').value.trim();
+        const isQDuplicate = questionBank.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && q.id !== id);
+        if (isQDuplicate) {
+            if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
+        }
+
+        // 3. Número de Pregunta Duplicada en la misma lección
+        const isNumDuplicate = questionBank.some(q => q.modulo === currentModule && q.leccion_num === currentLessonNum && q.pregunta_num === currentQNum && q.id !== id);
+        if(isNumDuplicate) {
+            if(!confirm(`⚠️ Ya existe la Pregunta #${currentQNum} en la Lección ${currentLessonNum}. ¿Deseas sobreescribir ese número de orden?`)) return;
         }
 
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
-        if(!checkedRadio) { showToast("Selecciona la alternativa correcta.", "error"); return; }
+        if(!checkedRadio) { showToast("Selecciona el círculo de la respuesta correcta.", "error"); return; }
 
-        const currentModule = document.getElementById('q-module').value;
-        const currentLessonNum = document.getElementById('q-lesson').value;
         const currentLessonName = document.getElementById('q-lesson-name').value;
 
-        const id = document.getElementById('q-id').value || Date.now().toString();
         const nuevaPregunta = {
             id: id, modulo: currentModule, leccion_num: currentLessonNum, leccion_nombre: currentLessonName,
-            pregunta: document.getElementById('q-text').value,
+            pregunta_num: currentQNum,
+            pregunta: qText,
             opciones: { a: optA, b: optB, c: optC, d: optD },
             respuesta: checkedRadio.value
         };
@@ -670,9 +713,10 @@
         questionBank.forEach(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, '');
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
+            const pNum = q.pregunta_num || '?';
             tbody.innerHTML += `
                 <tr>
-                    <td style="font-weight:700; color:var(--primary-red);">#${q.display_num}</td>
+                    <td style="font-weight:700; color:var(--primary-red);">#${pNum}</td>
                     <td><span class="tag">${q.modulo}</span></td>
                     <td>${lessonBadge}</td>
                     <td>${q.pregunta.substring(0, 50)}...</td>
@@ -728,7 +772,7 @@
         let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
         currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
         userAnswers = {};
-        currentSimIndex = 0; // Iniciar en la primera
+        currentSimIndex = 0; 
 
         if(currentSimulationQuestions.length === 0) { showToast("No hay preguntas registradas para esta configuración.", "error"); return; }
 
@@ -749,7 +793,7 @@
                 <div class="card sim-card" id="sim-q-card-${index}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
                         <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta}</span>
-                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.3rem 0.7rem; border-radius:8px; font-size:0.85rem; flex-shrink:0; margin-left:1rem;">Pregunta Original #${q.display_num}</span>
+                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.3rem 0.7rem; border-radius:8px; font-size:0.85rem; flex-shrink:0; margin-left:1rem;">Original #${q.pregunta_num || "?"}</span>
                     </div>
                     <ul class="options-list">
                         ${Object.entries(q.opciones).map(([key, text]) => `
@@ -769,7 +813,6 @@
         
         document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
         
-        // Manejo de botones de PaginaciÃ³n
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
         
         if (index === currentSimulationQuestions.length - 1) {
@@ -839,24 +882,21 @@
 
             reviewHTML += `
                 <div class="review-item ${statusClass}">
-                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.display_num}): ${q.pregunta}</div>
+                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta}</div>
                     ${userAnswerText}
                     <div class="r-ans actual-correct">La respuesta correcta era: <strong>${correct.toUpperCase()}) ${q.opciones[correct]}</strong></div>
                 </div>
             `;
         });
 
-        // Calcular y mostrar mÃ©tricas
-        const precision = Math.round((correctCount / total) * 100);
+        const precision = total > 0 ? Math.round((correctCount / total) * 100) : 0;
         document.getElementById('res-precision').innerText = `${precision}%`;
         document.getElementById('res-correct').innerText = correctCount;
         document.getElementById('res-error').innerText = errorCount;
         document.getElementById('res-blank').innerText = blankCount;
 
-        // Inyectar el reporte detallado
         document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
 
-        // Cambiar Vistas
         document.getElementById('sim-active').style.display = 'none';
         document.getElementById('sim-results').style.display = 'block';
         window.scrollTo(0, 0);
