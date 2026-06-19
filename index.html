@@ -149,18 +149,19 @@
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
         .options-list { list-style: none; margin-top: 1rem; }
         
+        /* Opciones Simulador */
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--primary-orange); background: #fff7ed; }
         .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
         .option-item.selected strong { color: var(--primary-orange) !important; }
 
-        /* Simulación UI Paginada */
+        /* Simulación UI */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
         .sim-card { display: none; animation: fadeIn 0.3s ease; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados Analíticos */
+        /* Dashboard de Resultados */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
         .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -215,7 +216,7 @@
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem;}
 
-        /* Ocultar elementos para usuarios estÃ¡ndar */
+        /* Ocultar elementos para usuarios estandar */
         body:not(.role-admin) .admin-only { display: none !important; }
 
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
@@ -228,7 +229,7 @@
 
 <div id="security-overlay">
     <h1>🚫 ACCESO DENEGADO</h1>
-    <p>El uso de herramientas de captura, grabación de pantalla o cambio de ventanas durante la revisión de material está <b>estrictamente prohibido</b> por políticas de seguridad del ESBAS.</p>
+    <p>El uso de herramientas de captura, grabación de pantalla o cambio de ventanas durante la revisión de material está <b>estrictamente prohibido</b> por políticas de seguridad.</p>
 </div>
 
 <div id="login-wrapper">
@@ -471,7 +472,8 @@
     let appData = {
         questions: [],
         users: [
-            { user: "JCARRANZA", pass: "bomberos2026", role: "admin" } // Usuario Maestro por defecto
+            { user: "JCARRANZA", pass: "bomberos2026", role: "admin" }, 
+            { user: "VBEDOYA", pass: "ESBAS-8342", role: "estudiante" } 
         ]
     };
     
@@ -489,25 +491,47 @@
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
 
     // ==========================================
-    // SEGURIDAD ANTI-CAPTURA (BLUR & TECLADO)
+    // SEGURIDAD ANTI-CAPTURA Y BYPASS (CTRL+F)
     // ==========================================
     const triggerSecurity = () => document.body.classList.add('security-breach');
     const removeSecurity = () => document.body.classList.remove('security-breach');
 
-    // Detectar cuando abren la herramienta de recortes o cambian de ventana
-    window.addEventListener('blur', triggerSecurity);
-    window.addEventListener('focus', removeSecurity);
+    let isSearching = false;
 
-    // Detectar si presionan PrintScreen
-    document.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen') {
-            triggerSecurity();
-            navigator.clipboard.writeText("🚫 ACCIÓN DENEGADA: El contenido del ESBAS está protegido y la copia está prohibida.");
-            showToast("Captura bloqueada. Contenido protegido.", "error");
-            setTimeout(removeSecurity, 3000);
+    // Permitir Ctrl+F (Bypass temporal del Blur para evitar el bloqueo)
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'f')) {
+            isSearching = true;
+            // Damos 1 segundo de gracia para que se abra la barra de bÃºsqueda
+            // sin que el evento blur consecuente bloquee la pantalla
+            setTimeout(() => { isSearching = false; }, 1000); 
         }
     });
 
+    // Detectar cuando cambian de ventana (ej. a una herramienta externa de captura)
+    window.addEventListener('blur', () => {
+        // Solo bloqueamos si no estÃ¡n buscando activamente con Ctrl+F
+        if (!isSearching) {
+            triggerSecurity();
+        }
+    });
+
+    // Al regresar a la ventana principal, quitamos la pantalla negra
+    window.addEventListener('focus', () => {
+        removeSecurity();
+        isSearching = false; // Reiniciamos el estado por si acaso
+    });
+
+    // Detectar si presionan la tecla PrintScreen (Imprimir Pantalla)
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') {
+            triggerSecurity();
+            navigator.clipboard.writeText("🚫 ACCIÓN DENEGADA: El contenido está protegido y la copia está prohibida.");
+            showToast("Captura bloqueada. Contenido protegido.", "error");
+            // Mantiene la pantalla negra 3 segundos como castigo/prevenciÃ³n adicional
+            setTimeout(removeSecurity, 3000);
+        }
+    });
 
     // TOASTS
     function showToast(message, type = 'success') {
@@ -527,7 +551,6 @@
         const inputUser = document.getElementById('login-user').value.trim().toUpperCase();
         const inputPass = document.getElementById('login-pass').value.trim();
 
-        // Si la data aÃºn no carga, advertir (aunque ya deberÃ­a por el fetch inicial oculto)
         if(appData.users.length === 0) {
             showToast("Conectando a la base de datos... intenta en 3 segundos.", "error"); return;
         }
@@ -540,7 +563,6 @@
             document.getElementById('main-nav').style.display = 'flex';
             document.getElementById('main-container').style.display = 'block';
             
-            // Asignar clase al body para ocultar/mostrar elementos de admin
             if (currentUser.role === 'admin') {
                 document.body.classList.add('role-admin');
             } else {
@@ -741,7 +763,6 @@
             const delay = i * 0.05; 
             const pNum = q.pregunta_num || "?"; 
             
-            // Boton de ediciÃ³n solo si es admin (ocultado por css body:not(.role-admin))
             const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>`;
 
             container.innerHTML += `
@@ -1068,11 +1089,9 @@
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
             
-            // LÃ³gica de MigraciÃ³n: Si viene como Array (viejo formato), convertir a Objeto
             if (Array.isArray(data.record)) {
                 appData.questions = data.record;
-                // appData.users ya tiene el maestro por defecto arriba
-                syncWithJSONBin(true); // Actualiza la nube al nuevo formato objeto
+                syncWithJSONBin(true); 
             } else if (data.record && data.record.questions) {
                 appData = data.record;
             }
@@ -1107,7 +1126,7 @@
         }
     }
 
-    // Inicializar (Descarga silenciosa en background antes del login)
+    // Inicializar
     fetchFromJSONBin();
 
 </script>
