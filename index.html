@@ -34,21 +34,6 @@
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
-        /* =========================================
-           SISTEMA ANTI-CAPTURA (PANTALLA NEGRA)
-           ========================================= */
-        #security-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000000; z-index: 9999999; flex-direction: column;
-            justify-content: center; align-items: center; color: var(--error); text-align: center;
-        }
-        #security-overlay h1 { font-size: 3rem; margin-bottom: 1rem; text-transform: uppercase; }
-        #security-overlay p { font-size: 1.2rem; color: #ffffff; max-width: 600px; line-height: 1.5;}
-        
-        body.security-breach #security-overlay { display: flex; }
-        body.security-breach > *:not(#security-overlay) { opacity: 0 !important; pointer-events: none; }
-        body.security-breach { background: #000; overflow: hidden; }
-
         /* TOAST NOTIFICATIONS */
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
         .toast {
@@ -227,11 +212,9 @@
 
 <div id="toast-container"></div>
 
-<div id="security-overlay">
-    <h1>🚫 ACCESO DENEGADO</h1>
-    <p>El uso de herramientas de captura, grabación de pantalla o cambio de ventanas durante la revisión de material está <b>estrictamente prohibido</b> por políticas de seguridad.</p>
-</div>
-
+<!-- ======================================================= -->
+<!-- PANTALLA DE LOGIN -->
+<!-- ======================================================= -->
 <div id="login-wrapper">
     <div class="login-box">
         <h1>🚒 ESBAS 2026</h1>
@@ -250,6 +233,9 @@
     </div>
 </div>
 
+<!-- ======================================================= -->
+<!-- APLICACIÓN PRINCIPAL -->
+<!-- ======================================================= -->
 <nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-title">🚒 ESBAS 2026</div>
@@ -266,6 +252,7 @@
 
 <div class="container" id="main-container">
     
+    <!-- VISTA: REPOSITORIO -->
     <div id="view-repo" class="view-section active">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
@@ -283,6 +270,7 @@
         <div id="repo-container"></div>
     </div>
 
+    <!-- VISTA: SIMULACIÓN -->
     <div id="view-sim" class="view-section">
         <div id="sim-setup" class="card">
             <h2 class="card-header">Configurar Simulador de Examen</h2>
@@ -321,6 +309,7 @@
             </div>
         </div>
 
+        <!-- DASHBOARD RESULTADOS -->
         <div id="sim-results" style="display: none;">
             <div class="card" style="text-align: center;">
                 <h2 class="card-header" style="justify-content: center;">Resultados del Examen</h2>
@@ -338,6 +327,7 @@
         </div>
     </div>
 
+    <!-- VISTA: BASE DE DATOS (SOLO ADMIN) -->
     <div id="view-config" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem;">
@@ -353,6 +343,7 @@
         </div>
     </div>
 
+    <!-- VISTA: USUARIOS (SOLO ADMIN) -->
     <div id="view-users" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid #f59e0b; padding-bottom: 0.5rem; margin-bottom: 1rem;">
@@ -387,6 +378,9 @@
     </div>
 </div>
 
+<!-- ======================================================= -->
+<!-- MODAL WIZARD PREGUNTAS -->
+<!-- ======================================================= -->
 <div id="modal-form" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" type="button" onclick="closeModal()">×</button>
@@ -489,49 +483,6 @@
 
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
-
-    // ==========================================
-    // SEGURIDAD ANTI-CAPTURA Y BYPASS (CTRL+F)
-    // ==========================================
-    const triggerSecurity = () => document.body.classList.add('security-breach');
-    const removeSecurity = () => document.body.classList.remove('security-breach');
-
-    let isSearching = false;
-
-    // Permitir Ctrl+F (Bypass temporal del Blur para evitar el bloqueo)
-    document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'f')) {
-            isSearching = true;
-            // Damos 1 segundo de gracia para que se abra la barra de bÃºsqueda
-            // sin que el evento blur consecuente bloquee la pantalla
-            setTimeout(() => { isSearching = false; }, 1000); 
-        }
-    });
-
-    // Detectar cuando cambian de ventana (ej. a una herramienta externa de captura)
-    window.addEventListener('blur', () => {
-        // Solo bloqueamos si no estÃ¡n buscando activamente con Ctrl+F
-        if (!isSearching) {
-            triggerSecurity();
-        }
-    });
-
-    // Al regresar a la ventana principal, quitamos la pantalla negra
-    window.addEventListener('focus', () => {
-        removeSecurity();
-        isSearching = false; // Reiniciamos el estado por si acaso
-    });
-
-    // Detectar si presionan la tecla PrintScreen (Imprimir Pantalla)
-    document.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen') {
-            triggerSecurity();
-            navigator.clipboard.writeText("🚫 ACCIÓN DENEGADA: El contenido está protegido y la copia está prohibida.");
-            showToast("Captura bloqueada. Contenido protegido.", "error");
-            // Mantiene la pantalla negra 3 segundos como castigo/prevenciÃ³n adicional
-            setTimeout(removeSecurity, 3000);
-        }
-    });
 
     // TOASTS
     function showToast(message, type = 'success') {
