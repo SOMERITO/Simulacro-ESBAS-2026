@@ -6,7 +6,6 @@
     <title>ESBAS - Simulador y Repositorio</title>
     <style>
         :root {
-            /* Paleta Institucional Bomberos + Glassmorphism */
             --bg-main: #f8fafc;
             --primary-red: #dc2626;
             --primary-red-hover: #b91c1c;
@@ -15,8 +14,6 @@
             --border-color: rgba(226, 232, 240, 0.9);
             --success: #10b981;
             --error: #ef4444;
-            
-            /* Variables Glass */
             --glass-bg: rgba(255, 255, 255, 0.9);
             --glass-nav: rgba(220, 38, 38, 0.95);
             --glass-blur: blur(16px);
@@ -39,17 +36,11 @@
             background-attachment: fixed;
         }
 
-        /* Ocultar flechas (spinners) del input number */
         input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield; 
-        }
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
 
-        /* Navegación Superior Glass */
+        /* Navegación y Estado Cloud */
         nav {
             background: var(--glass-nav);
             backdrop-filter: var(--glass-blur);
@@ -65,7 +56,23 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
-        .nav-brand { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
+        .nav-brand { display: flex; align-items: center; gap: 1.5rem; }
+        .brand-title { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
+        
+        .cloud-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.3s ease;
+        }
+        .cloud-status.syncing { background: #f59e0b; color: white; }
+        .cloud-status.success { background: var(--success); color: white; }
+        .cloud-status.error { background: var(--error); color: white; }
 
         .nav-links button {
             background: transparent;
@@ -76,26 +83,21 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-
-        .nav-links button.active {
+        .nav-links button.active, .nav-links button:hover {
             background: white;
             color: var(--primary-red);
             border-color: white;
+            transform: translateY(-2px);
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Vistas */
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas Base */
+        /* Tarjetas y UI Base */
         .card {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -116,324 +118,101 @@
             font-size: 1.2rem;
         }
 
-        /* -------------------------------------------
-           SISTEMA FLASHCARDS (Flip 3D)
-           ------------------------------------------- */
-        .flashcard-wrapper {
-            perspective: 1000px;
-            margin-bottom: 1.5rem;
-            cursor: pointer;
-            border-radius: 16px;
-        }
-        .flashcard {
-            display: grid;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-        }
-        .flashcard-wrapper.flipped .flashcard {
-            transform: rotateY(180deg);
-        }
+        /* Flashcards */
+        .flashcard-wrapper { perspective: 1000px; margin-bottom: 1.5rem; cursor: pointer; border-radius: 16px; }
+        .flashcard { display: grid; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--shadow-card); }
+        .flashcard-wrapper.flipped .flashcard { transform: rotateY(180deg); }
         .flashcard-front, .flashcard-back {
-            grid-area: 1 / 1 / 2 / 2;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            grid-area: 1 / 1 / 2 / 2; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem;
+            display: flex; flex-direction: column; justify-content: center;
         }
-        
-        .flashcard-front {
-            position: relative;
-        }
+        .flashcard-front { position: relative; }
+        .flashcard-back { transform: rotateY(180deg); background: rgba(220, 38, 38, 0.03); border: 2px solid rgba(220, 38, 38, 0.2); text-align: center; align-items: center; }
+        .flip-hint { margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 
-        .flashcard-back {
-            transform: rotateY(180deg);
-            background: rgba(220, 38, 38, 0.03);
-            border: 2px solid rgba(220, 38, 38, 0.2);
-            text-align: center;
-            align-items: center;
-        }
-
-        .flip-hint {
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-align: center;
-            font-weight: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Contenedores de Filtros */
+        /* Filtros */
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
-        
-        .filter-btn {
-            background: white;
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 1.2rem;
-            border-radius: 999px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
+        .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 999px; font-weight: 600; color: var(--text-muted); }
         .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
-
-        .lesson-filters {
-            display: none;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px dashed var(--border-color);
-            justify-content: center;
-        }
+        .lesson-filters { display: none; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); justify-content: center; }
         .lesson-filters.active { display: flex; animation: fadeIn 0.3s; }
-        
-        .lesson-btn {
-            background: rgba(226, 232, 240, 0.5);
-            border: 1px solid transparent;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
+        .lesson-btn { background: rgba(226, 232, 240, 0.5); border: 1px solid transparent; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
         .lesson-btn.active { background: rgba(220, 38, 38, 0.15); color: var(--primary-red); border-color: rgba(220, 38, 38, 0.3); font-weight: 600; }
 
-        /* =========================================
-           ANIMACIONES PROFESIONALES DE BOTONES
-           ========================================= */
-        button {
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            outline: none;
-        }
-        
-        button:active {
-            transform: scale(0.95) !important;
-        }
-
-        .btn {
-            background-color: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn:hover { 
-            background-color: var(--primary-red-hover); 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(220,38,38,0.3); 
-        }
-        
-        .btn-outline { 
-            background: transparent; 
-            color: var(--text-muted); 
-            border: 1px solid var(--border-color); 
-        }
-        .btn-outline:hover { 
-            background: #f1f5f9; 
-            color: var(--text-dark); 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
-
-        .nav-links button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.1);
-        }
-
-        .filter-btn:hover { 
-            border-color: var(--primary-red); 
-            color: var(--primary-red); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(220, 38, 38, 0.15);
-        }
-
-        .lesson-btn:hover { 
-            background: rgba(220, 38, 38, 0.1); 
-            color: var(--primary-red); 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.1);
-        }
-
-        .btn-card-edit {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: rgba(220, 38, 38, 0.05);
-            color: var(--primary-red);
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            z-index: 10;
-        }
-        .btn-card-edit:hover { 
-            background: var(--primary-red); 
-            color: white; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
-        }
-
-        .action-btn { 
-            padding: 0.4rem 0.6rem; 
-            margin-right: 0.25rem; 
-            font-size: 0.8rem; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: 600; 
-        }
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+        /* Botones Generales */
+        button { cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); outline: none; }
+        button:active { transform: scale(0.95) !important; }
+        .btn { background-color: var(--primary-red); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;}
+        .btn:hover { background-color: var(--primary-red-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(220,38,38,0.3); }
+        .btn-outline { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+        .btn-outline:hover { background: #f1f5f9; color: var(--text-dark); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-card-edit { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(220, 38, 38, 0.05); color: var(--primary-red); border: 1px solid rgba(220, 38, 38, 0.2); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; z-index: 10; }
+        .btn-card-edit:hover { background: var(--primary-red); color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3); }
+        .action-btn { padding: 0.4rem 0.6rem; margin-right: 0.25rem; font-size: 0.8rem; border: none; border-radius: 6px; font-weight: 600; }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
         .btn-edit { background: #f59e0b; color: white; }
         .btn-delete { background: var(--error); color: white; }
-
 
         /* Estilos Internos de Tarjeta */
         .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.8rem; }
         .tag { background: #fee2e2; color: var(--primary-red); padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; }
         .tag-lesson { background: #e2e8f0; color: var(--text-dark); }
-        
         .options-list { list-style: none; margin-top: 1rem; }
-        .option-item {
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            background: white;
-        }
+        .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--primary-red); background: #fef2f2; }
         .option-item.selected { border-color: var(--primary-red); background: #fef2f2; font-weight: 500; }
         .option-item.correct { background: #d1fae5; border-color: var(--success); color: #065f46; }
         .option-item.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
         
-        /* Simulación */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
-
-        /* Tabla CRUD */
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border-radius: 8px; overflow: hidden; }
         th, td { padding: 0.85rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
 
         /* =========================================
-           MODAL ELEGANTE PARA FORMULARIO
+           MODAL WIZARD (Tres Partes)
            ========================================= */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000; padding: 1rem;
-            animation: fadeIn 0.2s ease-out;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
         .modal-overlay.active { display: flex; }
-        
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 100%; max-width: 900px; max-height: 90vh;
-            overflow-y: auto; padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            position: relative;
-        }
-        
-        .modal-close {
-            position: absolute; top: 1.5rem; right: 1.5rem;
-            background: transparent; border: none; font-size: 1.5rem;
-            color: var(--text-muted);
-        }
+        .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); }
         .modal-close:hover { color: var(--error); transform: scale(1.1) rotate(90deg); }
+
+        /* Fases del Wizard */
+        .form-step { display: none; animation: fadeIn 0.3s; }
+        .form-step.active { display: block; }
+
+        /* Progress Bar Simple */
+        .wizard-progress { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+        .wizard-dot { height: 6px; flex: 1; background: #e2e8f0; border-radius: 999px; transition: background 0.3s; }
+        .wizard-dot.active { background: var(--primary-red); }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group.full-width { grid-column: 1 / -1; }
-        
         .form-group label { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
-        input[type="text"], input[type="number"], select, textarea {
-            width: 100%; padding: 0.85rem; border: 1px solid var(--border-color);
-            border-radius: 8px; font-size: 1rem; outline: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); background: #f8fafc;
-        }
-        input:focus, select:focus, textarea:focus { 
-            border-color: var(--primary-red); 
-            background: white; 
-            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); 
-        }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); background: #f8fafc; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
         
-        select:disabled {
-            background: #e2e8f0;
-            color: var(--text-muted);
-            cursor: not-allowed;
-        }
-        
-        /* Contenedor Vertical de Alternativas con Radio Buttons */
-        .alts-vertical {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            background: rgba(241, 245, 249, 0.5);
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
+        .alts-vertical { display: flex; flex-direction: column; gap: 1rem; background: rgba(241, 245, 249, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
+        .alt-row { display: flex; align-items: center; gap: 0.75rem; }
+        .alt-row input[type="radio"] { width: 1.5rem; height: 1.5rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
+        .alt-label { font-weight: 700; color: var(--text-dark); width: 1.5rem; font-size: 1.1rem; text-align: center; }
+        .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
 
-        .alt-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .alt-row input[type="radio"] {
-            width: 1.5rem;
-            height: 1.5rem;
-            cursor: pointer;
-            accent-color: var(--success);
-            margin: 0;
-            flex-shrink: 0;
-        }
-
-        .alt-label {
-            font-weight: 700;
-            color: var(--text-dark);
-            width: 1.5rem;
-            font-size: 1.1rem;
-            text-align: center;
-        }
-
-        @media (max-width: 480px) {
-            .form-grid { grid-template-columns: 1fr; }
-        }
-
+        @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="nav-brand">🚒 ESBAS 2026</div>
+    <div class="nav-brand">
+        <div class="brand-title">🚒 ESBAS 2026</div>
+        <div id="cloud-indicator" class="cloud-status success">☁️ Sincronizado</div>
+    </div>
     <div class="nav-links">
         <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
         <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
@@ -444,7 +223,6 @@
 <div class="container">
     
     <div id="view-repo" class="view-section active">
-        
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
                 <h2 style="color: var(--text-dark); font-size: 1.2rem;">Banco de Preguntas</h2>
@@ -460,14 +238,11 @@
                 <button class="filter-btn" onclick="setModuleFilter('Módulo III')">Módulo III</button>
             </div>
 
-            <div class="lesson-filters" id="lessonFiltersContainer">
-                </div>
-
+            <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
                 <input type="text" id="searchInput" placeholder="Buscar palabras clave en la pregunta..." onkeyup="renderRepo()">
             </div>
         </div>
-        
         <div id="repo-container"></div>
     </div>
 
@@ -491,12 +266,6 @@
                     </select>
                 </div>
             </div>
-            <div style="background: rgba(226, 232, 240, 0.4); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                <strong>Reglas de Evaluación:</strong><br>
-                - Examen General (Todos los módulos): 100 preguntas.<br>
-                - Examen de Módulo (Todas sus lecciones): 20 preguntas.<br>
-                - Examen de Lección (Una lección específica): 10 preguntas.
-            </div>
             <button class="btn" onclick="startSimulation()">Iniciar Simulación</button>
         </div>
 
@@ -518,20 +287,12 @@
         <div class="card">
             <div class="filter-header" style="border-bottom: 2px solid var(--primary-red); padding-bottom: 0.5rem; margin-bottom: 1rem;">
                 <h2 style="color: var(--primary-red);">Gestión de Base de Datos</h2>
-                <div>
-                    <button class="btn" onclick="openModal('new')">+ Nueva</button>
-                    <button class="btn btn-outline" style="margin-left: 0.5rem;" onclick="syncWithJSONBin()">Sincronizar Nube</button>
-                </div>
+                <button class="btn" onclick="openModal('new')">+ Nueva Pregunta</button>
             </div>
             <div class="table-container">
                 <table id="questionsTable">
                     <thead>
-                        <tr>
-                            <th>Módulo</th>
-                            <th>Lección</th>
-                            <th>Pregunta</th>
-                            <th style="width: 150px;">Acciones</th>
-                        </tr>
+                        <tr><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr>
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
@@ -542,71 +303,86 @@
 
 <div id="modal-form" class="modal-overlay">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <h2 class="card-header" id="modal-title" style="margin-top: 0;">Registrar Nueva Pregunta</h2>
+        <button class="modal-close" type="button" onclick="closeModal()">×</button>
+        <h2 class="card-header" id="modal-title" style="margin-top: 0; border:none; margin-bottom:0.5rem;">Registrar Pregunta</h2>
         
+        <div class="wizard-progress">
+            <div class="wizard-dot active" id="dot-1"></div>
+            <div class="wizard-dot" id="dot-2"></div>
+            <div class="wizard-dot" id="dot-3"></div>
+        </div>
+
         <form id="questionForm" onsubmit="saveQuestion(event)">
             <input type="hidden" id="q-id">
             
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Módulo del ESBAS</label>
-                    <select id="q-module" required onchange="handleModuleMemory(this.value)">
-                        <option value="" disabled selected>Selecciona un módulo...</option>
-                        <option value="Módulo I">Módulo I</option>
-                        <option value="Módulo II">Módulo II</option>
-                        <option value="Módulo III">Módulo III</option>
-                    </select>
+            <div id="step-1" class="form-step active">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 1: Ubicación</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Módulo del ESBAS</label>
+                        <select id="q-module" required onchange="handleModuleMemory(this.value)">
+                            <option value="" disabled selected>Selecciona un módulo...</option>
+                            <option value="Módulo I">Módulo I</option>
+                            <option value="Módulo II">Módulo II</option>
+                            <option value="Módulo III">Módulo III</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Lección (N°)</label>
+                        <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName()">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Lección</label>
+                        <input type="text" id="q-lesson-name" placeholder="Nombre de la lección (Autocompletado automático)" autocomplete="off">
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Lección (N°)</label>
-                    <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required>
+                <div class="wizard-footer" style="justify-content: flex-end;">
+                    <button type="button" class="btn" onclick="goToStep(2)">Siguiente ➝</button>
                 </div>
+            </div>
 
-                <div class="form-group full-width">
-                    <label>Nombre de la Lección (Opcional)</label>
-                    <input type="text" id="q-lesson-name" list="lesson-names-list" placeholder="Empieza a escribir para sugerencias..." autocomplete="off">
-                    <datalist id="lesson-names-list"></datalist>
-                </div>
-
+            <div id="step-2" class="form-step">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 2: Enunciado</h3>
                 <div class="form-group full-width">
                     <label>Pregunta</label>
-                    <textarea id="q-text" rows="3" placeholder="Redacta la pregunta aquí..." required></textarea>
+                    <textarea id="q-text" rows="5" placeholder="Redacta la pregunta aquí..." required></textarea>
                 </div>
+                <div class="wizard-footer">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(1)">← Atrás</button>
+                    <button type="button" class="btn" onclick="goToStep(3)">Siguiente ➝</button>
+                </div>
+            </div>
 
+            <div id="step-3" class="form-step">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Paso 3: Respuestas</h3>
                 <div class="form-group full-width alts-vertical">
-                    <label style="color: var(--primary-red); margin-bottom: -0.5rem;">Alternativas (Marca el círculo izquierdo de la correcta)</label>
+                    <label style="color: var(--primary-red); margin-bottom: -0.5rem; font-size: 0.95rem;">Selecciona el círculo izquierdo de la respuesta correcta:</label>
                     
                     <div class="alt-row">
                         <input type="radio" name="q-correct" value="a" required title="Marcar como correcta">
                         <span class="alt-label">A</span>
                         <input type="text" id="q-opt-a" required placeholder="Redacta la opción A...">
                     </div>
-                    
                     <div class="alt-row">
                         <input type="radio" name="q-correct" value="b" required title="Marcar como correcta">
                         <span class="alt-label">B</span>
                         <input type="text" id="q-opt-b" required placeholder="Redacta la opción B...">
                     </div>
-                    
                     <div class="alt-row">
                         <input type="radio" name="q-correct" value="c" required title="Marcar como correcta">
                         <span class="alt-label">C</span>
                         <input type="text" id="q-opt-c" required placeholder="Redacta la opción C...">
                     </div>
-                    
                     <div class="alt-row">
                         <input type="radio" name="q-correct" value="d" required title="Marcar como correcta">
                         <span class="alt-label">D</span>
                         <input type="text" id="q-opt-d" required placeholder="Redacta la opción D...">
                     </div>
                 </div>
-            </div>
-
-            <div style="display: flex; gap: 1rem; justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-                <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-                <button type="submit" class="btn" id="btn-save">Guardar Tarjeta</button>
+                <div class="wizard-footer">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Atrás</button>
+                    <button type="submit" class="btn" id="btn-save" style="background: var(--success);">✔ Guardar Tarjeta</button>
+                </div>
             </div>
         </form>
     </div>
@@ -626,7 +402,7 @@
     let activeModuleFilter = 'all';
     let activeLessonFilter = 'all';
 
-    // Memoria para el Data Entry rápido
+    // Memoria para Data Entry
     let formMemory = {
         lastModule: '',
         'Módulo I': { num: '', name: '' },
@@ -634,64 +410,76 @@
         'Módulo III': { num: '', name: '' }
     };
 
-    // Diccionario de lecciones por Módulo (Reglas del ESBAS)
-    const moduleLessonsMap = {
-        'Módulo I': { start: 1, end: 9 },     
-        'Módulo II': { start: 10, end: 21 },  
-        'Módulo III': { start: 22, end: 33 }  
-    };
+    const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
 
-    // ==========================================
-    // INICIALIZACIÓN Y NAVEGACIÓN
-    // ==========================================
     function switchView(viewName) {
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
-        
         document.getElementById(`view-${viewName}`).classList.add('active');
         document.getElementById(`btn-${viewName}`).classList.add('active');
-
         if(viewName === 'repo') renderRepo();
         if(viewName === 'config') renderTable();
     }
 
     // ==========================================
-    // LÓGICA DE MEMORIA Y DATALIST
+    // LÓGICA DE MEMORIA Y AUTOCOMPLETADO
     // ==========================================
-    function updateLessonDatalist() {
-        const datalist = document.getElementById('lesson-names-list');
-        const uniqueNames = [...new Set(questionBank
-            .map(q => q.leccion_nombre)
-            .filter(name => name && name.trim() !== ''))];
-        
-        datalist.innerHTML = uniqueNames.map(name => `<option value="${name}">`).join('');
-    }
-
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
-        // Restaurar la memoria de ese modulo especifico si existe
         if (formMemory[selectedModule].num !== '') {
             document.getElementById('q-lesson').value = formMemory[selectedModule].num;
             document.getElementById('q-lesson-name').value = formMemory[selectedModule].name;
         } else {
-            // Si no hay memoria, lo dejamos limpio
             document.getElementById('q-lesson').value = '';
             document.getElementById('q-lesson-name').value = '';
         }
     }
 
+    function autoFillLessonName() {
+        const numInput = document.getElementById('q-lesson').value.trim();
+        if(!numInput) return;
+        
+        // Buscar en la base de datos local si ya existe el nombre para ese numero
+        const existing = questionBank.find(q => q.leccion_num.toString().replace(/\D/g, '') === numInput && q.leccion_nombre.trim() !== '');
+        if(existing) {
+            document.getElementById('q-lesson-name').value = existing.leccion_nombre;
+        }
+    }
+
     // ==========================================
-    // LÓGICA DE FILTROS EN REPOSITORIO
+    // LÓGICA WIZARD (3 PASOS)
+    // ==========================================
+    function goToStep(step) {
+        // Validaciones rÃ¡pidas de HTML5 antes de avanzar
+        if (step === 2) {
+            if(!document.getElementById('q-module').value || !document.getElementById('q-lesson').value) {
+                alert("Completa el Módulo y el N° de Lección para continuar."); return;
+            }
+        }
+        if (step === 3) {
+            if(!document.getElementById('q-text').value) {
+                alert("Redacta la pregunta para continuar."); return;
+            }
+        }
+
+        document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+        
+        document.querySelectorAll('.wizard-dot').forEach((el, index) => {
+            if(index < step) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+    }
+
+    // ==========================================
+    // REPOSITORIO Y FILTROS
     // ==========================================
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
-        
         document.querySelectorAll('#moduleFilters .filter-btn').forEach(btn => {
             btn.classList.remove('active');
-            if(btn.innerText.includes(moduleName) || (moduleName === 'all' && btn.innerText.includes('Todos'))) {
-                btn.classList.add('active');
-            }
+            if(btn.innerText.includes(moduleName) || (moduleName === 'all' && btn.innerText.includes('Todos'))) btn.classList.add('active');
         });
 
         const lessonContainer = document.getElementById('lessonFiltersContainer');
@@ -699,14 +487,13 @@
             lessonContainer.classList.remove('active');
         } else {
             const range = moduleLessonsMap[moduleName];
-            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas las lecciones</button>`;
+            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas</button>`;
             for(let i = range.start; i <= range.end; i++) {
                 html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i}</button>`;
             }
             lessonContainer.innerHTML = html;
             lessonContainer.classList.add('active');
         }
-
         renderRepo();
     }
 
@@ -717,9 +504,6 @@
         renderRepo();
     }
 
-    // ==========================================
-    // REPOSITORIO Y FLASHCARDS
-    // ==========================================
     function renderRepo() {
         const container = document.getElementById('repo-container');
         const searchTxt = document.getElementById('searchInput').value.toLowerCase();
@@ -727,14 +511,10 @@
 
         const filtered = questionBank.filter(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
-
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
             const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
-            const fullLessonStr = `Lección ${numRaw} ${q.leccion_nombre || ''}`.toLowerCase();
-            
-            const matchesSearch = q.pregunta.toLowerCase().includes(searchTxt) || fullLessonStr.includes(searchTxt);
-            
-            return matchesModule && matchesLesson && matchesSearch;
+            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta}`.toLowerCase();
+            return matchesModule && matchesLesson && fullStr.includes(searchTxt);
         });
 
         if (filtered.length === 0) {
@@ -744,7 +524,7 @@
 
         filtered.forEach(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
-            const lessonBadge = q.leccion_nombre ? `Lección ${numRaw} - ${q.leccion_nombre}` : `Lección ${numRaw}`;
+            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const correctText = q.opciones[q.respuesta];
 
             container.innerHTML += `
@@ -752,16 +532,10 @@
                     <div class="flashcard">
                         <div class="flashcard-front">
                             <button class="btn-card-edit" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">✏️ Editar</button>
-                            <div class="meta-tags">
-                                <span class="tag">${q.modulo}</span>
-                                <span class="tag tag-lesson">${lessonBadge}</span>
-                            </div>
+                            <div class="meta-tags"><span class="tag">${q.modulo}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
                             <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta}</div>
-                            <div class="flip-hint">
-                                <span>👆</span> Haz clic para voltear y ver la respuesta
-                            </div>
+                            <div class="flip-hint"><span>👆</span> Haz clic para voltear y ver la respuesta</div>
                         </div>
-
                         <div class="flashcard-back">
                             <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Respuesta Correcta</div>
                             <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">${q.respuesta.toUpperCase()}) ${correctText}</div>
@@ -773,22 +547,34 @@
     }
 
     // ==========================================
-    // LÓGICA DEL MODAL (AÑADIR / EDITAR)
+    // LÓGICA DEL MODAL
     // ==========================================
     function openModal(mode, id = null) {
         document.getElementById('modal-form').classList.add('active');
+        goToStep(1); // Siempre inicia en el paso 1
         
         if (mode === 'new') {
-            document.getElementById('modal-title').innerText = "Registrar Nueva Pregunta";
-            document.getElementById('questionForm').reset();
+            document.getElementById('modal-title').innerText = "Registrar Pregunta";
             document.getElementById('q-id').value = '';
             
-            // Si hay memoria del ultimo modulo usado, cargarlo
+            // Lógica Expresa: Mantener memoria de Módulo/Lección, pero BORRAR lo demás.
             if (formMemory.lastModule !== '') {
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
                 document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
+            } else {
+                document.getElementById('q-module').value = '';
+                document.getElementById('q-lesson').value = '';
+                document.getElementById('q-lesson-name').value = '';
             }
+            
+            // Limpieza estricta de Pregunta y Alternativas
+            document.getElementById('q-text').value = '';
+            document.getElementById('q-opt-a').value = '';
+            document.getElementById('q-opt-b').value = '';
+            document.getElementById('q-opt-c').value = '';
+            document.getElementById('q-opt-d').value = '';
+            document.querySelectorAll('input[name="q-correct"]').forEach(r => r.checked = false);
 
         } else if (mode === 'edit' && id) {
             document.getElementById('modal-title').innerText = "Modificar Tarjeta";
@@ -803,27 +589,19 @@
                 document.getElementById('q-opt-b').value = q.opciones.b;
                 document.getElementById('q-opt-c').value = q.opciones.c;
                 document.getElementById('q-opt-d').value = q.opciones.d;
-                
-                // Marcar el radio button correcto
                 const correctRadio = document.querySelector(`input[name="q-correct"][value="${q.respuesta}"]`);
                 if(correctRadio) correctRadio.checked = true;
             }
         }
     }
 
-    function closeModal() {
-        document.getElementById('modal-form').classList.remove('active');
-    }
+    function closeModal() { document.getElementById('modal-form').classList.remove('active'); }
 
     function saveQuestion(e) {
         e.preventDefault();
         
-        // Obtener cual radio button se marcó como correcto
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
-        if(!checkedRadio) {
-            alert("Por favor, marca cuál de las alternativas es la correcta seleccionando el círculo.");
-            return;
-        }
+        if(!checkedRadio) { alert("Selecciona la alternativa correcta."); return; }
 
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
@@ -846,18 +624,13 @@
         };
 
         const existingIndex = questionBank.findIndex(q => q.id === id);
-        if(existingIndex >= 0) {
-            questionBank[existingIndex] = nuevaPregunta;
-        } else {
-            questionBank.push(nuevaPregunta);
-        }
+        if(existingIndex >= 0) questionBank[existingIndex] = nuevaPregunta;
+        else questionBank.push(nuevaPregunta);
 
-        // Actualizar la memoria con lo que se acaba de guardar
         formMemory.lastModule = currentModule;
         formMemory[currentModule].num = currentLessonNum;
         formMemory[currentModule].name = currentLessonName;
 
-        updateLessonDatalist(); 
         closeModal();
         renderRepo();
         renderTable();
@@ -865,12 +638,11 @@
     }
 
     // ==========================================
-    // GESTIÓN DE TABLA (Base de Datos)
+    // TABLA CRUD
     // ==========================================
     function renderTable() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
-        
         questionBank.forEach(q => {
             const numRaw = q.leccion_num.toString().replace(/\D/g, '');
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
@@ -878,7 +650,7 @@
                 <tr>
                     <td><span class="tag">${q.modulo}</span></td>
                     <td>${lessonBadge}</td>
-                    <td>${q.pregunta.substring(0, 60)}...</td>
+                    <td>${q.pregunta.substring(0, 50)}...</td>
                     <td>
                         <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
                         <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
@@ -891,29 +663,21 @@
     function deleteQuestion(id) {
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
             questionBank = questionBank.filter(q => q.id !== id);
-            updateLessonDatalist();
-            renderTable();
-            renderRepo();
-            syncWithJSONBin(true); 
+            renderTable(); renderRepo(); syncWithJSONBin(true); 
         }
     }
 
     // ==========================================
-    // SIMULACIÓN (Lógica Automática de Preguntas)
+    // SIMULACIÓN
     // ==========================================
     function updateSimLessonDropdown(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
-        
-        if (moduleName === 'all') {
-            lessonSelect.disabled = true;
-            return;
-        }
+        if (moduleName === 'all') { lessonSelect.disabled = true; return; }
         
         lessonSelect.disabled = false;
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
-
         for(let i = range.start; i <= range.end; i++) {
             lessonSelect.innerHTML += `<option value="${i}">Lección ${i}</option>`;
         }
@@ -925,43 +689,24 @@
         
         let pool = questionBank.filter(q => {
             const qNumRaw = q.leccion_num.toString().replace(/\D/g, '');
-            const matchMod = modFilter === 'all' || q.modulo === modFilter;
-            const matchLesson = lessonFilter === 'all' || qNumRaw === lessonFilter;
-            return matchMod && matchLesson;
+            return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
         
-        // Mezclar aleatoriamente (Fisher-Yates)
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
         }
 
-        // Aplicar reglas de cantidad
-        let targetCount = 0;
-        if (modFilter === 'all') {
-            targetCount = 100; // Todos los módulos
-        } else if (lessonFilter === 'all') {
-            targetCount = 20;  // Módulo completo
-        } else {
-            targetCount = 10;  // Lección específica
-        }
-
-        const finalCount = Math.min(targetCount, pool.length);
-        currentSimulationQuestions = pool.slice(0, finalCount);
+        let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
+        currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
         userAnswers = {};
 
-        if(currentSimulationQuestions.length === 0) {
-            alert("No hay preguntas registradas para la configuración seleccionada.");
-            return;
-        }
+        if(currentSimulationQuestions.length === 0) { alert("No hay preguntas registradas para esta configuración."); return; }
 
         document.getElementById('sim-setup').style.display = 'none';
         document.getElementById('sim-active').style.display = 'block';
         document.getElementById('sim-results').style.display = 'none';
-        renderSimulationQuestions();
-    }
-
-    function renderSimulationQuestions() {
+        
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
         document.getElementById('sim-progress').innerText = `${currentSimulationQuestions.length} Preguntas en total`;
@@ -991,23 +736,18 @@
 
     function finishSimulation() {
         if(Object.keys(userAnswers).length < currentSimulationQuestions.length) {
-            if(!confirm("Faltan preguntas por responder. ¿Deseas entregar el examen de todos modos?")) return;
+            if(!confirm("Faltan preguntas por responder. ¿Entregar de todos modos?")) return;
         }
 
         let score = 0;
         currentSimulationQuestions.forEach(q => {
             const correct = q.respuesta;
             const userSelected = userAnswers[q.id];
-
             document.querySelectorAll(`.sim-opt-${q.id}`).forEach(el => el.style.pointerEvents = 'none');
             const correctEl = document.getElementById(`opt-${q.id}-${correct}`);
             if(correctEl) correctEl.classList.add('correct');
-
-            if(userSelected === correct) {
-                score++;
-            } else if (userSelected) {
-                document.getElementById(`opt-${q.id}-${userSelected}`).classList.add('incorrect');
-            }
+            if(userSelected === correct) score++;
+            else if (userSelected) document.getElementById(`opt-${q.id}-${userSelected}`).classList.add('incorrect');
         });
 
         document.getElementById('sim-score').innerText = `${score} / ${currentSimulationQuestions.length}`;
@@ -1016,46 +756,46 @@
     }
 
     // ==========================================
-    // JSONBIN SYNC
+    // JSONBIN SYNC & CLOUD STATUS
     // ==========================================
+    function setCloudStatus(status) {
+        const indicator = document.getElementById('cloud-indicator');
+        indicator.className = 'cloud-status ' + status;
+        if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
+        if(status === 'syncing') indicator.innerHTML = '🔄 Guardando...';
+        if(status === 'error') indicator.innerHTML = '⚠️ Error Nube';
+    }
+
     async function fetchFromJSONBin() {
         try {
+            setCloudStatus('syncing');
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
-            if(data.record && Array.isArray(data.record)) {
-                questionBank = data.record;
-            }
-            updateLessonDatalist();
-            renderRepo();
-            renderTable();
+            if(data.record && Array.isArray(data.record)) questionBank = data.record;
+            renderRepo(); renderTable();
+            setCloudStatus('success');
         } catch (error) {
-            console.error("Error cargando los datos:", error);
+            console.error("Error:", error); setCloudStatus('error');
         }
     }
 
     async function syncWithJSONBin(isAutoSync = false) {
         try {
-            const btn = document.querySelector('button[onclick="syncWithJSONBin()"]');
-            if(!isAutoSync) btn.innerText = "Sincronizando...";
-            
+            setCloudStatus('syncing');
             const response = await fetch(JSONBIN_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
                 body: JSON.stringify(questionBank)
             });
             if(response.ok) {
-                if(!isAutoSync) {
-                    alert("Base de datos sincronizada en la nube con éxito.");
-                    btn.innerText = "Sincronizar Nube";
-                }
-            }
+                setCloudStatus('success');
+            } else { throw new Error("API Error"); }
         } catch (error) {
-            console.error(error);
+            console.error(error); setCloudStatus('error');
             if(!isAutoSync) alert("Error al sincronizar.");
         }
     }
 
-    // Inicializar
     fetchFromJSONBin();
     switchView('repo');
 
