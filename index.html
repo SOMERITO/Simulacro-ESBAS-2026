@@ -140,13 +140,13 @@
         .option-item.selected { border-color: var(--primary-orange); background: #fff7ed; font-weight: 500; }
         .option-item.selected strong { color: var(--primary-orange) !important; }
 
-        /* Simulación UI Paginada */
+        /* Simulación UI */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: var(--glass-bg); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
         .sim-card { display: none; animation: fadeIn 0.3s ease; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados Analíticos */
+        /* Dashboard de Resultados */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: var(--shadow-card); }
         .metric-value { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -164,28 +164,11 @@
         .r-ans.user-right { background: #d1fae5; color: #065f46; border: 1px dashed var(--success); }
         .r-ans.actual-correct { background: #f8fafc; color: var(--success); font-weight: 600; border: 1px solid #e2e8f0;}
 
-        /* Tabla CRUD y Usuarios */
+        /* Tabla CRUD */
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border-radius: 8px; overflow: hidden; }
         th, td { padding: 0.85rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
-
-        /* Estilos Selectores de Rol Dinámicos */
-        .role-select {
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: #f8fafc;
-            color: var(--text-dark);
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.2s;
-        }
-        .role-select:focus { border-color: var(--primary-red); }
-        .role-select.admin { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
-        .role-select.estudiante { color: var(--text-muted); }
 
         /* MODAL WIZARD */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 1rem; animation: fadeIn 0.2s ease-out; }
@@ -218,7 +201,7 @@
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem;}
 
-        /* Ocultar elementos para usuarios estándar */
+        /* Ocultar elementos para usuarios estandar */
         body:not(.role-admin) .admin-only { display: none !important; }
 
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
@@ -379,7 +362,7 @@
                     <label>Rol</label>
                     <select id="u-role" required>
                         <option value="estudiante">Estudiante (Solo Lectura/Examen)</option>
-                        <option value="admin">Editor / Admin</option>
+                        <option value="admin">Propietario / Admin</option>
                     </select>
                 </div>
                 <button type="submit" class="btn" style="background:#f59e0b;">+ Añadir</button>
@@ -558,46 +541,18 @@
         const tbody = document.getElementById('users-body');
         tbody.innerHTML = '';
         appData.users.forEach(u => {
-            let roleHtml = '';
-            let actionsHtml = '';
-
-            if (u.user === 'JCARRANZA') {
-                roleHtml = '<span style="color:#f59e0b; font-weight:700; padding: 0.4rem 0.8rem;">Admin (Propietario)</span>';
-                actionsHtml = '<i style="font-size:0.8rem; color:var(--text-muted);">Protegido</i>';
-            } else {
-                const selectClass = u.role === 'admin' ? 'role-select admin' : 'role-select estudiante';
-                roleHtml = `
-                    <select class="${selectClass}" onchange="changeUserRole('${u.user}', this.value, this)">
-                        <option value="estudiante" ${u.role === 'estudiante' ? 'selected' : ''}>Estudiante</option>
-                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Editor / Admin</option>
-                    </select>
-                `;
-                actionsHtml = `<button class="action-btn btn-delete" onclick="deleteUser('${u.user}')">Borrar</button>`;
-            }
-
+            const roleBadge = u.role === 'admin' ? '<span style="color:#f59e0b; font-weight:700;">Admin</span>' : 'Estudiante';
             tbody.innerHTML += `
                 <tr>
                     <td style="font-weight:700;">${u.user}</td>
                     <td style="font-family:monospace; color:var(--text-muted);">${u.pass}</td>
-                    <td>${roleHtml}</td>
-                    <td>${actionsHtml}</td>
+                    <td>${roleBadge}</td>
+                    <td>
+                        ${u.user !== 'JCARRANZA' ? `<button class="action-btn btn-delete" onclick="deleteUser('${u.user}')">Borrar</button>` : '<i style="font-size:0.8rem; color:var(--text-muted);">Protegido</i>'}
+                    </td>
                 </tr>
             `;
         });
-    }
-
-    function changeUserRole(username, newRole, selectElement) {
-        const userObj = appData.users.find(u => u.user === username);
-        if (userObj) {
-            userObj.role = newRole;
-            if(newRole === 'admin') {
-                selectElement.className = 'role-select admin';
-            } else {
-                selectElement.className = 'role-select estudiante';
-            }
-            syncWithJSONBin(true);
-            showToast(`Rol de ${username} actualizado exitosamente.`);
-        }
     }
 
     function saveUser(e) {
@@ -807,4 +762,324 @@
             document.getElementById('q-opt-b').value = '';
             document.getElementById('q-opt-c').value = '';
             document.getElementById('q-opt-d').value = '';
-            document.Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+            document.querySelectorAll('input[name="q-correct"]').forEach(r => r.checked = false);
+
+        } else if (mode === 'edit' && id) {
+            document.getElementById('modal-title').innerText = "Modificar Tarjeta";
+            const q = appData.questions.find(item => item.id === id);
+            if(q) {
+                document.getElementById('q-id').value = q.id;
+                document.getElementById('q-module').value = q.modulo;
+                document.getElementById('q-lesson').value = q.leccion_num.toString().replace(/\D/g, ''); 
+                document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
+                document.getElementById('q-num').value = q.pregunta_num || '';
+                document.getElementById('q-text').value = q.pregunta;
+                document.getElementById('q-opt-a').value = q.opciones.a;
+                document.getElementById('q-opt-b').value = q.opciones.b;
+                document.getElementById('q-opt-c').value = q.opciones.c;
+                document.getElementById('q-opt-d').value = q.opciones.d;
+                const correctRadio = document.querySelector(`input[name="q-correct"][value="${q.respuesta}"]`);
+                if(correctRadio) correctRadio.checked = true;
+            }
+        }
+    }
+
+    function closeModal() { document.getElementById('modal-form').classList.remove('active'); }
+
+    function saveQuestion(e) {
+        e.preventDefault();
+        const id = document.getElementById('q-id').value || Date.now().toString();
+        const currentModule = document.getElementById('q-module').value;
+        const currentLessonNum = document.getElementById('q-lesson').value;
+        const currentQNum = document.getElementById('q-num').value;
+        
+        const optA = document.getElementById('q-opt-a').value.trim();
+        const optB = document.getElementById('q-opt-b').value.trim();
+        const optC = document.getElementById('q-opt-c').value.trim();
+        const optD = document.getElementById('q-opt-d').value.trim();
+        
+        const optsLower = [optA, optB, optC, optD].map(o => o.toLowerCase());
+        if (new Set(optsLower).size < 4) {
+            showToast("ERROR: Tienes alternativas con texto idéntico. Corrígelas para continuar.", "error"); 
+            return; 
+        }
+
+        const qText = document.getElementById('q-text').value.trim();
+        const isQDuplicate = appData.questions.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && q.id !== id);
+        if (isQDuplicate) {
+            if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
+        }
+
+        const isNumDuplicate = appData.questions.some(q => q.modulo === currentModule && q.leccion_num.toString() === currentLessonNum.toString() && q.pregunta_num.toString() === currentQNum.toString() && q.id !== id);
+        if(isNumDuplicate) {
+            if(!confirm(`⚠️ Ya existe la Pregunta #${currentQNum} en la Lección ${currentLessonNum}. ¿Deseas sobreescribir ese número de orden?`)) return;
+        }
+
+        const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
+        if(!checkedRadio) { showToast("Selecciona el círculo de la respuesta correcta.", "error"); return; }
+
+        const currentLessonName = document.getElementById('q-lesson-name').value;
+
+        const nuevaPregunta = {
+            id: id, modulo: currentModule, leccion_num: currentLessonNum, leccion_nombre: currentLessonName,
+            pregunta_num: currentQNum,
+            pregunta: qText,
+            opciones: { a: optA, b: optB, c: optC, d: optD },
+            respuesta: checkedRadio.value
+        };
+
+        const existingIndex = appData.questions.findIndex(q => q.id === id);
+        if(existingIndex >= 0) appData.questions[existingIndex] = nuevaPregunta;
+        else appData.questions.push(nuevaPregunta);
+
+        formMemory.lastModule = currentModule;
+        formMemory[currentModule].num = currentLessonNum;
+        formMemory[currentModule].name = currentLessonName;
+
+        updateIndexesAndCounters();
+        closeModal(); renderRepo(); renderTable();
+        syncWithJSONBin(true); 
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        appData.questions.forEach(q => {
+            const numRaw = q.leccion_num.toString().replace(/\D/g, '');
+            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
+            const pNum = q.pregunta_num || '?';
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:700; color:var(--primary-red);">#${pNum}</td>
+                    <td><span class="tag">${q.modulo}</span></td>
+                    <td>${lessonBadge}</td>
+                    <td>${q.pregunta.substring(0, 50)}...</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
+                        <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteQuestion(id) {
+        if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
+            appData.questions = appData.questions.filter(q => q.id !== id);
+            updateIndexesAndCounters();
+            renderTable(); renderRepo(); syncWithJSONBin(true); 
+        }
+    }
+
+    // ==========================================
+    // SIMULACIÓN 
+    // ==========================================
+    function updateSimLessonDropdown(moduleName) {
+        const lessonSelect = document.getElementById('sim-lesson');
+        lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
+        if (moduleName === 'all') { lessonSelect.disabled = true; return; }
+        
+        lessonSelect.disabled = false;
+        const range = moduleLessonsMap[moduleName];
+        if(!range) return;
+        for(let i = range.start; i <= range.end; i++) {
+            const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+            if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
+        }
+    }
+
+    function startSimulation() {
+        const modFilter = document.getElementById('sim-module').value;
+        const lessonFilter = document.getElementById('sim-lesson').value;
+        
+        let pool = appData.questions.filter(q => {
+            const qNumRaw = q.leccion_num.toString().replace(/\D/g, '');
+            return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
+        });
+        
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
+        currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
+        userAnswers = {};
+        currentSimIndex = 0; 
+
+        if(currentSimulationQuestions.length === 0) { showToast("No hay preguntas registradas para esta configuración.", "error"); return; }
+
+        document.getElementById('sim-setup').style.display = 'none';
+        document.getElementById('sim-active').style.display = 'block';
+        document.getElementById('sim-results').style.display = 'none';
+        
+        renderSimulationQuestions();
+        showSimQuestion(0);
+    }
+
+    function renderSimulationQuestions() {
+        const container = document.getElementById('sim-questions-container');
+        container.innerHTML = '';
+
+        currentSimulationQuestions.forEach((q, index) => {
+            container.innerHTML += `
+                <div class="card sim-card" id="sim-q-card-${index}">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta}</span>
+                        <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.3rem 0.7rem; border-radius:8px; font-size:0.85rem; flex-shrink:0; margin-left:1rem;">Original #${q.pregunta_num || "?"}</span>
+                    </div>
+                    <ul class="options-list">
+                        ${Object.entries(q.opciones).map(([key, text]) => `
+                            <li class="option-item sim-opt-${q.id}" onclick="selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
+                                <strong style="margin-right: 10px; color:var(--text-muted);">${key.toUpperCase()})</strong> ${text}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        });
+    }
+
+    function showSimQuestion(index) {
+        document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`sim-q-card-${index}`).classList.add('active');
+        
+        document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
+        document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+        
+        if (index === currentSimulationQuestions.length - 1) {
+            document.getElementById('btn-sim-next').style.display = 'none';
+            document.getElementById('btn-sim-finish').style.display = 'inline-flex';
+        } else {
+            document.getElementById('btn-sim-next').style.display = 'inline-flex';
+            document.getElementById('btn-sim-finish').style.display = 'none';
+        }
+    }
+
+    function navigateSim(direction) {
+        const nextIndex = currentSimIndex + direction;
+        if(nextIndex >= 0 && nextIndex < currentSimulationQuestions.length) {
+            currentSimIndex = nextIndex;
+            showSimQuestion(currentSimIndex);
+        }
+    }
+
+    function selectAnswer(questionId, selectedKey) {
+        userAnswers[questionId] = selectedKey;
+        document.querySelectorAll(`.sim-opt-${questionId}`).forEach(el => el.classList.remove('selected'));
+        document.getElementById(`opt-${questionId}-${selectedKey}`).classList.add('selected');
+    }
+
+    function cancelSimulation() {
+        if(confirm("¿Seguro que deseas cancelar el examen? Perderás el progreso.")) {
+            document.getElementById('sim-active').style.display = 'none';
+            document.getElementById('sim-setup').style.display = 'block';
+        }
+    }
+
+    function finishSimulation() {
+        const total = currentSimulationQuestions.length;
+        const answered = Object.keys(userAnswers).length;
+
+        if(answered < total) {
+            if(!confirm(`Te faltan ${total - answered} preguntas por responder. ¿Entregar de todos modos?`)) return;
+        }
+
+        let correctCount = 0; let errorCount = 0; let blankCount = 0; let reviewHTML = '';
+
+        currentSimulationQuestions.forEach((q, index) => {
+            const correct = q.respuesta; const userSelected = userAnswers[q.id];
+            let statusClass = 'is-blank'; let icon = '⚠️'; let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
+
+            if (!userSelected) {
+                blankCount++;
+            } else if (userSelected === correct) {
+                correctCount++; statusClass = 'is-correct'; icon = '✅';
+                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            } else {
+                errorCount++; statusClass = 'is-incorrect'; icon = '❌';
+                userAnswerText = `<div class="r-ans user-wrong">Marcaste incorrectamente: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            }
+
+            reviewHTML += `
+                <div class="review-item ${statusClass}">
+                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta}</div>
+                    ${userAnswerText}
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${correct.toUpperCase()}) ${q.opciones[correct]}</strong></div>
+                </div>
+            `;
+        });
+
+        const precision = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        document.getElementById('res-precision').innerText = `${precision}%`;
+        document.getElementById('res-correct').innerText = correctCount;
+        document.getElementById('res-error').innerText = errorCount;
+        document.getElementById('res-blank').innerText = blankCount;
+        document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
+
+        document.getElementById('sim-active').style.display = 'none';
+        document.getElementById('sim-results').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    // ==========================================
+    // CLOUD SYNC & MIGRACION JSONBIN
+    // ==========================================
+    function setCloudStatus(status) {
+        document.querySelectorAll('.cloud-status').forEach(indicator => {
+            indicator.className = 'cloud-status admin-only ' + status;
+            if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
+            if(status === 'syncing') indicator.innerHTML = '🔄 Guardando...';
+            if(status === 'error') indicator.innerHTML = '⚠️ Error Nube';
+        });
+    }
+
+    async function fetchFromJSONBin() {
+        try {
+            setCloudStatus('syncing');
+            const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
+            const data = await response.json();
+            
+            if (Array.isArray(data.record)) {
+                appData.questions = data.record;
+                syncWithJSONBin(true); 
+            } else if (data.record && data.record.questions) {
+                appData = data.record;
+            }
+
+            updateIndexesAndCounters();
+            setModuleFilter('all');
+            renderTable();
+            if(document.getElementById('view-users').classList.contains('active')) renderUsers();
+            
+            setCloudStatus('success');
+        } catch (error) {
+            console.error("Error:", error); setCloudStatus('error');
+            showToast("Error de conexión a la base de datos.", "error");
+        }
+    }
+
+    async function syncWithJSONBin(isAutoSync = false) {
+        try {
+            setCloudStatus('syncing');
+            const response = await fetch(JSONBIN_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
+                body: JSON.stringify(appData)
+            });
+            if(response.ok) {
+                setCloudStatus('success');
+                if(!isAutoSync) showToast("Sincronización manual exitosa.");
+            } else { throw new Error("API Error"); }
+        } catch (error) {
+            console.error(error); setCloudStatus('error');
+            if(!isAutoSync) showToast("Fallo en la sincronización manual.", "error");
+        }
+    }
+
+    // Inicializar
+    fetchFromJSONBin();
+
+</script>
+</body>
+</html>
