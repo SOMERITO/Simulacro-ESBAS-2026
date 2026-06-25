@@ -757,7 +757,7 @@
 
         } else if (mode === 'edit' && id) {
             document.getElementById('modal-title').innerText = "Modificar Tarjeta";
-            // CORREGIDO: Conversión a String para evitar fallos de coincidencia.
+            // Conversión a String para evitar fallos de coincidencia
             const q = appData.questions.find(item => String(item.id) === String(id));
             
             if(q) {
@@ -781,6 +781,24 @@
 
     function saveQuestion(e) {
         e.preventDefault();
+        const form = document.getElementById('questionForm');
+
+        // VALIDACIÓN INTELIGENTE DEL WIZARD
+        if (!form.checkValidity()) {
+            const invalidElement = form.querySelector(':invalid');
+            if (invalidElement) {
+                const stepContainer = invalidElement.closest('.form-step');
+                if (stepContainer) {
+                    const stepId = stepContainer.id; 
+                    const stepNum = parseInt(stepId.replace('step-', ''));
+                    goToStep(stepNum);
+                    showToast("Por favor, completa los campos obligatorios en este paso.", "error");
+                    setTimeout(() => invalidElement.focus(), 300);
+                }
+            }
+            return; 
+        }
+
         const id = document.getElementById('q-id').value || Date.now().toString();
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
@@ -798,7 +816,7 @@
         }
 
         const qText = document.getElementById('q-text').value.trim();
-        // CORREGIDO: Comparación estricta de strings en IDs
+        
         const isQDuplicate = appData.questions.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && String(q.id) !== String(id));
         if (isQDuplicate) {
             if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
@@ -859,7 +877,7 @@
 
     function deleteQuestion(id) {
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
-            // CORREGIDO: Conversión a string para eliminar sin fallos
+            // Conversión a string para eliminar sin fallos
             appData.questions = appData.questions.filter(q => String(q.id) !== String(id));
             updateIndexesAndCounters();
             renderTable(); renderRepo(); syncWithJSONBin(true); 
@@ -1035,7 +1053,7 @@
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
             
-            // CORREGIDO: Controlar la sobreescritura destructiva de JSONBin garantizando la presencia de usuarios
+            // Controlar la sobreescritura destructiva de JSONBin garantizando la presencia de usuarios
             if (data.record) {
                 if (Array.isArray(data.record)) {
                     // Si el JSON solo era un array de preguntas (versión anterior de la app)
