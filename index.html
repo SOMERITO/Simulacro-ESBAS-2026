@@ -378,7 +378,7 @@
             <div class="wizard-dot" id="dot-3"></div>
         </div>
 
-        <form id="questionForm" onsubmit="saveQuestion(event)">
+        <form id="questionForm" novalidate onsubmit="saveQuestion(event)">
             <input type="hidden" id="q-id">
             
             <div id="step-1" class="form-step active">
@@ -454,7 +454,6 @@
         users: []
     };
     
-    // Usuarios por defecto por si el servidor falla en cargarlos.
     const defaultUsers = [
         { user: "JCARRANZA", pass: "bomberos2026", role: "admin" }, 
         { user: "VBEDOYA", pass: "ESBAS-8342", role: "estudiante" } 
@@ -491,7 +490,6 @@
         const inputUser = document.getElementById('login-user').value.trim().toUpperCase();
         const inputPass = document.getElementById('login-pass').value.trim();
 
-        // Evitar crasheo si appData.users se corrompió
         if(!appData.users || appData.users.length === 0) {
             showToast("Conectando a la base de datos... intenta en 3 segundos.", "error"); return;
         }
@@ -587,8 +585,8 @@
     // ORDEN Y CONTADORES
     function updateIndexesAndCounters() {
         appData.questions.sort((a,b) => {
-            if(a.modulo !== b.modulo) return a.modulo.localeCompare(b.modulo);
-            if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num) - parseInt(b.leccion_num);
+            if(a.modulo !== b.modulo) return (a.modulo || '').localeCompare(b.modulo || '');
+            if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num || 0) - parseInt(b.leccion_num || 0);
             return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
         });
 
@@ -602,7 +600,6 @@
         });
     }
 
-    // MEMORIA FORMULARIO Y AUTO-INCREMENTO
     function handleModuleMemory(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -617,7 +614,7 @@
     function autoFillLessonName() {
         const numInput = document.getElementById('q-lesson').value.trim();
         if(!numInput) return;
-        const existing = appData.questions.find(q => q.leccion_num.toString().replace(/\D/g, '') === numInput && q.leccion_nombre.trim() !== '');
+        const existing = appData.questions.find(q => String(q.leccion_num).replace(/\D/g, '') === numInput && (q.leccion_nombre || '').trim() !== '');
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     }
 
@@ -625,7 +622,7 @@
         const mod = document.getElementById('q-module').value;
         const lec = document.getElementById('q-lesson').value.trim();
         if (!document.getElementById('q-id').value && mod && lec) {
-            const questionsInLesson = appData.questions.filter(q => q.modulo === mod && q.leccion_num.toString() === lec);
+            const questionsInLesson = appData.questions.filter(q => q.modulo === mod && String(q.leccion_num) === lec);
             if (questionsInLesson.length === 0) {
                 document.getElementById('q-num').value = 1;
             } else {
@@ -650,7 +647,6 @@
         });
     }
 
-    // REPOSITORIO Y FILTROS
     function setModuleFilter(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
@@ -686,10 +682,10 @@
         container.innerHTML = '';
 
         const filtered = appData.questions.filter(q => {
-            const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
+            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
             const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
-            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta}`.toLowerCase();
+            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''}`.toLowerCase();
             return matchesModule && matchesLesson && fullStr.includes(searchTxt);
         });
 
@@ -699,9 +695,9 @@
         }
 
         filtered.forEach((q, i) => {
-            const numRaw = q.leccion_num.toString().replace(/\D/g, ''); 
+            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
-            const correctText = q.opciones[q.respuesta];
+            const correctText = q.opciones ? q.opciones[q.respuesta] : 'N/A';
             const delay = i * 0.05; 
             const pNum = q.pregunta_num || "?"; 
             
@@ -713,13 +709,13 @@
                         <div class="flashcard-front">
                             <span class="q-number-badge">Pregunta #${pNum}</span>
                             ${editBtn}
-                            <div class="meta-tags"><span class="tag">${q.modulo}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
-                            <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta}</div>
+                            <div class="meta-tags"><span class="tag">${q.modulo || 'Sin módulo'}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
+                            <div style="font-size: 1.1rem; font-weight: 500; padding-right: 6rem; line-height: 1.4;">${q.pregunta || 'Sin enunciado'}</div>
                             <div class="flip-hint"><span>👆</span> Clic para voltear</div>
                         </div>
                         <div class="flashcard-back">
                             <div style="color: var(--success); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 1px;">Pregunta #${pNum} | Clave Correcta</div>
-                            <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">${q.respuesta.toUpperCase()}) ${correctText}</div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">${(q.respuesta || 'N/A').toUpperCase()}) ${correctText}</div>
                         </div>
                     </div>
                 </div>
@@ -757,20 +753,19 @@
 
         } else if (mode === 'edit' && id) {
             document.getElementById('modal-title').innerText = "Modificar Tarjeta";
-            // Conversión a String para evitar fallos de coincidencia
             const q = appData.questions.find(item => String(item.id) === String(id));
             
             if(q) {
                 document.getElementById('q-id').value = q.id;
-                document.getElementById('q-module').value = q.modulo;
-                document.getElementById('q-lesson').value = q.leccion_num.toString().replace(/\D/g, ''); 
+                document.getElementById('q-module').value = q.modulo || '';
+                document.getElementById('q-lesson').value = String(q.leccion_num).replace(/\D/g, ''); 
                 document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
                 document.getElementById('q-num').value = q.pregunta_num || '';
-                document.getElementById('q-text').value = q.pregunta;
-                document.getElementById('q-opt-a').value = q.opciones.a;
-                document.getElementById('q-opt-b').value = q.opciones.b;
-                document.getElementById('q-opt-c').value = q.opciones.c;
-                document.getElementById('q-opt-d').value = q.opciones.d;
+                document.getElementById('q-text').value = q.pregunta || '';
+                document.getElementById('q-opt-a').value = q.opciones ? q.opciones.a : '';
+                document.getElementById('q-opt-b').value = q.opciones ? q.opciones.b : '';
+                document.getElementById('q-opt-c').value = q.opciones ? q.opciones.c : '';
+                document.getElementById('q-opt-d').value = q.opciones ? q.opciones.d : '';
                 const correctRadio = document.querySelector(`input[name="q-correct"][value="${q.respuesta}"]`);
                 if(correctRadio) correctRadio.checked = true;
             }
@@ -780,10 +775,9 @@
     function closeModal() { document.getElementById('modal-form').classList.remove('active'); }
 
     function saveQuestion(e) {
-        e.preventDefault();
+        if(e) e.preventDefault();
         const form = document.getElementById('questionForm');
 
-        // VALIDACIÓN INTELIGENTE DEL WIZARD
         if (!form.checkValidity()) {
             const invalidElement = form.querySelector(':invalid');
             if (invalidElement) {
@@ -792,7 +786,7 @@
                     const stepId = stepContainer.id; 
                     const stepNum = parseInt(stepId.replace('step-', ''));
                     goToStep(stepNum);
-                    showToast("Por favor, completa los campos obligatorios en este paso.", "error");
+                    showToast("Por favor, completa todos los campos obligatorios.", "error");
                     setTimeout(() => invalidElement.focus(), 300);
                 }
             }
@@ -817,12 +811,25 @@
 
         const qText = document.getElementById('q-text').value.trim();
         
-        const isQDuplicate = appData.questions.some(q => q.pregunta.toLowerCase() === qText.toLowerCase() && String(q.id) !== String(id));
+        // VALIDACIÓN SEGURA CONTRA DATOS CORRUPTOS
+        const isQDuplicate = appData.questions.some(q => 
+            q.pregunta && 
+            q.pregunta.toLowerCase() === qText.toLowerCase() && 
+            String(q.id) !== String(id)
+        );
+        
         if (isQDuplicate) {
             if(!confirm("⚠️ Ya existe una pregunta con exactamente este mismo texto. ¿Deseas guardarla de todos modos?")) return;
         }
 
-        const isNumDuplicate = appData.questions.some(q => q.modulo === currentModule && q.leccion_num.toString() === currentLessonNum.toString() && q.pregunta_num.toString() === currentQNum.toString() && String(q.id) !== String(id));
+        // VALIDACIÓN SEGURA CONTRA DATOS CORRUPTOS
+        const isNumDuplicate = appData.questions.some(q => 
+            q.modulo === currentModule && 
+            String(q.leccion_num) === String(currentLessonNum) && 
+            String(q.pregunta_num) === String(currentQNum) && 
+            String(q.id) !== String(id)
+        );
+
         if(isNumDuplicate) {
             if(!confirm(`⚠️ Ya existe la Pregunta #${currentQNum} en la Lección ${currentLessonNum}. ¿Deseas sobreescribir ese número de orden?`)) return;
         }
@@ -857,15 +864,15 @@
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         appData.questions.forEach(q => {
-            const numRaw = q.leccion_num.toString().replace(/\D/g, '');
+            const numRaw = String(q.leccion_num).replace(/\D/g, '');
             const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
             const pNum = q.pregunta_num || '?';
             tbody.innerHTML += `
                 <tr>
                     <td style="font-weight:700; color:var(--primary-red);">#${pNum}</td>
-                    <td><span class="tag">${q.modulo}</span></td>
+                    <td><span class="tag">${q.modulo || 'N/A'}</span></td>
                     <td>${lessonBadge}</td>
-                    <td>${q.pregunta.substring(0, 50)}...</td>
+                    <td>${(q.pregunta || '').substring(0, 50)}...</td>
                     <td>
                         <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
                         <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
@@ -877,7 +884,6 @@
 
     function deleteQuestion(id) {
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
-            // Conversión a string para eliminar sin fallos
             appData.questions = appData.questions.filter(q => String(q.id) !== String(id));
             updateIndexesAndCounters();
             renderTable(); renderRepo(); syncWithJSONBin(true); 
@@ -906,7 +912,7 @@
         const lessonFilter = document.getElementById('sim-lesson').value;
         
         let pool = appData.questions.filter(q => {
-            const qNumRaw = q.leccion_num.toString().replace(/\D/g, '');
+            const qNumRaw = String(q.leccion_num).replace(/\D/g, '');
             return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
         });
         
@@ -935,10 +941,11 @@
         container.innerHTML = '';
 
         currentSimulationQuestions.forEach((q, index) => {
+            if(!q.opciones) return;
             container.innerHTML += `
                 <div class="card sim-card" id="sim-q-card-${index}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta}</span>
+                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta || ''}</span>
                         <span style="font-weight: 700; color: var(--primary-red); background:rgba(220,38,38,0.1); padding:0.3rem 0.7rem; border-radius:8px; font-size:0.85rem; flex-shrink:0; margin-left:1rem;">Original #${q.pregunta_num || "?"}</span>
                     </div>
                     <ul class="options-list">
@@ -955,7 +962,8 @@
 
     function showSimQuestion(index) {
         document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
-        document.getElementById(`sim-q-card-${index}`).classList.add('active');
+        const activeCard = document.getElementById(`sim-q-card-${index}`);
+        if(activeCard) activeCard.classList.add('active');
         
         document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
@@ -1016,9 +1024,9 @@
 
             reviewHTML += `
                 <div class="review-item ${statusClass}">
-                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta}</div>
+                    <div class="r-question">${icon} Examen Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta || ''}</div>
                     ${userAnswerText}
-                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${correct.toUpperCase()}) ${q.opciones[correct]}</strong></div>
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${(correct || 'N/A').toUpperCase()}) ${q.opciones ? q.opciones[correct] : 'N/A'}</strong></div>
                 </div>
             `;
         });
@@ -1053,16 +1061,13 @@
             const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
             const data = await response.json();
             
-            // Controlar la sobreescritura destructiva de JSONBin garantizando la presencia de usuarios
             if (data.record) {
                 if (Array.isArray(data.record)) {
-                    // Si el JSON solo era un array de preguntas (versión anterior de la app)
                     appData.questions = data.record;
                     appData.users = defaultUsers;
-                    syncWithJSONBin(true); // Estructura el JSON correctamente en la nube
+                    syncWithJSONBin(true); 
                 } else {
                     appData.questions = data.record.questions || [];
-                    // Rescata a los usuarios almacenados, o reestablece los default si se habían perdido
                     appData.users = (data.record.users && data.record.users.length > 0) ? data.record.users : defaultUsers;
                 }
             }
