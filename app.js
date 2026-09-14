@@ -1,4 +1,4 @@
-// VERSIÓN: V3
+// VERSIÓN: V4
 // ==========================================
 // CONFIGURACIÓN FIREBASE (SDK Modular v10)
 // ==========================================
@@ -87,7 +87,6 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// LOGIN MEJORADO (V3)
 window.handleLogin = async function(e) {
     e.preventDefault();
     const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
