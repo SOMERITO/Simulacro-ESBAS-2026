@@ -1,4 +1,4 @@
-// VERSIÓN: V1
+// VERSIÓN: V3
 // ==========================================
 // CONFIGURACIÓN FIREBASE (SDK Modular v10)
 // ==========================================
@@ -21,7 +21,6 @@ import {
     getDoc 
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// Tu configuración real de ESBAS-2026
 const firebaseConfig = {
     apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
     authDomain: "esbas-2026.firebaseapp.com",
@@ -36,7 +35,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Variables de estado
 let appData = { questions: [], users: [] };
 let currentUser = null;
 let currentUserRole = 'estudiante';
@@ -89,26 +87,23 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// LOGICA MEJORADA DE LOGIN V1
+// LOGIN MEJORADO (V3)
 window.handleLogin = async function(e) {
     e.preventDefault();
     const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
     const inputPass = document.getElementById('login-pass').value.trim();
-    // Convierte tu nombre corto a email de firebase automáticamente
     const email = inputUser.includes('@') ? inputUser : `${inputUser}@esbas.pe`;
 
     try {
         await signInWithEmailAndPassword(auth, email, inputPass);
     } catch (error) {
-        console.error("Error Firebase Auth:", error);
+        console.error("Error Auth:", error.code);
         if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
-            showToast("El usuario no existe en Firebase. Debes crearlo en la consola.", "error");
+            showToast("Usuario no encontrado. Asegúrate de haberlo registrado en Firebase.", "error");
         } else if (error.code === 'auth/wrong-password') {
             showToast("La contraseña es incorrecta.", "error");
-        } else if (error.code === 'auth/invalid-email') {
-            showToast("El formato de usuario no es válido.", "error");
         } else {
-            showToast("Error de conexión: " + error.message, "error");
+            showToast("Fallo de acceso: " + error.message, "error");
         }
     }
 };
