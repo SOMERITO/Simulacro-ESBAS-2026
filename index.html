@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V5 (Unificada) -->
+    <!-- VERSIÓN: V6 (Con botón de ver contraseña) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Sistema de Evaluación V5</title>
+    <title>ESBAS - Sistema de Evaluación V6</title>
     <style>
         :root {
             --bg-main: #f8fafc;
@@ -79,12 +79,22 @@
             background: white; padding: 3rem; border-radius: 16px; box-shadow: var(--shadow-card);
             width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color);
         }
-        .login-box h1 { color: var(--primary-red); margin-bottom: 0.5rem; font-size: 1.8rem; }
-        .login-box p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+        .login-box h1 { color: var(--primary-red); margin-bottom: 2rem; font-size: 1.8rem; }
         .login-form-group { margin-bottom: 1.5rem; text-align: left; }
         .login-form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); font-size: 0.9rem;}
         .login-form-group input { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 1rem; transition: border-color 0.2s;}
         .login-form-group input:focus { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        
+        /* ESTILOS NUEVOS PARA EL BOTÓN DE CONTRASEÑA */
+        .password-container { position: relative; display: flex; align-items: center; }
+        .password-container input { width: 100%; padding-right: 3rem; }
+        .password-toggle { 
+            position: absolute; right: 10px; background: transparent; border: none;
+            cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 0.2rem; outline: none;
+            transition: transform 0.2s;
+        }
+        .password-toggle:hover { transform: scale(1.1); }
+
         .btn-login { width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 1rem; }
 
         /* Tarjetas Base */
@@ -216,7 +226,7 @@
 <div id="login-wrapper">
     <div class="login-box">
         <h1>🚒 ESBAS 2026</h1>
-        <p>Sistema de Entrenamiento y Evaluación</p>
+        <!-- El subtítulo de Entrenamiento ha sido removido como solicitaste -->
         <form onsubmit="handleLogin(event)">
             <div class="login-form-group">
                 <label>Usuario</label>
@@ -224,21 +234,10 @@
             </div>
             <div class="login-form-group">
                 <label>Contraseña</label>
-                <input type="password" id="login-pass" placeholder="••••••••" required>
+                <!-- Nuevo contenedor con botón de ojito -->
+                <div class="password-container">
+                    <input type="password" id="login-pass" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword()" id="eye-icon">👁️</button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-login">Ingresar al Sistema</button>
-        </form>
-    </div>
-</div>
-
-<nav id="main-nav">
-    <div class="nav-brand">
-        <div class="brand-title">🚒 ESBAS 2026</div>
-        <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
-    </div>
-    <div class="nav-links">
-        <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
-        <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
-        <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
-        <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: #f59e0b; color: #f59e0b;">Usuarios</button>
-        <button onclick="logout()" style="border-color: rgba(255,255
+            <button type="submit" class="btn btn-login">Ingresar al Sistema</button
