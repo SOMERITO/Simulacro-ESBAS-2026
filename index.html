@@ -1,45 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V13 (Arquitectura Segura: Sanitización XSS, Multi-Auth, Búsqueda Profunda) -->
+    <!-- VERSIÓN: V14 (Seguridad de Roles, Usuarios Deshabilitados, Multi-Auth, Búsqueda Profunda) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESBAS - Sistema de Evaluación</title>
     <style>
         :root {
-            --bg-main: #f5f5f7; 
+            --bg-main: #f5f5f7;
             --primary-red: #d93025;
             --primary-red-hover: #b3261e;
-            --primary-orange: #f97316; 
+            --primary-orange: #f97316;
             --text-dark: #1d1d1f;
             --text-muted: #86868b;
             --border-color: rgba(0, 0, 0, 0.08);
-            --success: #34c759; 
-            --error: #ff3b30; 
+            --success: #34c759;
+            --error: #ff3b30;
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-nav: rgba(217, 48, 37, 0.95);
             --glass-blur: blur(20px);
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
         body {
             background-color: var(--bg-main);
             color: var(--text-dark); min-height: 100vh; background-attachment: fixed;
             -webkit-font-smoothing: antialiased;
         }
-
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-
         @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes modalPop { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
         .toast {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
@@ -51,9 +46,8 @@
         .toast.success { border-color: var(--success); }
         .toast.error { border-color: var(--error); }
         @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
-
         nav {
-            display: none; 
+            display: none;
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             padding: 0.8rem 2rem; justify-content: space-between; align-items: center;
             color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 0 rgba(0,0,0,0.1);
@@ -61,26 +55,23 @@
         }
         .nav-brand { display: flex; align-items: center; gap: 1.5rem; }
         .brand-title { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.3px; }
-        .cloud-status { 
-            font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px; 
-            background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 0.4rem; 
+        .cloud-status {
+            font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 0.4rem;
             transition: var(--transition-smooth);
         }
         .cloud-status.syncing { background: #f59e0b; color: white; }
-        .cloud-status.success { background: var(--success); color: white; } 
+        .cloud-status.success { background: var(--success); color: white; }
         .cloud-status.error { background: var(--error); color: white; }
-
-        .nav-links button { 
-            background: transparent; border: 1px solid transparent; color: rgba(255,255,255,0.8); 
-            padding: 0.5rem 1rem; margin-left: 0.2rem; border-radius: 8px; cursor: pointer; 
-            font-weight: 500; font-size: 0.9rem; transition: var(--transition-smooth); 
+        .nav-links button {
+            background: transparent; border: 1px solid transparent; color: rgba(255,255,255,0.8);
+            padding: 0.5rem 1rem; margin-left: 0.2rem; border-radius: 8px; cursor: pointer;
+            font-weight: 500; font-size: 0.9rem; transition: var(--transition-smooth);
         }
         .nav-links button.active, .nav-links button:hover { background: rgba(255,255,255,0.15); color: white; }
-
         .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; display: none; }
         .view-section { display: none; animation: fadeInScale 0.4s ease-out; }
         .view-section.active { display: block; }
-
         #login-wrapper {
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
             background: var(--bg-main); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
@@ -95,38 +86,35 @@
         .login-box h1 { color: var(--primary-red); margin-bottom: 2rem; font-size: 1.6rem; font-weight: 600; letter-spacing: -0.5px;}
         .login-form-group { margin-bottom: 1.5rem; text-align: left; }
         .login-form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;}
-        .login-form-group input { 
-            width: 100%; padding: 0.9rem; border: 1px solid var(--border-color); border-radius: 12px; 
+        .login-form-group input {
+            width: 100%; padding: 0.9rem; border: 1px solid var(--border-color); border-radius: 12px;
             outline: none; font-size: 1rem; transition: var(--transition-smooth); background: #fbfbfd;
         }
         .login-form-group input:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 3px rgba(217,48,37,0.15); }
-        
+
         .password-container { position: relative; display: flex; align-items: center; }
         .password-container input { width: 100%; padding-right: 3rem; }
-        .password-toggle { 
+        .password-toggle {
             position: absolute; right: 10px; background: transparent; border: none;
             cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 0.2rem; outline: none;
             transition: var(--transition-smooth);
         }
         .password-toggle:hover { opacity: 0.7; }
-
         .btn-login { width: 100%; padding: 0.9rem; font-size: 1rem; margin-top: 0.5rem; border-radius: 12px; }
-
-        .card { 
-            background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); 
-            border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card); 
+        .card {
+            background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card);
             position: relative; transition: var(--transition-smooth);
         }
         .card-header { border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1.2rem; font-weight: 600; color: var(--text-dark); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;}
         .global-counter { background: #f5f5f7; color: var(--text-muted); font-size: 0.8rem; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: 500; border: 1px solid var(--border-color); }
-
-        .flashcard-wrapper { 
-            perspective: 1000px; margin-bottom: 1.2rem; cursor: pointer; border-radius: 16px; 
-            animation: slideUpFade 0.5s ease-out forwards; opacity: 0; 
+        .flashcard-wrapper {
+            perspective: 1000px; margin-bottom: 1.2rem; cursor: pointer; border-radius: 16px;
+            animation: slideUpFade 0.5s ease-out forwards; opacity: 0;
         }
-        .flashcard { 
-            display: grid; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
-            transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--shadow-card); 
+        .flashcard {
+            display: grid; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--shadow-card);
         }
         .flashcard-wrapper:hover .flashcard { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
         .flashcard-wrapper.flipped .flashcard { transform: rotateY(180deg); }
@@ -136,7 +124,6 @@
         .q-number-badge { position: absolute; top: 1.5rem; left: 1.5rem; background: #f5f5f7; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 8px; }
         .flip-hint { margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center; display: flex; justify-content: center; align-items: center; gap: 0.5rem; opacity: 0; transition: var(--transition-smooth);}
         .flashcard-wrapper:hover .flip-hint { opacity: 1; }
-
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
         .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.5rem 1.2rem; border-radius: 999px; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; transition: var(--transition-smooth); }
@@ -144,43 +131,38 @@
         .filter-btn.active { background: var(--text-dark); color: white; border-color: var(--text-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.15);}
         .badge-count { background: #e5e5ea; color: var(--text-dark); font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 600; transition: var(--transition-smooth); }
         .filter-btn.active .badge-count { background: rgba(255,255,255,0.2); color: white; }
-        
+
         .lesson-filters { display: none; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); justify-content: center; }
         .lesson-filters.active { display: flex; animation: fadeInScale 0.4s; }
         .lesson-btn { background: transparent; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem; transition: var(--transition-smooth);}
         .lesson-btn:hover { background: #f5f5f7; }
         .lesson-btn.active { background: #e5e5ea; color: var(--text-dark); border-color: #d1d1d6; font-weight: 600; }
         .lesson-btn.active .badge-count { background: var(--text-dark); color: white; }
-
         button { cursor: pointer; outline: none; }
         button:active { transform: scale(0.97) !important; }
         .btn { background-color: var(--primary-red); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: var(--transition-smooth); font-size: 0.95rem;}
         .btn:hover { background-color: var(--primary-red-hover); box-shadow: 0 4px 12px rgba(217,48,37,0.2); }
         .btn-outline { background: transparent; color: var(--text-dark); border: 1px solid var(--border-color); }
         .btn-outline:hover { background: #f5f5f7; }
-        
+
         .btn-card-edit { position: absolute; top: 1.2rem; right: 1.2rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 500; z-index: 10; transition: var(--transition-smooth);}
         .btn-card-edit:hover { background: var(--text-dark); color: white; border-color: var(--text-dark); }
-        
+
         .action-btn { padding: 0.3rem 0.6rem; margin-right: 0.25rem; font-size: 0.8rem; border: none; border-radius: 6px; font-weight: 500; transition: var(--transition-smooth); }
         .action-btn:hover { opacity: 0.8; }
         .btn-edit { background: #f5f5f7; color: var(--text-dark); border: 1px solid var(--border-color); }
         .btn-delete { background: #fee2e2; color: var(--error); border: 1px solid rgba(255,59,48,0.2); }
-
         .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; margin-top: 2rem; font-size: 0.75rem; }
         .tag { background: #f5f5f7; color: var(--text-muted); padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 500; border: 1px solid var(--border-color); }
-
         .options-list { list-style: none; margin-top: 1rem; }
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 0.5rem; cursor: pointer; transition: var(--transition-smooth); display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--text-dark); }
         .option-item.selected { border-color: var(--primary-red); background: rgba(217,48,37,0.02); font-weight: 500; box-shadow: 0 0 0 1px var(--primary-red); }
         .option-item.selected strong { color: var(--primary-red) !important; }
-
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 16px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); transition: var(--transition-smooth);}
         .sim-card { display: none; animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
-
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 16px; text-align: center; box-shadow: var(--shadow-card); transition: var(--transition-smooth); animation: fadeInScale 0.5s ease-out backwards;}
         .metric-card:nth-child(1) { animation-delay: 0.05s; } .metric-card:nth-child(2) { animation-delay: 0.1s; }
@@ -188,7 +170,6 @@
         .metric-value { font-size: 2.2rem; font-weight: 600; margin-bottom: 0.2rem; }
         .metric-label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
         .m-precision { color: #007aff; } .m-correct { color: var(--success); } .m-error { color: var(--error); } .m-blank { color: #ff9500; }
-
         .detailed-review { display: flex; flex-direction: column; gap: 1rem; text-align: left;}
         .review-item { padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); background: white; transition: var(--transition-smooth);}
         .review-item.is-correct { border-left: 4px solid var(--success); }
@@ -199,13 +180,11 @@
         .r-ans.user-wrong { background: #fff2f2; color: #cc2222; }
         .r-ans.user-right { background: #f0fff4; color: #1e7e34; }
         .r-ans.actual-correct { background: #f8fafc; color: var(--text-dark); border: 1px solid var(--border-color);}
-
         .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; transition: background 0.2s;}
         tr:hover td { background: #fbfbfd; }
         th { background: #f8fafc; font-weight: 500; color: var(--text-muted); font-size: 0.8rem; border-bottom: 1px solid var(--border-color); }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: white; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); position: relative; animation: modalPop 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
@@ -222,7 +201,6 @@
         .form-group label { font-weight: 500; font-size: 0.85rem; color: var(--text-muted); transition: color 0.3s;}
         input[type="text"], input[type="number"], select, textarea, input[type="password"] { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.95rem; outline: none; transition: var(--transition-smooth); background: #fbfbfd; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-red); background: white; box-shadow: 0 0 0 3px rgba(217,48,37,0.1); }
-
         .alts-vertical { display: flex; flex-direction: column; gap: 0.6rem; background: #fbfbfd; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
         .alt-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: white; cursor: pointer; transition: var(--transition-smooth); }
         .alt-row:has(input:checked) { border-color: var(--success); box-shadow: 0 0 0 1px var(--success);}
@@ -234,17 +212,13 @@
         .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
         .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); animation: fadeInScale 0.4s; }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;}
-
         body:not(.role-admin) .admin-only { display: none !important; }
-
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-
 <div id="toast-container"></div>
-
 <div id="login-wrapper">
     <div class="login-box">
         <h1>🚒 ESBAS 2026</h1>
@@ -264,7 +238,6 @@
         </form>
     </div>
 </div>
-
 <nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-title">🚒 ESBAS 2026</div>
@@ -278,9 +251,8 @@
         <button onclick="logout()" style="color: rgba(255,255,255,0.7);">Salir</button>
     </div>
 </nav>
-
 <div class="container" id="main-container">
-    
+
     <div id="view-repo" class="view-section active">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
@@ -297,7 +269,6 @@
         </div>
         <div id="repo-container"></div>
     </div>
-
     <div id="view-sim" class="view-section">
         <div id="sim-setup" class="card">
             <h2 class="card-header">Configurar Simulador de Examen</h2>
@@ -320,7 +291,6 @@
             </div>
             <button class="btn" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
         </div>
-
         <div id="sim-active" style="display: none;">
             <div class="sim-controls">
                 <span id="sim-progress" style="font-weight: 500; color: var(--text-dark);">Pregunta 1 de X</span>
@@ -335,7 +305,6 @@
                 </div>
             </div>
         </div>
-
         <div id="sim-results" style="display: none;">
             <div class="card" style="text-align: center;">
                 <h2 class="card-header" style="justify-content: center; border:none;">Resultados del Examen</h2>
@@ -349,10 +318,9 @@
             </div>
             <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
             <div id="sim-detailed-review" class="detailed-review"></div>
-            <br><br>
+            
         </div>
     </div>
-
     <div id="view-config" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
@@ -367,7 +335,6 @@
             </div>
         </div>
     </div>
-
     <div id="view-users" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
@@ -391,7 +358,6 @@
                 </div>
                 <button type="submit" class="btn" style="background:var(--text-dark);">+ Añadir</button>
             </form>
-
             <div class="table-container">
                 <table id="usersTable">
                     <thead><tr><th>Usuario</th><th>Contraseña</th><th>Nivel de Acceso</th><th style="width: 100px;">Acciones</th></tr></thead>
@@ -401,21 +367,19 @@
         </div>
     </div>
 </div>
-
 <div id="modal-form" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" type="button" onclick="closeModal()">×</button>
         <h2 class="card-header" id="modal-title" style="margin-top: 0; border:none; margin-bottom:0.5rem;">Registrar Pregunta</h2>
-        
+
         <div class="wizard-progress">
             <div class="wizard-dot active" id="dot-1"></div>
             <div class="wizard-dot" id="dot-2"></div>
             <div class="wizard-dot" id="dot-3"></div>
         </div>
-
         <form id="questionForm" novalidate>
             <input type="hidden" id="q-id">
-            
+
             <div id="step-1" class="form-step active">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 1: Ubicación y Orden</h3>
                 <div class="form-grid">
@@ -445,7 +409,6 @@
                     <button type="button" class="btn" onclick="goToStep(2)">Siguiente ➝</button>
                 </div>
             </div>
-
             <div id="step-2" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 2: Enunciado</h3>
                 <div class="form-group full-width">
@@ -457,7 +420,6 @@
                     <button type="button" class="btn" onclick="goToStep(3)">Siguiente ➝</button>
                 </div>
             </div>
-
             <div id="step-3" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 3: Alternativas de Respuesta</h3>
                 <div class="form-group full-width alts-vertical">
@@ -475,13 +437,11 @@
         </form>
     </div>
 </div>
-
 <script type="module">
     // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     const firebaseConfig = {
         apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
         authDomain: "esbas-2026.firebaseapp.com",
@@ -491,15 +451,12 @@
         appId: "1:524580412919:web:9104e66780fc4c61c9e2f2",
         measurementId: "G-WL19S67089"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     // Instancia secundaria para crear usuarios sin cerrar la sesión de Admin
     const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
     const secondaryAuth = getAuth(secondaryApp);
-
     const db = initializeFirestore(app, { experimentalForceLongPolling: true });
-
     // SANITIZACIÓN CONTRA XSS
     function escapeHTML(str) {
         if (str === null || str === undefined) return '';
@@ -507,7 +464,6 @@
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
         }[tag] || tag));
     }
-
     document.addEventListener("DOMContentLoaded", () => {
         const eyeBtn = document.getElementById('eye-icon');
         const passInput = document.getElementById('login-pass');
@@ -520,7 +476,6 @@
                 }
             });
         }
-
         const loginForm = document.getElementById('login-form');
         if(loginForm) {
             loginForm.addEventListener('submit', async (e) => {
@@ -528,7 +483,6 @@
                 const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
                 const inputPass = document.getElementById('login-pass').value.trim();
                 const email = inputUser.includes('@') ? inputUser : `${inputUser}@esbas.pe`;
-
                 try {
                     await signInWithEmailAndPassword(auth, email, inputPass);
                 } catch (error) {
@@ -542,14 +496,11 @@
                 }
             });
         }
-
         const questionForm = document.getElementById('questionForm');
         if(questionForm) { questionForm.addEventListener('submit', (e) => { window.saveQuestion(e); }); }
-
         const userForm = document.getElementById('userForm');
         if(userForm) { userForm.addEventListener('submit', (e) => { window.saveUser(e); }); }
     });
-
     let appData = { questions: [], users: [] };
     let currentUser = null;
     let currentUserRole = 'estudiante';
@@ -560,45 +511,77 @@
     let activeLessonFilter = 'all';
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
-
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.innerHTML = type === 'success' ? `✅ ${escapeHTML(message)}` : `⚠️ ${escapeHTML(message)}`;
         container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000); 
+        setTimeout(() => toast.remove(), 4000);
     };
+    async function loadAuthenticatedUser(user) {
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            await signOut(auth);
+            window.showToast("Tu cuenta no tiene permisos registrados en ESBAS.", "error");
+            return;
+        }
+
+        const data = userDoc.data();
+        if (data.disabled === true) {
+            await signOut(auth);
+            window.showToast("Tu cuenta está deshabilitada.", "error");
+            return;
+        }
+
+        currentUser = user;
+        currentUserRole = data.role === 'admin' ? 'admin' : 'estudiante';
+        document.getElementById('login-wrapper').style.display = 'none';
+        document.getElementById('main-nav').style.display = 'flex';
+        document.getElementById('main-container').style.display = 'block';
+        document.body.classList.toggle('role-admin', currentUserRole === 'admin');
+
+        window.showToast(`Bienvenido al sistema ESBAS`);
+        await fetchQuestions();
+        if (currentUserRole === 'admin') await fetchUsers();
+    }
 
     onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                currentUserRole = userDoc.exists() ? userDoc.data().role : 'estudiante';
-            } catch(e) { currentUserRole = 'estudiante'; }
-
-            document.getElementById('login-wrapper').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
-            document.getElementById('main-container').style.display = 'block';
-            
-            if (currentUserRole === 'admin') document.body.classList.add('role-admin');
-            else document.body.classList.remove('role-admin');
-
-            window.showToast(`Bienvenido al sistema ESBAS`);
-            fetchQuestions();
-            if(currentUserRole === 'admin') fetchUsers();
-        } else {
+        if (!user) {
+            currentUser = null;
+            currentUserRole = 'estudiante';
             document.body.classList.remove('role-admin');
             document.getElementById('login-wrapper').style.display = 'flex';
             document.getElementById('main-nav').style.display = 'none';
             document.getElementById('main-container').style.display = 'none';
+            return;
+        }
+
+        try {
+            await loadAuthenticatedUser(user);
+        } catch (error) {
+            console.error(error);
+            await signOut(auth);
+            window.showToast("No se pudo validar tu acceso. Revisa Firebase Rules.", "error");
         }
     });
 
-    window.logout = function() { signOut(auth); };
+    function isAdmin() {
+        return !!currentUser && currentUserRole === 'admin';
+    }
 
+    function requireAdmin() {
+        if (!isAdmin()) {
+            window.showToast("No tienes permisos de administrador.", "error");
+            return false;
+        }
+        return true;
+    }
+    window.logout = function() { signOut(auth); };
     async function fetchUsers() {
+        if (!requireAdmin()) return;
         try {
             const querySnapshot = await getDocs(collection(db, "users"));
             appData.users = [];
@@ -606,8 +589,8 @@
             window.renderUsers();
         } catch (error) { console.error(error); }
     }
-
     window.renderUsers = function() {
+        if (!isAdmin()) return;
         const tbody = document.getElementById('users-body');
         if(!tbody) return;
         tbody.innerHTML = '';
@@ -618,36 +601,85 @@
                     <td style="font-weight:600;">${escapeHTML((u.email || '').split('@')[0].toUpperCase())}</td>
                     <td style="font-family:monospace; color:var(--text-muted);">[Protegido]</td>
                     <td>${roleBadge}</td>
-                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${u.uid}')">Deshabilitar</button></td>
+                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${escapeHTML(u.uid)}')">Deshabilitar</button></td>
                 </tr>
             `;
         });
     };
-
     window.saveUser = async function(e) {
         if(e) e.preventDefault();
+        if (!requireAdmin()) return;
+
         const username = document.getElementById('u-name').value.trim().toLowerCase();
         const password = document.getElementById('u-pass').value.trim();
         const role = document.getElementById('u-role').value;
+
+        if (!/^[a-z0-9._-]{3,30}$/.test(username)) {
+            window.showToast("El usuario debe tener entre 3 y 30 caracteres y usar solo letras, números, punto, guion o guion bajo.", "error");
+            return;
+        }
+        if (password.length < 6) {
+            window.showToast("La contraseña debe tener al menos 6 caracteres.", "error");
+            return;
+        }
+        if (!['estudiante', 'admin'].includes(role)) {
+            window.showToast("Rol no válido.", "error");
+            return;
+        }
+
         const email = `${username}@esbas.pe`;
+        let createdCredential = null;
+
         try {
-            // Uso de secondaryAuth para evitar el deslogueo del Admin
-            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-            await signOut(secondaryAuth); 
-            await setDoc(doc(db, "users", userCredential.user.uid), { email: email, role: role, createdAt: new Date() });
-            
+            // Segunda sesión: evita sacar al administrador de su sesión principal.
+            createdCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+            const uid = createdCredential.user.uid;
+
+            await setDoc(doc(db, "users", uid), {
+                email,
+                role,
+                disabled: false,
+                createdAt: serverTimestamp(),
+                createdBy: currentUser.uid
+            });
+
+            await signOut(secondaryAuth);
             document.getElementById('u-name').value = '';
             document.getElementById('u-pass').value = '';
             window.showToast("Usuario registrado exitosamente.");
-            fetchUsers();
-        } catch (error) { window.showToast(error.message, "error"); }
+            await fetchUsers();
+        } catch (error) {
+            // Si Auth creó la cuenta pero Firestore falló, intenta limpiar la cuenta huérfana.
+            if (createdCredential?.user) {
+                try { await deleteUser(createdCredential.user); } catch (_) { /* limpieza best-effort */ }
+            }
+            try { await signOut(secondaryAuth); } catch (_) { /* noop */ }
+            console.error(error);
+            window.showToast(error.code === 'auth/email-already-in-use'
+                ? "Ese usuario ya existe."
+                : (error.message || "No se pudo registrar el usuario."), "error");
+        }
     };
 
     window.deleteUserRecord = async function(uid) {
-        if(confirm("Se eliminarán sus permisos de acceso al sistema (Queda bloqueado por Reglas). ¿Continuar?")) {
-            await deleteDoc(doc(db, "users", uid));
-            fetchUsers();
-            window.showToast("Usuario deshabilitado lógicamente.");
+        if (!requireAdmin()) return;
+        if (uid === currentUser?.uid) {
+            window.showToast("No puedes deshabilitar tu propia cuenta desde esta pantalla.", "error");
+            return;
+        }
+        if (!confirm("La cuenta quedará deshabilitada y perderá el acceso a ESBAS. ¿Continuar?")) return;
+
+        try {
+            await updateDoc(doc(db, "users", uid), {
+                disabled: true,
+                disabledAt: serverTimestamp(),
+                disabledBy: currentUser.uid
+            });
+            await fetchUsers();
+            window.showToast("Usuario deshabilitado.");
+        } catch (error) {
+            console.error(error);
+            window.showToast("No se pudo deshabilitar el usuario. Revisa las Firebase Rules.", "error");
         }
     };
 
@@ -659,7 +691,6 @@
             if(status === 'error') indicator.innerHTML = '⚠️ Error Conexión';
         });
     };
-
     async function fetchQuestions() {
         window.setCloudStatus('syncing');
         try {
@@ -675,9 +706,9 @@
             window.showToast("No se pudo descargar el banco de preguntas.", "error");
         }
     }
-
     window.saveQuestion = async function(e) {
         if(e) e.preventDefault();
+        if (!requireAdmin()) return;
         const form = document.getElementById('questionForm');
         if (!form.checkValidity()) {
             const invalidElement = form.querySelector(':invalid');
@@ -689,9 +720,8 @@
                     setTimeout(() => invalidElement.focus(), 300);
                 }
             }
-            return; 
+            return;
         }
-
         const id = document.getElementById('q-id').value;
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
@@ -702,23 +732,21 @@
         const optB = document.getElementById('q-opt-b').value.trim();
         const optC = document.getElementById('q-opt-c').value.trim();
         const optD = document.getElementById('q-opt-d').value.trim();
-        
+
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
         if(!checkedRadio) { window.showToast("Selecciona la respuesta correcta.", "error"); return; }
         const optsLower = [optA, optB, optC, optD].map(o => o.toLowerCase());
         if (new Set(optsLower).size < 4) { window.showToast("Error: Hay alternativas con texto duplicado.", "error"); return; }
-
         const nuevaPregunta = {
             modulo: currentModule, leccion_num: Number(currentLessonNum), leccion_nombre: currentLessonName,
             pregunta_num: Number(currentQNum), pregunta: qText,
             opciones: { a: optA, b: optB, c: optC, d: optD }, respuesta: checkedRadio.value
         };
-
         window.setCloudStatus('syncing');
         try {
             if (id) await setDoc(doc(db, "questions", id), nuevaPregunta);
             else await addDoc(collection(db, "questions"), nuevaPregunta);
-            
+
             formMemory.lastModule = currentModule;
             formMemory[currentModule].num = currentLessonNum;
             formMemory[currentModule].name = currentLessonName;
@@ -729,8 +757,8 @@
             window.setCloudStatus('error');
         }
     };
-
     window.deleteQuestion = async function(id) {
+        if (!requireAdmin()) return;
         if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
             window.setCloudStatus('syncing');
             try {
@@ -739,8 +767,8 @@
             } catch (error) { window.setCloudStatus('error'); }
         }
     };
-
     window.switchView = function(viewName) {
+        if ((viewName === 'config' || viewName === 'users') && !requireAdmin()) return;
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
         document.getElementById(`view-${viewName}`).classList.add('active');
@@ -749,14 +777,12 @@
         if(viewName === 'config') window.renderTable();
         if(viewName === 'users') window.renderUsers();
     };
-
     window.updateIndexesAndCounters = function() {
         appData.questions.sort((a,b) => {
             if(a.modulo !== b.modulo) return (a.modulo || '').localeCompare(b.modulo || '');
             if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num || 0) - parseInt(b.leccion_num || 0);
             return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
         });
-
         document.getElementById('global-count-badge').innerText = `${appData.questions.length} Preguntas`;
         const modContainer = document.getElementById('moduleFilters');
         modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${appData.questions.length}</span></button>`;
@@ -765,11 +791,10 @@
             modContainer.innerHTML += `<button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">${mod} <span class="badge-count">${count}</span></button>`;
         });
     };
-
     window.setModuleFilter = function(moduleName) {
         activeModuleFilter = moduleName;
         activeLessonFilter = 'all';
-        window.updateIndexesAndCounters(); 
+        window.updateIndexesAndCounters();
         const lessonContainer = document.getElementById('lessonFiltersContainer');
         if(moduleName === 'all') {
             lessonContainer.classList.remove('active');
@@ -788,42 +813,37 @@
         }
         window.renderRepo();
     };
-
     window.setLessonFilter = function(lessonNumberStr, btnElement) {
         activeLessonFilter = lessonNumberStr;
         document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
         window.renderRepo();
     };
-
     window.renderRepo = function() {
         const container = document.getElementById('repo-container');
         const searchTxt = (document.getElementById('searchInput').value || '').toLowerCase();
         container.innerHTML = '';
-        
+
         // Búsqueda profunda: Incluye opciones A, B, C, D
         const filtered = appData.questions.filter(q => {
-            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
+            const numRaw = String(q.leccion_num).replace(/\D/g, '');
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
             const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
             const optsText = q.opciones ? `${q.opciones.a} ${q.opciones.b} ${q.opciones.c} ${q.opciones.d}` : '';
             const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''} ${optsText}`.toLowerCase();
             return matchesModule && matchesLesson && fullStr.includes(searchTxt);
         });
-
         if (filtered.length === 0) {
             container.innerHTML = `<div class="empty-state"><text>📂</text><h3>Sin resultados</h3></div>`;
             return;
         }
-
         filtered.forEach((q, i) => {
-            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
+            const numRaw = String(q.leccion_num).replace(/\D/g, '');
             const lessonBadge = escapeHTML(q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`);
             const correctText = escapeHTML(q.opciones ? q.opciones[q.respuesta] : 'N/A');
-            const pNum = escapeHTML(q.pregunta_num || "?"); 
+            const pNum = escapeHTML(q.pregunta_num || "?");
             const delay = i > 15 ? 0 : i * 0.05;
             const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">Editar</button>`;
-
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard">
@@ -843,7 +863,6 @@
             `;
         });
     };
-
     window.renderTable = function() {
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
@@ -857,14 +876,12 @@
                     <td>${lessonBadge}</td>
                     <td>${escapeHTML((q.pregunta || '').substring(0, 50))}...</td>
                     <td>
-                        <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
-                        <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
+                        ${isAdmin() ? `<button class="action-btn btn-edit" onclick="openModal('edit', '${escapeHTML(q.id)}')">Editar</button><button class="action-btn btn-delete" onclick="deleteQuestion('${escapeHTML(q.id)}')">Borrar</button>` : '<span style="color:var(--text-muted);">Solo lectura</span>'}
                     </td>
                 </tr>
             `;
         });
     };
-
     window.handleModuleMemory = function(selectedModule) {
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
@@ -872,14 +889,12 @@
             document.getElementById('q-lesson-name').value = formMemory[selectedModule].name;
         }
     };
-
     window.autoFillLessonName = function() {
         const numInput = document.getElementById('q-lesson').value.trim();
         if(!numInput) return;
         const existing = appData.questions.find(q => String(q.leccion_num).replace(/\D/g, '') === numInput && (q.leccion_nombre || '').trim() !== '');
         if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
     };
-
     window.autoIncrementQuestionNumber = function() {
         const mod = document.getElementById('q-module').value;
         const lec = document.getElementById('q-lesson').value.trim();
@@ -892,7 +907,6 @@
             }
         }
     };
-
     window.goToStep = function(step) {
         document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
         document.getElementById(`step-${step}`).classList.add('active');
@@ -900,10 +914,10 @@
             if(index < step) el.classList.add('active'); else el.classList.remove('active');
         });
     };
-
     window.openModal = function(mode, id = null) {
+        if (!requireAdmin()) return;
         document.getElementById('modal-form').classList.add('active');
-        window.goToStep(1); 
+        window.goToStep(1);
         if (mode === 'new') {
             document.getElementById('modal-title').innerText = "Registrar Pregunta";
             document.getElementById('q-id').value = '';
@@ -911,7 +925,7 @@
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
                 document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
-                window.autoIncrementQuestionNumber(); 
+                window.autoIncrementQuestionNumber();
             } else {
                 document.getElementById('q-module').value = '';
                 document.getElementById('q-lesson').value = '';
@@ -930,7 +944,7 @@
             if(q) {
                 document.getElementById('q-id').value = q.id;
                 document.getElementById('q-module').value = q.modulo || '';
-                document.getElementById('q-lesson').value = String(q.leccion_num).replace(/\D/g, ''); 
+                document.getElementById('q-lesson').value = String(q.leccion_num).replace(/\D/g, '');
                 document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
                 document.getElementById('q-num').value = q.pregunta_num || '';
                 document.getElementById('q-text').value = q.pregunta || '';
@@ -943,9 +957,7 @@
             }
         }
     };
-
     window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); };
-
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
@@ -958,7 +970,6 @@
             if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
         }
     };
-
     window.startSimulation = function() {
         const modFilter = document.getElementById('sim-module').value;
         const lessonFilter = document.getElementById('sim-lesson').value;
@@ -973,7 +984,7 @@
         let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
         currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
         userAnswers = {};
-        currentSimIndex = 0; 
+        currentSimIndex = 0;
         if(currentSimulationQuestions.length === 0) { window.showToast("No hay preguntas registradas.", "error"); return; }
         document.getElementById('sim-setup').style.display = 'none';
         document.getElementById('sim-active').style.display = 'block';
@@ -981,7 +992,6 @@
         window.renderSimulationQuestions();
         window.showSimQuestion(0);
     };
-
     window.renderSimulationQuestions = function() {
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
@@ -1004,7 +1014,6 @@
             `;
         });
     };
-
     window.showSimQuestion = function(index) {
         document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
         const activeCard = document.getElementById(`sim-q-card-${index}`);
@@ -1019,7 +1028,6 @@
             document.getElementById('btn-sim-finish').style.display = 'none';
         }
     };
-
     window.navigateSim = function(direction) {
         const nextIndex = currentSimIndex + direction;
         if(nextIndex >= 0 && nextIndex < currentSimulationQuestions.length) {
@@ -1027,30 +1035,25 @@
             window.showSimQuestion(currentSimIndex);
         }
     };
-
     window.selectAnswer = function(questionId, selectedKey) {
         userAnswers[questionId] = selectedKey;
         document.querySelectorAll(`.sim-opt-${questionId}`).forEach(el => el.classList.remove('selected'));
         document.getElementById(`opt-${questionId}-${selectedKey}`).classList.add('selected');
     };
-
     window.cancelSimulation = function() {
         if(confirm("¿Seguro que deseas cancelar el examen?")) {
             document.getElementById('sim-active').style.display = 'none';
             document.getElementById('sim-setup').style.display = 'block';
         }
     };
-
     window.finishSimulation = function() {
         const total = currentSimulationQuestions.length;
         const answered = Object.keys(userAnswers).length;
         if(answered < total && !confirm(`Faltan ${total - answered} preguntas. ¿Entregar?`)) return;
-
         let correctCount = 0; let errorCount = 0; let blankCount = 0; let reviewHTML = '';
         currentSimulationQuestions.forEach((q, index) => {
             const correct = q.respuesta; const userSelected = userAnswers[q.id];
             let statusClass = 'is-blank'; let icon = '⚠️'; let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
-
             if (!userSelected) {
                 blankCount++;
             } else if (userSelected === correct) {
@@ -1060,7 +1063,6 @@
                 errorCount++; statusClass = 'is-incorrect'; icon = '❌';
                 userAnswerText = `<div class="r-ans user-wrong">Error: <strong>${escapeHTML(userSelected.toUpperCase())}) ${escapeHTML(q.opciones[userSelected])}</strong></div>`;
             }
-
             reviewHTML += `
                 <div class="review-item ${statusClass}">
                     <div class="r-question">${icon} Q${index + 1} (Orig. #${escapeHTML(q.pregunta_num || "?")}): ${escapeHTML(q.pregunta || '')}</div>
@@ -1069,7 +1071,6 @@
                 </div>
             `;
         });
-
         document.getElementById('res-precision').innerText = `${total > 0 ? Math.round((correctCount / total) * 100) : 0}%`;
         document.getElementById('res-correct').innerText = correctCount;
         document.getElementById('res-error').innerText = errorCount;
@@ -1082,4 +1083,3 @@
 </script>
 </body>
 </html>
-
