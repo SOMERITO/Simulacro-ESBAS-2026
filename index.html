@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V6 (Con botón de ver contraseña) -->
+    <!-- VERSIÓN: V7 (Lógica blindada y sincrónica) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Sistema de Evaluación V6</title>
+    <title>ESBAS - Sistema de Evaluación</title>
     <style>
         :root {
             --bg-main: #f8fafc;
@@ -85,7 +85,6 @@
         .login-form-group input { width: 100%; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 1rem; transition: border-color 0.2s;}
         .login-form-group input:focus { border-color: var(--primary-red); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
         
-        /* ESTILOS NUEVOS PARA EL BOTÓN DE CONTRASEÑA */
         .password-container { position: relative; display: flex; align-items: center; }
         .password-container input { width: 100%; padding-right: 3rem; }
         .password-toggle { 
@@ -226,18 +225,25 @@
 <div id="login-wrapper">
     <div class="login-box">
         <h1>🚒 ESBAS 2026</h1>
-        <!-- El subtítulo de Entrenamiento ha sido removido como solicitaste -->
-        <form onsubmit="handleLogin(event)">
+        <!-- Lógica de formulario blindada (sin onsubmit) -->
+        <form id="login-form">
             <div class="login-form-group">
                 <label>Usuario</label>
                 <input type="text" id="login-user" placeholder="Ej: JCARRANZA" required autocomplete="off">
             </div>
             <div class="login-form-group">
                 <label>Contraseña</label>
-                <!-- Nuevo contenedor con botón de ojito -->
                 <div class="password-container">
                     <input type="password" id="login-pass" placeholder="••••••••" required>
-                    <button type="button" class="password-toggle" onclick="togglePassword()" id="eye-icon">👁️</button>
+                    <!-- Botón de ojito blindado (sin onclick) -->
+                    <button type="button" class="password-toggle" id="eye-icon">👁️</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-login">Ingresar al Sistema</button
+            <button type="submit" class="btn btn-login">Ingresar al Sistema</button>
+        </form>
+    </div>
+</div>
+
+<nav id="main-nav">
+    <div class="nav-brand">
+        <div class="brand-ti
