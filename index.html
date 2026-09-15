@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V15 (Experiencia Premium, Gestión de Accesos, Reparación de Usuarios, Feedback de Carga) -->
+    <!-- VERSIÓN: V16 (Arquitectura Segura, Experiencia iOS, Simulador Server-Side, Gestión de Accesos) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Sistema de Evaluación</title>
+    <title>Simulacro ESBAS 2026</title>
     <style>
         :root {
             --bg-main: #f5f5f7;
@@ -300,6 +300,93 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
         }
+
+        /* =========================================================
+           V16 — Refinamiento visual + seguridad de datos
+           ========================================================= */
+        .access-note {
+            margin: .35rem 0 1.5rem !important;
+            padding: .9rem 1rem;
+            border: 1px solid rgba(0,0,0,.06);
+            border-radius: 14px;
+            background: rgba(248,248,250,.85);
+            color: var(--text-muted);
+            font-size: .8rem;
+            line-height: 1.55;
+        }
+        .welcome-banner {
+            display: none;
+            align-items: center;
+            gap: .9rem;
+            margin: 0 0 1.15rem;
+            padding: .95rem 1.15rem;
+            border: 1px solid rgba(255,255,255,.9);
+            background: rgba(255,255,255,.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 18px;
+            box-shadow: 0 12px 32px rgba(0,0,0,.07);
+            animation: welcomeIn .5s var(--ease-ios) both;
+        }
+        .welcome-banner.active { display: flex; }
+        .welcome-banner-icon {
+            width: 40px; height: 40px; flex: 0 0 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; background: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,.07);
+            animation: loaderFloat 1.5s ease-in-out infinite;
+        }
+        .welcome-banner-title { font-weight: 700; color: var(--text-dark); letter-spacing: -.15px; }
+        .welcome-banner-subtitle { color: var(--text-muted); font-size: .78rem; margin-top: .18rem; }
+        @keyframes welcomeIn {
+            from { opacity: 0; transform: translateY(-10px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes welcomeOut {
+            from { opacity: 1; max-height: 120px; transform: translateY(0); margin-bottom: 1.15rem; }
+            to { opacity: 0; max-height: 0; transform: translateY(-8px); margin-bottom: 0; padding-top: 0; padding-bottom: 0; overflow: hidden; }
+        }
+        .welcome-banner.leaving { animation: welcomeOut .45s var(--ease-ios) forwards; }
+        .security-chip {
+            display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .55rem;
+            font-size:.72rem; font-weight:650; border-radius:999px;
+            color:#157347; background:#ecfdf3; border:1px solid rgba(21,115,71,.08);
+        }
+        .password-protected {
+            display:inline-flex; align-items:center; gap:.45rem;
+            color:var(--text-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.8rem;
+        }
+        .password-help {
+            margin-top:.45rem; color:var(--text-muted); font-size:.76rem; line-height:1.45;
+        }
+        .table-container table tr { transition: background .22s var(--ease-ios); }
+        .table-container table tr:hover td { background:#fbfbfd; }
+        .user-actions .action-btn { min-width:90px; }
+        .danger-outline { color:var(--error) !important; border-color:rgba(255,59,48,.28) !important; background:#fff !important; }
+        .danger-outline:hover { background:#fff5f5 !important; }
+        .nav-links { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:.2rem; }
+        .nav-links button { position:relative; overflow:hidden; }
+        .nav-links button.active { box-shadow: inset 0 -2px 0 rgba(255,255,255,.92); }
+        .sim-secure-note {
+            margin-top: .85rem; padding: .7rem .85rem; border-radius: 12px;
+            background:#f8fafc; color:var(--text-muted); font-size:.77rem; line-height:1.5;
+            border:1px solid rgba(0,0,0,.05);
+        }
+        .admin-bank-note {
+            display:flex; align-items:center; gap:.55rem; color:var(--text-muted); font-size:.8rem;
+            margin-top:.75rem;
+        }
+        body:not(.role-admin) #view-repo,
+        body:not(.role-admin) #btn-repo { display:none !important; }
+        body:not(.role-admin) #btn-config,
+        body:not(.role-admin) #btn-users { display:none !important; }
+        @media (max-width: 700px) {
+            .welcome-banner { align-items:flex-start; }
+            .nav-links { gap:.15rem; }
+            .nav-links button { padding:.45rem .7rem; font-size:.82rem; }
+            .user-actions { flex-direction:column; }
+            .user-actions .action-btn { width:100%; }
+        }
     </style>
 </head>
 <body>
@@ -337,8 +424,8 @@
         <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
     </div>
     <div class="nav-links">
-        <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
-        <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
+        <button onclick="switchView('repo')" id="btn-repo" class="admin-only">Repositorio</button>
+        <button onclick="switchView('sim')" id="btn-sim" class="active">Simulación</button>
         <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
         <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: var(--primary-orange); color: var(--primary-orange);">Usuarios</button>
         <button onclick="logout()" style="color: rgba(255,255,255,0.7);">Salir</button>
@@ -346,7 +433,15 @@
 </nav>
 <div class="container" id="main-container">
 
-    <div id="view-repo" class="view-section active">
+    <div id="welcome-banner" class="welcome-banner" aria-live="polite">
+        <div class="welcome-banner-icon" id="welcome-icon">🚒</div>
+        <div>
+            <div class="welcome-banner-title" id="welcome-title">Bienvenidos al Simulacro ESBAS</div>
+            <div class="welcome-banner-subtitle" id="welcome-subtitle">Tu sesión está lista.</div>
+        </div>
+    </div>
+
+    <div id="view-repo" class="view-section admin-only">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
                 <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
@@ -362,7 +457,7 @@
         </div>
         <div id="repo-container"></div>
     </div>
-    <div id="view-sim" class="view-section">
+    <div id="view-sim" class="view-section active">
         <div id="sim-setup" class="card">
             <h2 class="card-header">Configurar Simulador de Examen</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
@@ -382,7 +477,8 @@
                     </select>
                 </div>
             </div>
-            <button class="btn" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
+            <button class="btn" id="btn-start-sim" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
+            <div class="sim-secure-note">🔒 El banco completo de preguntas solo está disponible para administradores. El simulacro de estudiantes se genera de forma segura en el servidor y no expone las respuestas antes de entregar el examen.</div>
         </div>
         <div id="sim-active" style="display: none;">
             <div class="sim-controls">
@@ -407,7 +503,7 @@
                     <div class="metric-card"><div class="metric-value m-error" id="res-error">0</div><div class="metric-label">Errores</div></div>
                     <div class="metric-card"><div class="metric-value m-blank" id="res-blank">0</div><div class="metric-label">Sin responder</div></div>
                 </div>
-                <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block';">Volver a Configurar Examen</button>
+                <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block'; currentSimulationSessionId = null; currentSimulationQuestions = []; userAnswers = {}; updateSimLessonDropdown(document.getElementById('sim-module').value);">Volver a Configurar Examen</button>
             </div>
             <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
             <div id="sim-detailed-review" class="detailed-review"></div>
@@ -433,7 +529,7 @@
             <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
                 <div>
                     <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Accesos</h2>
-                    <div class="access-note">Los accesos se guardan en Firebase Authentication y su perfil se registra en Firestore. Las contraseñas nunca se muestran.</div>
+                    <div class="access-note"><span class="security-chip">🔐 Seguridad</span> Las contraseñas existentes no se pueden recuperar ni mostrar: Firebase las protege. Desde aquí puedes establecer una nueva contraseña sin exponerla en el código ni guardarla en Firestore.</div>
                 </div>
             </div>
             <form id="userForm" style="display:flex; gap:1rem; margin-bottom: 1.25rem; align-items:flex-end; flex-wrap:wrap;">
@@ -459,7 +555,7 @@
             </form>
             <div class="table-container">
                 <table id="usersTable">
-                    <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th style="width: 270px;">Acciones</th></tr></thead>
+                    <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Contraseña</th><th style="width: 290px;">Acciones</th></tr></thead>
                     <tbody id="users-body"></tbody>
                 </table>
             </div>
@@ -490,6 +586,14 @@
                     <option value="false">Activo — puede ingresar</option>
                     <option value="true">Deshabilitado — acceso bloqueado</option>
                 </select>
+            </div>
+            <div class="form-group full-width">
+                <label>Nueva contraseña <span style="font-weight:400;color:var(--text-muted);">(opcional)</span></label>
+                <div class="field-password-wrap">
+                    <input type="password" id="edit-user-password" autocomplete="new-password" minlength="6" placeholder="Dejar vacío para no cambiarla">
+                    <button type="button" class="mini-toggle" id="edit-pass-toggle" aria-label="Mostrar nueva contraseña">👁️</button>
+                </div>
+                <div class="password-help">Al guardarla, la contraseña actual será reemplazada. La contraseña anterior no puede consultarse.</div>
             </div>
         </div>
         <div class="wizard-footer">
@@ -571,8 +675,9 @@
 <script type="module">
     // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-functions.js";
     const firebaseConfig = {
         apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
         authDomain: "esbas-2026.firebaseapp.com",
@@ -584,10 +689,12 @@
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    // Instancia secundaria para crear usuarios sin cerrar la sesión de Admin
-    const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
-    const secondaryAuth = getAuth(secondaryApp);
     const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+    const functions = getFunctions(app, 'us-central1');
+    const callAdminCreateOrResetUser = httpsCallable(functions, 'adminCreateOrResetUser');
+    const callAdminUpdateUserAccess = httpsCallable(functions, 'adminUpdateUserAccess');
+    const callStartSimulation = httpsCallable(functions, 'startSimulation');
+    const callGradeSimulation = httpsCallable(functions, 'gradeSimulation');
     // SANITIZACIÓN CONTRA XSS
     function escapeHTML(str) {
         if (str === null || str === undefined) return '';
@@ -610,6 +717,14 @@
             userEyeBtn.addEventListener('click', () => {
                 if(userPassInput.type === 'password') { userPassInput.type = 'text'; userEyeBtn.innerText = '🙈'; }
                 else { userPassInput.type = 'password'; userEyeBtn.innerText = '👁️'; }
+            });
+        }
+        const editEyeBtn = document.getElementById('edit-pass-toggle');
+        const editPassInput = document.getElementById('edit-user-password');
+        if(editEyeBtn && editPassInput) {
+            editEyeBtn.addEventListener('click', () => {
+                if(editPassInput.type === 'password') { editPassInput.type = 'text'; editEyeBtn.innerText = '🙈'; }
+                else { editPassInput.type = 'password'; editEyeBtn.innerText = '👁️'; }
             });
         }
         const loginForm = document.getElementById('login-form');
@@ -661,6 +776,7 @@
     let currentUser = null;
     let currentUserRole = 'estudiante';
     let currentSimulationQuestions = [];
+    let currentSimulationSessionId = null;
     let userAnswers = {};
     let currentSimIndex = 0;
     let activeModuleFilter = 'all';
@@ -682,6 +798,24 @@
         document.getElementById('loader-icon').textContent = icon;
     }
     function hideAppLoading() { setAppLoading(false); }
+    function showWelcomeBanner(role) {
+        const banner = document.getElementById('welcome-banner');
+        if (!banner) return;
+        const subtitle = role === 'admin'
+            ? 'Sesión de administrador iniciada. Todo está sincronizado.'
+            : 'Tu simulador está listo. El banco completo permanece protegido.';
+        document.getElementById('welcome-title').textContent = 'Bienvenidos al Simulacro ESBAS';
+        document.getElementById('welcome-subtitle').textContent = subtitle;
+        document.getElementById('welcome-icon').textContent = role === 'admin' ? '🛡️' : '🚒';
+        banner.classList.remove('leaving');
+        banner.classList.add('active');
+        clearTimeout(window.__welcomeTimer);
+        window.__welcomeTimer = setTimeout(() => {
+            banner.classList.add('leaving');
+            setTimeout(() => banner.classList.remove('active', 'leaving'), 500);
+        }, 4200);
+    }
+
 
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
@@ -692,24 +826,21 @@
         setTimeout(() => toast.remove(), 4000);
     };
     async function loadAuthenticatedUser(user) {
-        setAppLoading(true, 'Preparando tu acceso', 'Validando permisos, descargando preguntas y sincronizando tu sesión.', '🔐');
+        setAppLoading(true, 'Preparando tu acceso', 'Validando permisos y preparando tu espacio ESBAS.', '🔐');
         try {
             const userRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userRef);
-
             if (!userDoc.exists()) {
                 await signOut(auth);
                 window.showToast("Tu cuenta no tiene un perfil registrado en ESBAS.", "error");
                 return;
             }
-
             const data = userDoc.data();
             if (data.disabled === true) {
                 await signOut(auth);
                 window.showToast("Tu cuenta está deshabilitada.", "error");
                 return;
             }
-
             currentUser = user;
             currentUserRole = data.role === 'admin' ? 'admin' : 'estudiante';
             document.getElementById('login-wrapper').style.display = 'none';
@@ -717,9 +848,15 @@
             document.getElementById('main-container').style.display = 'block';
             document.body.classList.toggle('role-admin', currentUserRole === 'admin');
 
-            window.showToast(`Bienvenido al sistema ESBAS`);
-            await fetchQuestions();
-            if (currentUserRole === 'admin') await fetchUsers();
+            if (currentUserRole === 'admin') {
+                await fetchQuestions();
+                await fetchUsers();
+                switchView('repo');
+            } else {
+                switchView('sim');
+                updateSimLessonDropdown('all');
+            }
+            showWelcomeBanner(currentUserRole);
         } finally {
             hideAppLoading();
             setButtonLoading(document.getElementById('btn-login'), false);
@@ -738,13 +875,14 @@
             setButtonLoading(document.getElementById('btn-login'), false);
             return;
         }
-
         try {
             await loadAuthenticatedUser(user);
         } catch (error) {
             console.error(error);
             await signOut(auth);
-            window.showToast("No se pudo validar tu acceso. Revisa Firebase Rules.", "error");
+            hideAppLoading();
+            setButtonLoading(document.getElementById('btn-login'), false);
+            window.showToast(error?.code === 'permission-denied' ? 'Firebase rechazó la lectura del perfil. Revisa las Rules.' : 'No se pudo validar tu acceso. Revisa la conexión.', 'error');
         }
     });
 
@@ -765,9 +903,12 @@
         try {
             const querySnapshot = await getDocs(collection(db, "users"));
             appData.users = [];
-            querySnapshot.forEach((doc) => { appData.users.push({ uid: doc.id, ...doc.data() }); });
+            querySnapshot.forEach((docSnap) => { appData.users.push({ uid: docSnap.id, ...docSnap.data() }); });
             window.renderUsers();
-        } catch (error) { console.error(error); }
+        } catch (error) {
+            console.error(error);
+            window.showToast('No se pudo cargar la lista de accesos.', 'error');
+        }
     }
     function userStatusHTML(user) {
         return user.disabled === true
@@ -780,22 +921,23 @@
         if(!tbody) return;
         tbody.innerHTML = '';
         if (!appData.users.length) {
-            tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state" style="padding:2.5rem 1rem;"><div style="font-size:2rem;">👥</div><h3>No hay accesos registrados</h3><p>Los accesos aparecerán aquí después de crearlos o repararlos.</p></div></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state" style="padding:2.5rem 1rem;"><div style="font-size:2rem;">👥</div><h3>No hay accesos registrados</h3><p>Los accesos aparecerán aquí después de crearlos.</p></div></td></tr>';
             return;
         }
         appData.users.sort((a,b) => String(a.email || '').localeCompare(String(b.email || '')));
         appData.users.forEach(u => {
             const roleBadge = u.role === 'admin'
-                ? '<span style="color:var(--text-dark); font-weight:600;">Administrador</span>'
+                ? '<span style="color:var(--text-dark); font-weight:650;">Administrador</span>'
                 : '<span style="color:var(--text-muted);">Estudiante</span>';
             const disabled = u.disabled === true;
             const toggleLabel = disabled ? 'Habilitar' : 'Deshabilitar';
             const toggleClass = disabled ? 'btn-edit' : 'btn-delete';
             tbody.innerHTML += `
                 <tr>
-                    <td style="font-weight:600;">${escapeHTML((u.email || '').split('@')[0].toUpperCase())}</td>
+                    <td style="font-weight:650;">${escapeHTML((u.email || '').split('@')[0].toUpperCase())}</td>
                     <td>${roleBadge}</td>
                     <td>${userStatusHTML(u)}</td>
+                    <td><span class="password-protected">🔒 Protegida</span></td>
                     <td>
                         <div class="user-actions">
                             <button class="action-btn btn-edit" onclick="openUserEditor('${escapeHTML(u.uid)}')">Editar</button>
@@ -807,74 +949,40 @@
         });
     };
 
-    async function setUserProfile(uid, email, role, extra = {}) {
-        await setDoc(doc(db, 'users', uid), {
-            email,
-            role,
-            disabled: extra.disabled === true,
-            createdAt: extra.createdAt || serverTimestamp(),
-            createdBy: extra.createdBy || currentUser.uid,
-            ...(extra.disabledAt ? { disabledAt: extra.disabledAt } : {}),
-            ...(extra.disabledBy ? { disabledBy: extra.disabledBy } : {})
-        }, { merge: true });
-    }
-
     window.saveUser = async function(e) {
         if(e) e.preventDefault();
         if (!requireAdmin()) return;
-
         const username = document.getElementById('u-name').value.trim().toLowerCase();
         const password = document.getElementById('u-pass').value.trim();
         const role = document.getElementById('u-role').value;
         const btn = document.getElementById('btn-save-user');
-
         if (!/^[a-z0-9._-]{3,30}$/.test(username)) {
-            window.showToast("El usuario debe tener entre 3 y 30 caracteres y usar solo letras, números, punto, guion o guion bajo.", "error");
-            return;
+            window.showToast("El usuario debe tener entre 3 y 30 caracteres y usar solo letras, números, punto, guion o guion bajo.", "error"); return;
         }
         if (password.length < 6) {
-            window.showToast("La contraseña debe tener al menos 6 caracteres.", "error");
-            return;
+            window.showToast("La contraseña debe tener al menos 6 caracteres.", "error"); return;
         }
         if (!['estudiante', 'admin'].includes(role)) {
-            window.showToast("Rol no válido.", "error");
-            return;
+            window.showToast("Rol no válido.", "error"); return;
         }
-
-        const email = `${username}@esbas.pe`;
-        let tempCredential = null;
         setButtonLoading(btn, true);
-        setAppLoading(true, 'Configurando acceso', 'Creando la cuenta y sincronizando su perfil en Firebase.', '👤');
-
+        setAppLoading(true, 'Configurando acceso', 'Creando o actualizando la cuenta de forma segura…', '👤');
         try {
-            try {
-                // Ruta normal: crea la cuenta de Auth.
-                tempCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-            } catch (authError) {
-                if (authError.code !== 'auth/email-already-in-use') throw authError;
-
-                // Ruta de reparación: la cuenta de Auth ya existe pero el perfil de Firestore puede faltar.
-                // El administrador confirma las credenciales y se reutiliza el UID existente.
-                window.showToast("La cuenta ya existe en Firebase. Verificando y reparando su perfil…", "success");
-                tempCredential = await signInWithEmailAndPassword(secondaryAuth, email, password);
-            }
-
-            const uid = tempCredential.user.uid;
-            await setUserProfile(uid, email, role, { disabled: false, createdBy: currentUser.uid });
-            await signOut(secondaryAuth);
-
+            const result = await callAdminCreateOrResetUser({ username, password, role });
             document.getElementById('u-name').value = '';
             document.getElementById('u-pass').value = '';
             document.getElementById('u-role').value = 'estudiante';
-            window.showToast("Acceso creado y sincronizado correctamente.");
             await fetchUsers();
+            window.showToast(result.data?.action === 'updated'
+                ? 'Acceso existente actualizado y contraseña restablecida.'
+                : 'Acceso creado correctamente.');
         } catch (error) {
-            try { await signOut(secondaryAuth); } catch (_) {}
             console.error(error);
             let msg = 'No se pudo configurar el acceso.';
-            if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = 'La cuenta existe, pero la contraseña proporcionada no coincide. Usa la contraseña actual para reparar el acceso.';
-            else if (error.code === 'auth/user-not-found') msg = 'No se encontró la cuenta en Firebase Authentication.';
-            else if (error.code === 'permission-denied') msg = 'Firebase rechazó el registro del perfil. Revisa las Rules.';
+            if (error.code === 'functions/permission-denied') msg = 'No tienes permisos de administrador.';
+            else if (error.code === 'functions/already-exists') msg = 'Ese acceso ya existe.';
+            else if (error.code === 'functions/invalid-argument') msg = error.message || 'Revisa los datos ingresados.';
+            else if (error.code === 'functions/resource-exhausted') msg = 'Demasiados intentos. Espera un momento y vuelve a intentarlo.';
             else if (error.message) msg = error.message;
             window.showToast(msg, 'error');
         } finally {
@@ -891,9 +999,9 @@
         document.getElementById('edit-user-name').value = (user.email || '').split('@')[0].toUpperCase();
         document.getElementById('edit-user-role').value = user.role === 'admin' ? 'admin' : 'estudiante';
         document.getElementById('edit-user-disabled').value = user.disabled === true ? 'true' : 'false';
+        document.getElementById('edit-user-password').value = '';
         document.getElementById('user-modal').classList.add('active');
     };
-
     window.closeUserModal = function() { document.getElementById('user-modal').classList.remove('active'); };
 
     window.updateUserAccess = async function() {
@@ -901,28 +1009,29 @@
         const uid = document.getElementById('edit-user-uid').value;
         const role = document.getElementById('edit-user-role').value;
         const disabled = document.getElementById('edit-user-disabled').value === 'true';
+        const newPassword = document.getElementById('edit-user-password').value.trim();
         const btn = document.getElementById('btn-update-user');
         if (!uid || !['admin','estudiante'].includes(role)) return;
         if (uid === currentUser.uid && disabled) {
-            window.showToast('No puedes deshabilitar tu propia cuenta.', 'error');
-            return;
+            window.showToast('No puedes deshabilitar tu propia cuenta.', 'error'); return;
+        }
+        if (newPassword && newPassword.length < 6) {
+            window.showToast('La nueva contraseña debe tener al menos 6 caracteres.', 'error'); return;
         }
         setButtonLoading(btn, true);
+        setAppLoading(true, 'Guardando cambios', 'Actualizando permisos y, si corresponde, la contraseña…', '🛡️');
         try {
-            await updateDoc(doc(db, 'users', uid), {
-                role,
-                disabled,
-                updatedAt: serverTimestamp(),
-                updatedBy: currentUser.uid,
-                ...(disabled ? { disabledAt: serverTimestamp(), disabledBy: currentUser.uid } : { disabledAt: null, disabledBy: null })
-            });
+            await callAdminUpdateUserAccess({ uid, role, disabled, newPassword: newPassword || null });
             closeUserModal();
             await fetchUsers();
-            window.showToast('Acceso actualizado correctamente.');
+            window.showToast(newPassword ? 'Acceso y contraseña actualizados correctamente.' : 'Acceso actualizado correctamente.');
         } catch (error) {
             console.error(error);
-            window.showToast('No se pudo actualizar el acceso. Revisa las Firebase Rules.', 'error');
-        } finally { setButtonLoading(btn, false); }
+            window.showToast(error.message || 'No se pudo actualizar el acceso.', 'error');
+        } finally {
+            hideAppLoading();
+            setButtonLoading(btn, false);
+        }
     };
 
     window.toggleUserDisabled = async function(uid) {
@@ -930,36 +1039,24 @@
         const user = appData.users.find(u => u.uid === uid);
         if (!user) return;
         if (uid === currentUser?.uid) {
-            window.showToast('No puedes deshabilitar tu propia cuenta desde esta pantalla.', 'error');
-            return;
+            window.showToast('No puedes deshabilitar tu propia cuenta.', 'error'); return;
         }
         const nextDisabled = user.disabled !== true;
         const action = nextDisabled ? 'deshabilitar' : 'habilitar';
         if (!confirm(`¿Deseas ${action} el acceso de ${(user.email || '').split('@')[0].toUpperCase()}?`)) return;
+        setAppLoading(true, nextDisabled ? 'Deshabilitando acceso' : 'Habilitando acceso', 'Aplicando el cambio en Firebase Authentication y Firestore…', nextDisabled ? '🔒' : '🔓');
         try {
-            await updateDoc(doc(db, 'users', uid), {
-                disabled: nextDisabled,
-                updatedAt: serverTimestamp(),
-                updatedBy: currentUser.uid,
-                ...(nextDisabled ? { disabledAt: serverTimestamp(), disabledBy: currentUser.uid } : { disabledAt: null, disabledBy: null })
-            });
+            await callAdminUpdateUserAccess({ uid, role: user.role === 'admin' ? 'admin' : 'estudiante', disabled: nextDisabled, newPassword: null });
             await fetchUsers();
             window.showToast(nextDisabled ? 'Usuario deshabilitado.' : 'Usuario habilitado.');
         } catch (error) {
             console.error(error);
-            window.showToast('No se pudo actualizar el estado del usuario. Revisa las Firebase Rules.', 'error');
-        }
+            window.showToast(error.message || 'No se pudo actualizar el estado del usuario.', 'error');
+        } finally { hideAppLoading(); }
     };
 
-    window.setCloudStatus = function(status) {
-        document.querySelectorAll('.cloud-status').forEach(indicator => {
-            indicator.className = 'cloud-status admin-only ' + status;
-            if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
-            if(status === 'syncing') indicator.innerHTML = '🔄 Sincronizando...';
-            if(status === 'error') indicator.innerHTML = '⚠️ Error Conexión';
-        });
-    };
     async function fetchQuestions() {
+        if (!requireAdmin()) return;
         window.setCloudStatus('syncing');
         try {
             const querySnapshot = await getDocs(collection(db, "questions"));
@@ -1036,11 +1133,15 @@
         }
     };
     window.switchView = function(viewName) {
-        if ((viewName === 'config' || viewName === 'users') && !requireAdmin()) return;
+        if (['repo', 'config', 'users'].includes(viewName) && !requireAdmin()) return;
+        if (viewName === 'sim' && !currentUser) return;
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
-        document.getElementById(`view-${viewName}`).classList.add('active');
-        document.getElementById(`btn-${viewName}`).classList.add('active');
+        const view = document.getElementById(`view-${viewName}`);
+        const btn = document.getElementById(`btn-${viewName}`);
+        if (!view || !btn) return;
+        view.classList.add('active');
+        btn.classList.add('active');
         if(viewName === 'repo') window.renderRepo();
         if(viewName === 'config') window.renderTable();
         if(viewName === 'users') window.renderUsers();
@@ -1088,6 +1189,7 @@
         window.renderRepo();
     };
     window.renderRepo = function() {
+        if (!isAdmin()) return;
         const container = document.getElementById('repo-container');
         const searchTxt = (document.getElementById('searchInput').value || '').toLowerCase();
         container.innerHTML = '';
@@ -1132,6 +1234,7 @@
         });
     };
     window.renderTable = function() {
+        if (!isAdmin()) return;
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         appData.questions.forEach(q => {
@@ -1234,52 +1337,59 @@
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
         for(let i = range.start; i <= range.end; i++) {
-            const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
-            if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
+            const count = isAdmin() ? appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length : null;
+            if (!isAdmin() || count > 0) {
+                lessonSelect.innerHTML += `<option value="${i}">${isAdmin() && count ? `Lección ${i} (${count} pregs)` : `Lección ${i}`}</option>`;
+            }
         }
     };
-    window.startSimulation = function() {
+    window.startSimulation = async function() {
+        if (!currentUser) return;
         const modFilter = document.getElementById('sim-module').value;
         const lessonFilter = document.getElementById('sim-lesson').value;
-        let pool = appData.questions.filter(q => {
-            const qNumRaw = String(q.leccion_num).replace(/\D/g, '');
-            return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
-        });
-        for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
+        const btn = document.getElementById('btn-start-sim');
+        setButtonLoading(btn, true);
+        setAppLoading(true, 'Generando simulacro', 'Seleccionando preguntas de forma aleatoria y protegiendo las respuestas…', '📝');
+        try {
+            const result = await callStartSimulation({ module: modFilter, lesson: lessonFilter });
+            currentSimulationQuestions = result.data.questions || [];
+            currentSimulationSessionId = result.data.sessionId;
+            userAnswers = {};
+            currentSimIndex = 0;
+            if(currentSimulationQuestions.length === 0) {
+                window.showToast('No hay preguntas disponibles para ese filtro.', 'error');
+                return;
+            }
+            document.getElementById('sim-setup').style.display = 'none';
+            document.getElementById('sim-active').style.display = 'block';
+            document.getElementById('sim-results').style.display = 'none';
+            window.renderSimulationQuestions();
+            window.showSimQuestion(0);
+        } catch (error) {
+            console.error(error);
+            window.showToast(error.message || 'No se pudo generar el simulacro.', 'error');
+        } finally {
+            hideAppLoading();
+            setButtonLoading(btn, false);
         }
-        let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
-        currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
-        userAnswers = {};
-        currentSimIndex = 0;
-        if(currentSimulationQuestions.length === 0) { window.showToast("No hay preguntas registradas.", "error"); return; }
-        document.getElementById('sim-setup').style.display = 'none';
-        document.getElementById('sim-active').style.display = 'block';
-        document.getElementById('sim-results').style.display = 'none';
-        window.renderSimulationQuestions();
-        window.showSimQuestion(0);
     };
     window.renderSimulationQuestions = function() {
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
         currentSimulationQuestions.forEach((q, index) => {
             if(!q.opciones) return;
+            const optionIds = Object.entries(q.opciones).map(([key, text]) => `
+                <li class="option-item sim-opt-${escapeHTML(q.id)}" onclick="window.selectAnswer('${escapeHTML(q.id)}', '${escapeHTML(key)}')" id="opt-${escapeHTML(q.id)}-${escapeHTML(key)}">
+                    <strong style="margin-right:10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
+                </li>`).join('');
             container.innerHTML += `
                 <div class="card sim-card" id="sim-q-card-${index}">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${escapeHTML(q.pregunta || '')}</span>
-                        <span style="font-weight: 600; color: var(--text-muted); background:#f5f5f7; padding:0.3rem 0.7rem; border-radius:8px; font-size:0.8rem; flex-shrink:0; margin-left:1rem;">Orig #${escapeHTML(q.pregunta_num || "?")}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; gap:1rem;">
+                        <span style="font-size:1.05rem; font-weight:500; color:var(--text-dark); line-height:1.5;">${escapeHTML(q.pregunta || '')}</span>
+                        <span style="font-weight:600; color:var(--text-muted); background:#f5f5f7; padding:.3rem .7rem; border-radius:8px; font-size:.8rem; flex-shrink:0;">Orig #${escapeHTML(q.pregunta_num || '?')}</span>
                     </div>
-                    <ul class="options-list">
-                        ${Object.entries(q.opciones).map(([key, text]) => `
-                            <li class="option-item sim-opt-${q.id}" onclick="window.selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
-                                <strong style="margin-right: 10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            `;
+                    <ul class="options-list">${optionIds}</ul>
+                </div>`;
         });
     };
     window.showSimQuestion = function(index) {
@@ -1312,41 +1422,42 @@
         if(confirm("¿Seguro que deseas cancelar el examen?")) {
             document.getElementById('sim-active').style.display = 'none';
             document.getElementById('sim-setup').style.display = 'block';
+            currentSimulationSessionId = null;
+            currentSimulationQuestions = [];
+            userAnswers = {};
+            updateSimLessonDropdown(document.getElementById('sim-module').value);
         }
     };
-    window.finishSimulation = function() {
+    window.finishSimulation = async function() {
         const total = currentSimulationQuestions.length;
         const answered = Object.keys(userAnswers).length;
         if(answered < total && !confirm(`Faltan ${total - answered} preguntas. ¿Entregar?`)) return;
-        let correctCount = 0; let errorCount = 0; let blankCount = 0; let reviewHTML = '';
-        currentSimulationQuestions.forEach((q, index) => {
-            const correct = q.respuesta; const userSelected = userAnswers[q.id];
-            let statusClass = 'is-blank'; let icon = '⚠️'; let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
-            if (!userSelected) {
-                blankCount++;
-            } else if (userSelected === correct) {
-                correctCount++; statusClass = 'is-correct'; icon = '✅';
-                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${escapeHTML(userSelected.toUpperCase())}) ${escapeHTML(q.opciones[userSelected])}</strong></div>`;
-            } else {
-                errorCount++; statusClass = 'is-incorrect'; icon = '❌';
-                userAnswerText = `<div class="r-ans user-wrong">Error: <strong>${escapeHTML(userSelected.toUpperCase())}) ${escapeHTML(q.opciones[userSelected])}</strong></div>`;
-            }
-            reviewHTML += `
-                <div class="review-item ${statusClass}">
-                    <div class="r-question">${icon} Q${index + 1} (Orig. #${escapeHTML(q.pregunta_num || "?")}): ${escapeHTML(q.pregunta || '')}</div>
-                    ${userAnswerText}
-                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${escapeHTML((correct || 'N/A').toUpperCase())}) ${escapeHTML(q.opciones ? q.opciones[correct] : 'N/A')}</strong></div>
-                </div>
-            `;
-        });
-        document.getElementById('res-precision').innerText = `${total > 0 ? Math.round((correctCount / total) * 100) : 0}%`;
-        document.getElementById('res-correct').innerText = correctCount;
-        document.getElementById('res-error').innerText = errorCount;
-        document.getElementById('res-blank').innerText = blankCount;
-        document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
-        document.getElementById('sim-active').style.display = 'none';
-        document.getElementById('sim-results').style.display = 'block';
-        window.scrollTo(0, 0);
+        const btn = document.getElementById('btn-sim-finish');
+        setButtonLoading(btn, true);
+        setAppLoading(true, 'Corrigiendo examen', 'Evaluando tus respuestas de forma segura en el servidor…', '✅');
+        try {
+            const result = await callGradeSimulation({ sessionId: currentSimulationSessionId, answers: userAnswers });
+            const data = result.data || {};
+            document.getElementById('res-precision').innerText = `${data.precision || 0}%`;
+            document.getElementById('res-correct').innerText = data.correctCount || 0;
+            document.getElementById('res-error').innerText = data.errorCount || 0;
+            document.getElementById('res-blank').innerText = data.blankCount || 0;
+            document.getElementById('sim-detailed-review').innerHTML = (data.review || []).map((item, index) => `
+                <div class="review-item ${escapeHTML(item.statusClass || 'is-blank')}">
+                    <div class="r-question">${escapeHTML(item.icon || '•')} Q${index + 1}: ${escapeHTML(item.pregunta || '')}</div>
+                    ${item.userAnswerText ? `<div class="r-ans ${escapeHTML(item.userStatus || 'actual-correct')}">${escapeHTML(item.userAnswerText)}</div>` : ''}
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${escapeHTML((item.correctKey || 'N/A').toUpperCase())}) ${escapeHTML(item.correctText || 'N/A')}</strong></div>
+                </div>`).join('');
+            document.getElementById('sim-active').style.display = 'none';
+            document.getElementById('sim-results').style.display = 'block';
+            window.scrollTo(0, 0);
+        } catch (error) {
+            console.error(error);
+            window.showToast(error.message || 'No se pudo corregir el examen.', 'error');
+        } finally {
+            hideAppLoading();
+            setButtonLoading(btn, false);
+        }
     };
 </script>
 </body>
