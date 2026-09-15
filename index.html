@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V14 (Seguridad de Roles, Usuarios Deshabilitados, Multi-Auth, Búsqueda Profunda) -->
+    <!-- VERSIÓN: V15 (Experiencia Premium, Gestión de Accesos, Reparación de Usuarios, Feedback de Carga) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESBAS - Sistema de Evaluación</title>
@@ -215,10 +215,103 @@
         body:not(.role-admin) .admin-only { display: none !important; }
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
+
+
+        /* =========================================================
+           V15 — Microinteracciones y estado de carga premium
+           ========================================================= */
+        :root {
+            --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        body { overflow-x: hidden; }
+        button, .btn, .action-btn, .filter-btn, .lesson-btn, .modal-close, .password-toggle {
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform;
+        }
+        button:not(:disabled), .btn:not(:disabled), .action-btn:not(:disabled), .filter-btn:not(:disabled), .lesson-btn:not(:disabled) {
+            transition: transform 180ms var(--ease-ios), box-shadow 220ms var(--ease-ios), background-color 220ms var(--ease-ios), border-color 220ms var(--ease-ios), opacity 220ms var(--ease-ios);
+        }
+        button:not(:disabled):hover, .btn:not(:disabled):hover, .action-btn:not(:disabled):hover, .filter-btn:not(:disabled):hover, .lesson-btn:not(:disabled):hover {
+            transform: translateY(-1px);
+        }
+        button:not(:disabled):active, .btn:not(:disabled):active, .action-btn:not(:disabled):active, .filter-btn:not(:disabled):active, .lesson-btn:not(:disabled):active {
+            transform: translateY(1px) scale(0.985) !important;
+        }
+        button:disabled, .btn:disabled, .action-btn:disabled { opacity: .55; cursor: not-allowed; transform: none !important; }
+        .btn.is-loading, .nav-links button.is-loading { position: relative; pointer-events: none; }
+        .btn.is-loading > *, .nav-links button.is-loading > * { visibility: hidden; }
+        .btn.is-loading::after, .nav-links button.is-loading::after {
+            content: '';
+            position: absolute;
+            width: 1rem; height: 1rem;
+            left: 50%; top: 50%;
+            margin: -0.5rem 0 0 -0.5rem;
+            border: 2px solid rgba(255,255,255,.35);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin .75s linear infinite;
+        }
+        .btn-outline.is-loading::after { border-color: rgba(0,0,0,.15); border-top-color: currentColor; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); } 50% { box-shadow: 0 0 0 8px rgba(217,48,37,.08); } }
+        @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes loaderFloat { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-3px) scale(1.02); } }
+        @keyframes shimmer { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
+        .app-loader {
+            position: fixed; inset: 0; z-index: 10000;
+            display: none; align-items: center; justify-content: center;
+            background: rgba(245,245,247,.74);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            animation: overlayIn .2s ease-out;
+        }
+        .app-loader.active { display:flex; }
+        .app-loader-card {
+            width:min(92vw, 360px); padding:2rem 1.8rem; text-align:center;
+            background:rgba(255,255,255,.94); border:1px solid rgba(255,255,255,.85);
+            border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.14);
+            animation: fadeInScale .28s var(--ease-ios);
+        }
+        .app-loader-icon {
+            width:54px; height:54px; margin:0 auto 1rem; border-radius:16px;
+            display:flex; align-items:center; justify-content:center; font-size:1.6rem;
+            background:linear-gradient(180deg,#fff,#f4f4f6); box-shadow:0 10px 28px rgba(0,0,0,.08);
+            animation:loaderFloat 1.4s ease-in-out infinite;
+        }
+        .app-loader-spinner { width:30px; height:30px; margin:0 auto 1rem; border-radius:50%; border:3px solid #ececef; border-top-color:var(--primary-red); animation:spin .8s linear infinite; }
+        .app-loader-title { font-weight:650; font-size:1rem; margin-bottom:.35rem; color:var(--text-dark); }
+        .app-loader-subtitle { font-size:.82rem; line-height:1.5; color:var(--text-muted); }
+        .field-password-wrap { position:relative; }
+        .field-password-wrap input { padding-right:3rem !important; }
+        .mini-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); border:0; background:transparent; color:var(--text-muted); font-size:1rem; padding:.25rem; }
+        .user-status { display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .55rem; border-radius:999px; font-size:.72rem; font-weight:600; }
+        .user-status.active { color:#157347; background:#ecfdf3; }
+        .user-status.disabled { color:#b42318; background:#fef3f2; }
+        .user-actions { display:flex; gap:.4rem; flex-wrap:wrap; }
+        .access-note { margin-top:-.8rem; margin-bottom:1.3rem; color:var(--text-muted); font-size:.78rem; }
+        .modal-content.small { max-width:500px; }
+        .modal-subtitle { color:var(--text-muted); font-size:.84rem; line-height:1.5; margin-bottom:1.25rem; }
+        .ripple {
+            position:absolute; border-radius:999px; transform:scale(0); animation:ripple .55s ease-out forwards;
+            background:rgba(255,255,255,.28); pointer-events:none;
+        }
+        .btn-outline .ripple, .action-btn .ripple, .filter-btn .ripple, .lesson-btn .ripple { background:rgba(0,0,0,.08); }
+        @keyframes ripple { to { transform:scale(3.5); opacity:0; } }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+        }
     </style>
 </head>
 <body>
 <div id="toast-container"></div>
+<div id="app-loader" class="app-loader" aria-live="polite" aria-busy="false">
+    <div class="app-loader-card">
+        <div class="app-loader-icon" id="loader-icon">🚒</div>
+        <div class="app-loader-spinner"></div>
+        <div class="app-loader-title" id="loader-title">Procesando</div>
+        <div class="app-loader-subtitle" id="loader-subtitle">Espera un momento, por favor.</div>
+    </div>
+</div>
 <div id="login-wrapper">
     <div class="login-box">
         <h1>🚒 ESBAS 2026</h1>
@@ -234,7 +327,7 @@
                     <button type="button" class="password-toggle" id="eye-icon">👁️</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-login">Ingresar al Sistema</button>
+            <button type="submit" class="btn btn-login" id="btn-login"><span>Ingresar al Sistema</span></button>
         </form>
     </div>
 </div>
@@ -338,32 +431,70 @@
     <div id="view-users" class="view-section admin-only">
         <div class="card">
             <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
-                <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Accesos (Usuarios)</h2>
+                <div>
+                    <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Accesos</h2>
+                    <div class="access-note">Los accesos se guardan en Firebase Authentication y su perfil se registra en Firestore. Las contraseñas nunca se muestran.</div>
+                </div>
             </div>
-            <form id="userForm" style="display:flex; gap:1rem; margin-bottom: 2rem; align-items:flex-end; flex-wrap:wrap;">
-                <div class="form-group" style="flex:1;">
-                    <label>Nuevo Usuario (Ej: JPPEREZ)</label>
-                    <input type="text" id="u-name" required autocomplete="off" style="text-transform: uppercase;">
+            <form id="userForm" style="display:flex; gap:1rem; margin-bottom: 1.25rem; align-items:flex-end; flex-wrap:wrap;">
+                <div class="form-group" style="flex:1; min-width:180px;">
+                    <label>Usuario</label>
+                    <input type="text" id="u-name" required autocomplete="off" placeholder="Ej: JPPEREZ" style="text-transform: uppercase;">
                 </div>
-                <div class="form-group" style="flex:1;">
-                    <label>Contraseña Asignada</label>
-                    <input type="text" id="u-pass" required autocomplete="off">
+                <div class="form-group" style="flex:1; min-width:180px;">
+                    <label>Contraseña inicial</label>
+                    <div class="field-password-wrap">
+                        <input type="password" id="u-pass" required autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+                        <button type="button" class="mini-toggle" id="user-pass-toggle" aria-label="Mostrar contraseña">👁️</button>
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="min-width:210px;">
                     <label>Rol</label>
-                    <select id="u-role" required style="padding:0.85rem; border-radius:10px; border:1px solid var(--border-color); outline:none;">
+                    <select id="u-role" required style="padding:0.85rem; border-radius:10px; border:1px solid var(--border-color); outline:none; width:100%;">
                         <option value="estudiante">Estudiante (Solo Lectura/Examen)</option>
-                        <option value="admin">Propietario / Admin</option>
+                        <option value="admin">Administrador</option>
                     </select>
                 </div>
-                <button type="submit" class="btn" style="background:var(--text-dark);">+ Añadir</button>
+                <button type="submit" class="btn" id="btn-save-user" style="background:var(--text-dark); min-width:120px;"><span>+ Añadir</span></button>
             </form>
             <div class="table-container">
                 <table id="usersTable">
-                    <thead><tr><th>Usuario</th><th>Contraseña</th><th>Nivel de Acceso</th><th style="width: 100px;">Acciones</th></tr></thead>
+                    <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th style="width: 270px;">Acciones</th></tr></thead>
                     <tbody id="users-body"></tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+<div id="user-modal" class="modal-overlay">
+    <div class="modal-content small">
+        <button class="modal-close" type="button" onclick="closeUserModal()">×</button>
+        <h2 class="card-header" style="margin-top:0; border:none; margin-bottom:.25rem;">Editar acceso</h2>
+        <div class="modal-subtitle">Puedes cambiar el rol y habilitar/deshabilitar el acceso. El cambio se aplica inmediatamente en Firestore.</div>
+        <input type="hidden" id="edit-user-uid">
+        <div class="form-grid" style="margin-bottom:1.2rem;">
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" id="edit-user-name" readonly style="background:#f5f5f7;">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select id="edit-user-role">
+                    <option value="estudiante">Estudiante</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label>Estado</label>
+                <select id="edit-user-disabled">
+                    <option value="false">Activo — puede ingresar</option>
+                    <option value="true">Deshabilitado — acceso bloqueado</option>
+                </select>
+            </div>
+        </div>
+        <div class="wizard-footer">
+            <button type="button" class="btn btn-outline" onclick="closeUserModal()">Cancelar</button>
+            <button type="button" class="btn" id="btn-update-user" onclick="updateUserAccess()">Guardar cambios</button>
         </div>
     </div>
 </div>
@@ -469,11 +600,16 @@
         const passInput = document.getElementById('login-pass');
         if(eyeBtn && passInput) {
             eyeBtn.addEventListener('click', () => {
-                if(passInput.type === 'password') {
-                    passInput.type = 'text'; eyeBtn.innerText = '🙈';
-                } else {
-                    passInput.type = 'password'; eyeBtn.innerText = '👁️';
-                }
+                if(passInput.type === 'password') { passInput.type = 'text'; eyeBtn.innerText = '🙈'; }
+                else { passInput.type = 'password'; eyeBtn.innerText = '👁️'; }
+            });
+        }
+        const userEyeBtn = document.getElementById('user-pass-toggle');
+        const userPassInput = document.getElementById('u-pass');
+        if(userEyeBtn && userPassInput) {
+            userEyeBtn.addEventListener('click', () => {
+                if(userPassInput.type === 'password') { userPassInput.type = 'text'; userEyeBtn.innerText = '🙈'; }
+                else { userPassInput.type = 'password'; userEyeBtn.innerText = '👁️'; }
             });
         }
         const loginForm = document.getElementById('login-form');
@@ -482,24 +618,44 @@
                 e.preventDefault();
                 const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
                 const inputPass = document.getElementById('login-pass').value.trim();
+                if (!inputUser || !inputPass) { window.showToast("Completa usuario y contraseña.", "error"); return; }
                 const email = inputUser.includes('@') ? inputUser : `${inputUser}@esbas.pe`;
+                const btn = document.getElementById('btn-login');
+                setButtonLoading(btn, true);
+                setAppLoading(true, 'Verificando tu acceso', 'Conectando con Firebase y preparando tu espacio ESBAS.', '🚒');
                 try {
                     await signInWithEmailAndPassword(auth, email, inputPass);
                 } catch (error) {
-                    if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
-                        window.showToast("Usuario o contraseña incorrectos.", "error");
-                    } else if (error.code === 'auth/wrong-password') {
-                        window.showToast("La contraseña es incorrecta.", "error");
-                    } else {
-                        window.showToast("Fallo de acceso. Revisa tu red.", "error");
-                    }
+                    hideAppLoading();
+                    setButtonLoading(btn, false);
+                    if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') window.showToast("Usuario o contraseña incorrectos.", "error");
+                    else if (error.code === 'auth/wrong-password') window.showToast("La contraseña es incorrecta.", "error");
+                    else if (error.code === 'auth/too-many-requests') window.showToast("Demasiados intentos. Espera unos minutos y vuelve a intentarlo.", "error");
+                    else window.showToast("Fallo de acceso. Revisa tu conexión.", "error");
                 }
             });
         }
         const questionForm = document.getElementById('questionForm');
-        if(questionForm) { questionForm.addEventListener('submit', (e) => { window.saveQuestion(e); }); }
+        if(questionForm) questionForm.addEventListener('submit', (e) => window.saveQuestion(e));
         const userForm = document.getElementById('userForm');
-        if(userForm) { userForm.addEventListener('submit', (e) => { window.saveUser(e); }); }
+        if(userForm) userForm.addEventListener('submit', (e) => window.saveUser(e));
+
+        // Microinteracción de toque para botones: estilo iOS.
+        document.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (!button || button.disabled || button.classList.contains('modal-close')) return;
+            const rect = button.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+            if (getComputedStyle(button).position === 'static') button.style.position = 'relative';
+            button.style.overflow = 'hidden';
+            button.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
     });
     let appData = { questions: [], users: [] };
     let currentUser = null;
@@ -511,6 +667,22 @@
     let activeLessonFilter = 'all';
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
+    function setButtonLoading(button, loading) {
+        if (!button) return;
+        if (loading) { button.dataset.originalText = button.querySelector('span')?.innerText || button.innerText; button.classList.add('is-loading'); button.disabled = true; }
+        else { button.classList.remove('is-loading'); button.disabled = false; }
+    }
+    function setAppLoading(show, title = 'Procesando', subtitle = 'Espera un momento, por favor.', icon = '🚒') {
+        const loader = document.getElementById('app-loader');
+        if (!loader) return;
+        loader.classList.toggle('active', !!show);
+        loader.setAttribute('aria-busy', String(!!show));
+        document.getElementById('loader-title').textContent = title;
+        document.getElementById('loader-subtitle').textContent = subtitle;
+        document.getElementById('loader-icon').textContent = icon;
+    }
+    function hideAppLoading() { setAppLoading(false); }
+
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -520,32 +692,38 @@
         setTimeout(() => toast.remove(), 4000);
     };
     async function loadAuthenticatedUser(user) {
-        const userRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userRef);
+        setAppLoading(true, 'Preparando tu acceso', 'Validando permisos, descargando preguntas y sincronizando tu sesión.', '🔐');
+        try {
+            const userRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userRef);
 
-        if (!userDoc.exists()) {
-            await signOut(auth);
-            window.showToast("Tu cuenta no tiene permisos registrados en ESBAS.", "error");
-            return;
+            if (!userDoc.exists()) {
+                await signOut(auth);
+                window.showToast("Tu cuenta no tiene un perfil registrado en ESBAS.", "error");
+                return;
+            }
+
+            const data = userDoc.data();
+            if (data.disabled === true) {
+                await signOut(auth);
+                window.showToast("Tu cuenta está deshabilitada.", "error");
+                return;
+            }
+
+            currentUser = user;
+            currentUserRole = data.role === 'admin' ? 'admin' : 'estudiante';
+            document.getElementById('login-wrapper').style.display = 'none';
+            document.getElementById('main-nav').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'block';
+            document.body.classList.toggle('role-admin', currentUserRole === 'admin');
+
+            window.showToast(`Bienvenido al sistema ESBAS`);
+            await fetchQuestions();
+            if (currentUserRole === 'admin') await fetchUsers();
+        } finally {
+            hideAppLoading();
+            setButtonLoading(document.getElementById('btn-login'), false);
         }
-
-        const data = userDoc.data();
-        if (data.disabled === true) {
-            await signOut(auth);
-            window.showToast("Tu cuenta está deshabilitada.", "error");
-            return;
-        }
-
-        currentUser = user;
-        currentUserRole = data.role === 'admin' ? 'admin' : 'estudiante';
-        document.getElementById('login-wrapper').style.display = 'none';
-        document.getElementById('main-nav').style.display = 'flex';
-        document.getElementById('main-container').style.display = 'block';
-        document.body.classList.toggle('role-admin', currentUserRole === 'admin');
-
-        window.showToast(`Bienvenido al sistema ESBAS`);
-        await fetchQuestions();
-        if (currentUserRole === 'admin') await fetchUsers();
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -556,6 +734,8 @@
             document.getElementById('login-wrapper').style.display = 'flex';
             document.getElementById('main-nav').style.display = 'none';
             document.getElementById('main-container').style.display = 'none';
+            hideAppLoading();
+            setButtonLoading(document.getElementById('btn-login'), false);
             return;
         }
 
@@ -589,23 +769,56 @@
             window.renderUsers();
         } catch (error) { console.error(error); }
     }
+    function userStatusHTML(user) {
+        return user.disabled === true
+            ? '<span class="user-status disabled">● Deshabilitado</span>'
+            : '<span class="user-status active">● Activo</span>';
+    }
     window.renderUsers = function() {
         if (!isAdmin()) return;
         const tbody = document.getElementById('users-body');
         if(!tbody) return;
         tbody.innerHTML = '';
+        if (!appData.users.length) {
+            tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state" style="padding:2.5rem 1rem;"><div style="font-size:2rem;">👥</div><h3>No hay accesos registrados</h3><p>Los accesos aparecerán aquí después de crearlos o repararlos.</p></div></td></tr>';
+            return;
+        }
+        appData.users.sort((a,b) => String(a.email || '').localeCompare(String(b.email || '')));
         appData.users.forEach(u => {
-            const roleBadge = u.role === 'admin' ? '<span style="color:var(--text-dark); font-weight:600;">Admin</span>' : '<span style="color:var(--text-muted);">Estudiante</span>';
+            const roleBadge = u.role === 'admin'
+                ? '<span style="color:var(--text-dark); font-weight:600;">Administrador</span>'
+                : '<span style="color:var(--text-muted);">Estudiante</span>';
+            const disabled = u.disabled === true;
+            const toggleLabel = disabled ? 'Habilitar' : 'Deshabilitar';
+            const toggleClass = disabled ? 'btn-edit' : 'btn-delete';
             tbody.innerHTML += `
                 <tr>
                     <td style="font-weight:600;">${escapeHTML((u.email || '').split('@')[0].toUpperCase())}</td>
-                    <td style="font-family:monospace; color:var(--text-muted);">[Protegido]</td>
                     <td>${roleBadge}</td>
-                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${escapeHTML(u.uid)}')">Deshabilitar</button></td>
+                    <td>${userStatusHTML(u)}</td>
+                    <td>
+                        <div class="user-actions">
+                            <button class="action-btn btn-edit" onclick="openUserEditor('${escapeHTML(u.uid)}')">Editar</button>
+                            <button class="action-btn ${toggleClass}" onclick="toggleUserDisabled('${escapeHTML(u.uid)}')">${toggleLabel}</button>
+                        </div>
+                    </td>
                 </tr>
             `;
         });
     };
+
+    async function setUserProfile(uid, email, role, extra = {}) {
+        await setDoc(doc(db, 'users', uid), {
+            email,
+            role,
+            disabled: extra.disabled === true,
+            createdAt: extra.createdAt || serverTimestamp(),
+            createdBy: extra.createdBy || currentUser.uid,
+            ...(extra.disabledAt ? { disabledAt: extra.disabledAt } : {}),
+            ...(extra.disabledBy ? { disabledBy: extra.disabledBy } : {})
+        }, { merge: true });
+    }
+
     window.saveUser = async function(e) {
         if(e) e.preventDefault();
         if (!requireAdmin()) return;
@@ -613,6 +826,7 @@
         const username = document.getElementById('u-name').value.trim().toLowerCase();
         const password = document.getElementById('u-pass').value.trim();
         const role = document.getElementById('u-role').value;
+        const btn = document.getElementById('btn-save-user');
 
         if (!/^[a-z0-9._-]{3,30}$/.test(username)) {
             window.showToast("El usuario debe tener entre 3 y 30 caracteres y usar solo letras, números, punto, guion o guion bajo.", "error");
@@ -628,58 +842,112 @@
         }
 
         const email = `${username}@esbas.pe`;
-        let createdCredential = null;
+        let tempCredential = null;
+        setButtonLoading(btn, true);
+        setAppLoading(true, 'Configurando acceso', 'Creando la cuenta y sincronizando su perfil en Firebase.', '👤');
 
         try {
-            // Segunda sesión: evita sacar al administrador de su sesión principal.
-            createdCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-            const uid = createdCredential.user.uid;
+            try {
+                // Ruta normal: crea la cuenta de Auth.
+                tempCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+            } catch (authError) {
+                if (authError.code !== 'auth/email-already-in-use') throw authError;
 
-            await setDoc(doc(db, "users", uid), {
-                email,
-                role,
-                disabled: false,
-                createdAt: serverTimestamp(),
-                createdBy: currentUser.uid
-            });
+                // Ruta de reparación: la cuenta de Auth ya existe pero el perfil de Firestore puede faltar.
+                // El administrador confirma las credenciales y se reutiliza el UID existente.
+                window.showToast("La cuenta ya existe en Firebase. Verificando y reparando su perfil…", "success");
+                tempCredential = await signInWithEmailAndPassword(secondaryAuth, email, password);
+            }
 
+            const uid = tempCredential.user.uid;
+            await setUserProfile(uid, email, role, { disabled: false, createdBy: currentUser.uid });
             await signOut(secondaryAuth);
+
             document.getElementById('u-name').value = '';
             document.getElementById('u-pass').value = '';
-            window.showToast("Usuario registrado exitosamente.");
+            document.getElementById('u-role').value = 'estudiante';
+            window.showToast("Acceso creado y sincronizado correctamente.");
             await fetchUsers();
         } catch (error) {
-            // Si Auth creó la cuenta pero Firestore falló, intenta limpiar la cuenta huérfana.
-            if (createdCredential?.user) {
-                try { await deleteUser(createdCredential.user); } catch (_) { /* limpieza best-effort */ }
-            }
-            try { await signOut(secondaryAuth); } catch (_) { /* noop */ }
+            try { await signOut(secondaryAuth); } catch (_) {}
             console.error(error);
-            window.showToast(error.code === 'auth/email-already-in-use'
-                ? "Ese usuario ya existe."
-                : (error.message || "No se pudo registrar el usuario."), "error");
+            let msg = 'No se pudo configurar el acceso.';
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = 'La cuenta existe, pero la contraseña proporcionada no coincide. Usa la contraseña actual para reparar el acceso.';
+            else if (error.code === 'auth/user-not-found') msg = 'No se encontró la cuenta en Firebase Authentication.';
+            else if (error.code === 'permission-denied') msg = 'Firebase rechazó el registro del perfil. Revisa las Rules.';
+            else if (error.message) msg = error.message;
+            window.showToast(msg, 'error');
+        } finally {
+            hideAppLoading();
+            setButtonLoading(btn, false);
         }
     };
 
-    window.deleteUserRecord = async function(uid) {
+    window.openUserEditor = function(uid) {
         if (!requireAdmin()) return;
-        if (uid === currentUser?.uid) {
-            window.showToast("No puedes deshabilitar tu propia cuenta desde esta pantalla.", "error");
+        const user = appData.users.find(u => u.uid === uid);
+        if (!user) return;
+        document.getElementById('edit-user-uid').value = user.uid;
+        document.getElementById('edit-user-name').value = (user.email || '').split('@')[0].toUpperCase();
+        document.getElementById('edit-user-role').value = user.role === 'admin' ? 'admin' : 'estudiante';
+        document.getElementById('edit-user-disabled').value = user.disabled === true ? 'true' : 'false';
+        document.getElementById('user-modal').classList.add('active');
+    };
+
+    window.closeUserModal = function() { document.getElementById('user-modal').classList.remove('active'); };
+
+    window.updateUserAccess = async function() {
+        if (!requireAdmin()) return;
+        const uid = document.getElementById('edit-user-uid').value;
+        const role = document.getElementById('edit-user-role').value;
+        const disabled = document.getElementById('edit-user-disabled').value === 'true';
+        const btn = document.getElementById('btn-update-user');
+        if (!uid || !['admin','estudiante'].includes(role)) return;
+        if (uid === currentUser.uid && disabled) {
+            window.showToast('No puedes deshabilitar tu propia cuenta.', 'error');
             return;
         }
-        if (!confirm("La cuenta quedará deshabilitada y perderá el acceso a ESBAS. ¿Continuar?")) return;
-
+        setButtonLoading(btn, true);
         try {
-            await updateDoc(doc(db, "users", uid), {
-                disabled: true,
-                disabledAt: serverTimestamp(),
-                disabledBy: currentUser.uid
+            await updateDoc(doc(db, 'users', uid), {
+                role,
+                disabled,
+                updatedAt: serverTimestamp(),
+                updatedBy: currentUser.uid,
+                ...(disabled ? { disabledAt: serverTimestamp(), disabledBy: currentUser.uid } : { disabledAt: null, disabledBy: null })
             });
+            closeUserModal();
             await fetchUsers();
-            window.showToast("Usuario deshabilitado.");
+            window.showToast('Acceso actualizado correctamente.');
         } catch (error) {
             console.error(error);
-            window.showToast("No se pudo deshabilitar el usuario. Revisa las Firebase Rules.", "error");
+            window.showToast('No se pudo actualizar el acceso. Revisa las Firebase Rules.', 'error');
+        } finally { setButtonLoading(btn, false); }
+    };
+
+    window.toggleUserDisabled = async function(uid) {
+        if (!requireAdmin()) return;
+        const user = appData.users.find(u => u.uid === uid);
+        if (!user) return;
+        if (uid === currentUser?.uid) {
+            window.showToast('No puedes deshabilitar tu propia cuenta desde esta pantalla.', 'error');
+            return;
+        }
+        const nextDisabled = user.disabled !== true;
+        const action = nextDisabled ? 'deshabilitar' : 'habilitar';
+        if (!confirm(`¿Deseas ${action} el acceso de ${(user.email || '').split('@')[0].toUpperCase()}?`)) return;
+        try {
+            await updateDoc(doc(db, 'users', uid), {
+                disabled: nextDisabled,
+                updatedAt: serverTimestamp(),
+                updatedBy: currentUser.uid,
+                ...(nextDisabled ? { disabledAt: serverTimestamp(), disabledBy: currentUser.uid } : { disabledAt: null, disabledBy: null })
+            });
+            await fetchUsers();
+            window.showToast(nextDisabled ? 'Usuario deshabilitado.' : 'Usuario habilitado.');
+        } catch (error) {
+            console.error(error);
+            window.showToast('No se pudo actualizar el estado del usuario. Revisa las Firebase Rules.', 'error');
         }
     };
 
@@ -687,7 +955,7 @@
         document.querySelectorAll('.cloud-status').forEach(indicator => {
             indicator.className = 'cloud-status admin-only ' + status;
             if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
-            if(status === 'syncing') indicator.innerHTML = '🔄 Cargando...';
+            if(status === 'syncing') indicator.innerHTML = '🔄 Sincronizando...';
             if(status === 'error') indicator.innerHTML = '⚠️ Error Conexión';
         });
     };
