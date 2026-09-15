@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V12 (Estable, Red QUIC Fix, Animaciones Premium) -->
+    <!-- VERSIÓN: V13 (Arquitectura Segura: Sanitización XSS, Multi-Auth, Búsqueda Profunda) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Sistema de Evaluación V12</title>
+    <title>ESBAS - Sistema de Evaluación</title>
     <style>
         :root {
-            --bg-main: #f5f5f7; /* Tono Apple gris ultra claro */
+            --bg-main: #f5f5f7; 
             --primary-red: #d93025;
             --primary-red-hover: #b3261e;
             --primary-orange: #f97316; 
             --text-dark: #1d1d1f;
             --text-muted: #86868b;
             --border-color: rgba(0, 0, 0, 0.08);
-            --success: #34c759; /* Verde estilo iOS */
-            --error: #ff3b30; /* Rojo estilo iOS */
+            --success: #34c759; 
+            --error: #ff3b30; 
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-nav: rgba(217, 48, 37, 0.95);
             --glass-blur: blur(20px);
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Curva Apple */
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -36,21 +36,10 @@
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
-        /* ================= ANIMACIONES FLUIDAS ================= */
-        @keyframes slideUpFade { 
-            0% { opacity: 0; transform: translateY(20px); } 
-            100% { opacity: 1; transform: translateY(0); } 
-        }
-        @keyframes fadeInScale { 
-            0% { opacity: 0; transform: scale(0.98); } 
-            100% { opacity: 1; transform: scale(1); } 
-        }
-        @keyframes modalPop { 
-            0% { opacity: 0; transform: scale(0.95); } 
-            100% { opacity: 1; transform: scale(1); } 
-        }
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes modalPop { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* TOAST NOTIFICATIONS */
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
         .toast {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
@@ -63,7 +52,6 @@
         .toast.error { border-color: var(--error); }
         @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
 
-        /* NAVEGACION */
         nav {
             display: none; 
             background: var(--glass-nav); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
@@ -87,15 +75,12 @@
             padding: 0.5rem 1rem; margin-left: 0.2rem; border-radius: 8px; cursor: pointer; 
             font-weight: 500; font-size: 0.9rem; transition: var(--transition-smooth); 
         }
-        .nav-links button.active, .nav-links button:hover { 
-            background: rgba(255,255,255,0.15); color: white; 
-        }
+        .nav-links button.active, .nav-links button:hover { background: rgba(255,255,255,0.15); color: white; }
 
         .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; display: none; }
         .view-section { display: none; animation: fadeInScale 0.4s ease-out; }
         .view-section.active { display: block; }
 
-        /* PANTALLA DE LOGIN */
         #login-wrapper {
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
             background: var(--bg-main); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
@@ -106,6 +91,7 @@
             animation: slideUpFade 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             transition: var(--transition-smooth);
         }
+        .login-box:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
         .login-box h1 { color: var(--primary-red); margin-bottom: 2rem; font-size: 1.6rem; font-weight: 600; letter-spacing: -0.5px;}
         .login-form-group { margin-bottom: 1.5rem; text-align: left; }
         .login-form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;}
@@ -126,7 +112,6 @@
 
         .btn-login { width: 100%; padding: 0.9rem; font-size: 1rem; margin-top: 0.5rem; border-radius: 12px; }
 
-        /* Tarjetas Base */
         .card { 
             background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); 
             border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-card); 
@@ -135,7 +120,6 @@
         .card-header { border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1.2rem; font-weight: 600; color: var(--text-dark); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;}
         .global-counter { background: #f5f5f7; color: var(--text-muted); font-size: 0.8rem; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: 500; border: 1px solid var(--border-color); }
 
-        /* Flashcards Repositorio */
         .flashcard-wrapper { 
             perspective: 1000px; margin-bottom: 1.2rem; cursor: pointer; border-radius: 16px; 
             animation: slideUpFade 0.5s ease-out forwards; opacity: 0; 
@@ -153,7 +137,6 @@
         .flip-hint { margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center; display: flex; justify-content: center; align-items: center; gap: 0.5rem; opacity: 0; transition: var(--transition-smooth);}
         .flashcard-wrapper:hover .flip-hint { opacity: 1; }
 
-        /* Filtros */
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
         .filter-btn { background: white; border: 1px solid var(--border-color); padding: 0.5rem 1.2rem; border-radius: 999px; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; transition: var(--transition-smooth); }
@@ -169,7 +152,6 @@
         .lesson-btn.active { background: #e5e5ea; color: var(--text-dark); border-color: #d1d1d6; font-weight: 600; }
         .lesson-btn.active .badge-count { background: var(--text-dark); color: white; }
 
-        /* Botones Generales */
         button { cursor: pointer; outline: none; }
         button:active { transform: scale(0.97) !important; }
         .btn { background-color: var(--primary-red); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 10px; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: var(--transition-smooth); font-size: 0.95rem;}
@@ -188,25 +170,21 @@
         .meta-tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; margin-top: 2rem; font-size: 0.75rem; }
         .tag { background: #f5f5f7; color: var(--text-muted); padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 500; border: 1px solid var(--border-color); }
 
-        /* Opciones Simulador */
         .options-list { list-style: none; margin-top: 1rem; }
         .option-item { padding: 0.85rem 1rem; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 0.5rem; cursor: pointer; transition: var(--transition-smooth); display: flex; align-items: center; background: white; }
         .option-item:hover { border-color: var(--text-dark); }
         .option-item.selected { border-color: var(--primary-red); background: rgba(217,48,37,0.02); font-weight: 500; box-shadow: 0 0 0 1px var(--primary-red); }
         .option-item.selected strong { color: var(--primary-red) !important; }
 
-        /* Simulación UI */
         .sim-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 16px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); transition: var(--transition-smooth);}
         .sim-card { display: none; animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .sim-card.active { display: block; }
         .sim-nav-footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
-        /* Dashboard de Resultados */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
         .metric-card { background: white; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 16px; text-align: center; box-shadow: var(--shadow-card); transition: var(--transition-smooth); animation: fadeInScale 0.5s ease-out backwards;}
         .metric-card:nth-child(1) { animation-delay: 0.05s; } .metric-card:nth-child(2) { animation-delay: 0.1s; }
         .metric-card:nth-child(3) { animation-delay: 0.15s; } .metric-card:nth-child(4) { animation-delay: 0.2s; }
-        
         .metric-value { font-size: 2.2rem; font-weight: 600; margin-bottom: 0.2rem; }
         .metric-label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
         .m-precision { color: #007aff; } .m-correct { color: var(--success); } .m-error { color: var(--error); } .m-blank { color: #ff9500; }
@@ -222,14 +200,12 @@
         .r-ans.user-right { background: #f0fff4; color: #1e7e34; }
         .r-ans.actual-correct { background: #f8fafc; color: var(--text-dark); border: 1px solid var(--border-color);}
 
-        /* Tabla CRUD */
         .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; transition: background 0.2s;}
         tr:hover td { background: #fbfbfd; }
         th { background: #f8fafc; font-weight: 500; color: var(--text-muted); font-size: 0.8rem; border-bottom: 1px solid var(--border-color); }
 
-        /* MODAL WIZARD */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: white; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); position: relative; animation: modalPop 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
@@ -259,7 +235,6 @@
         .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); animation: fadeInScale 0.4s; }
         .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;}
 
-        /* Ocultar elementos para usuarios estandar */
         body:not(.role-admin) .admin-only { display: none !important; }
 
         @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
@@ -317,7 +292,7 @@
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
-                <input type="text" id="searchInput" placeholder="Buscar palabras clave en la pregunta..." onkeyup="renderRepo()">
+                <input type="text" id="searchInput" placeholder="Buscar palabras clave en enunciados y alternativas..." onkeyup="renderRepo()">
             </div>
         </div>
         <div id="repo-container"></div>
@@ -502,14 +477,10 @@
 </div>
 
 <script type="module">
-    // FIX DE RED: Importamos initializeFirestore para forzar Long Polling y saltar el bloqueo QUIC
+    // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { 
-        getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword 
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { 
-        getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
@@ -523,10 +494,19 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    // FORZAMOS LONG POLLING AQUÍ PARA EVITAR EL ERROR DE QUIC_NETWORK_IDLE_TIMEOUT
-    const db = initializeFirestore(app, {
-        experimentalForceLongPolling: true
-    });
+    // Instancia secundaria para crear usuarios sin cerrar la sesión de Admin
+    const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+    const secondaryAuth = getAuth(secondaryApp);
+
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+
+    // SANITIZACIÓN CONTRA XSS
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return str.toString().replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
         const eyeBtn = document.getElementById('eye-icon');
@@ -534,11 +514,9 @@
         if(eyeBtn && passInput) {
             eyeBtn.addEventListener('click', () => {
                 if(passInput.type === 'password') {
-                    passInput.type = 'text';
-                    eyeBtn.innerText = '🙈';
+                    passInput.type = 'text'; eyeBtn.innerText = '🙈';
                 } else {
-                    passInput.type = 'password';
-                    eyeBtn.innerText = '👁️';
+                    passInput.type = 'password'; eyeBtn.innerText = '👁️';
                 }
             });
         }
@@ -554,7 +532,6 @@
                 try {
                     await signInWithEmailAndPassword(auth, email, inputPass);
                 } catch (error) {
-                    console.error("Error Auth:", error.code);
                     if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
                         window.showToast("Usuario o contraseña incorrectos.", "error");
                     } else if (error.code === 'auth/wrong-password') {
@@ -567,14 +544,10 @@
         }
 
         const questionForm = document.getElementById('questionForm');
-        if(questionForm) {
-            questionForm.addEventListener('submit', (e) => { window.saveQuestion(e); });
-        }
+        if(questionForm) { questionForm.addEventListener('submit', (e) => { window.saveQuestion(e); }); }
 
         const userForm = document.getElementById('userForm');
-        if(userForm) {
-            userForm.addEventListener('submit', (e) => { window.saveUser(e); });
-        }
+        if(userForm) { userForm.addEventListener('submit', (e) => { window.saveUser(e); }); }
     });
 
     let appData = { questions: [], users: [] };
@@ -592,7 +565,7 @@
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = type === 'success' ? `✅ ${message}` : `⚠️ ${message}`;
+        toast.innerHTML = type === 'success' ? `✅ ${escapeHTML(message)}` : `⚠️ ${escapeHTML(message)}`;
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 4000); 
     };
@@ -642,10 +615,10 @@
             const roleBadge = u.role === 'admin' ? '<span style="color:var(--text-dark); font-weight:600;">Admin</span>' : '<span style="color:var(--text-muted);">Estudiante</span>';
             tbody.innerHTML += `
                 <tr>
-                    <td style="font-weight:600;">${(u.email || '').split('@')[0].toUpperCase()}</td>
+                    <td style="font-weight:600;">${escapeHTML((u.email || '').split('@')[0].toUpperCase())}</td>
                     <td style="font-family:monospace; color:var(--text-muted);">[Protegido]</td>
                     <td>${roleBadge}</td>
-                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${u.uid}')">Borrar</button></td>
+                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${u.uid}')">Deshabilitar</button></td>
                 </tr>
             `;
         });
@@ -658,8 +631,11 @@
         const role = document.getElementById('u-role').value;
         const email = `${username}@esbas.pe`;
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            // Uso de secondaryAuth para evitar el deslogueo del Admin
+            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+            await signOut(secondaryAuth); 
             await setDoc(doc(db, "users", userCredential.user.uid), { email: email, role: role, createdAt: new Date() });
+            
             document.getElementById('u-name').value = '';
             document.getElementById('u-pass').value = '';
             window.showToast("Usuario registrado exitosamente.");
@@ -668,10 +644,10 @@
     };
 
     window.deleteUserRecord = async function(uid) {
-        if(confirm("Se eliminarán sus permisos de acceso al sistema. ¿Continuar?")) {
+        if(confirm("Se eliminarán sus permisos de acceso al sistema (Queda bloqueado por Reglas). ¿Continuar?")) {
             await deleteDoc(doc(db, "users", uid));
             fetchUsers();
-            window.showToast("Usuario deshabilitado.");
+            window.showToast("Usuario deshabilitado lógicamente.");
         }
     };
 
@@ -824,11 +800,14 @@
         const container = document.getElementById('repo-container');
         const searchTxt = (document.getElementById('searchInput').value || '').toLowerCase();
         container.innerHTML = '';
+        
+        // Búsqueda profunda: Incluye opciones A, B, C, D
         const filtered = appData.questions.filter(q => {
             const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
             const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
-            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''}`.toLowerCase();
+            const optsText = q.opciones ? `${q.opciones.a} ${q.opciones.b} ${q.opciones.c} ${q.opciones.d}` : '';
+            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''} ${optsText}`.toLowerCase();
             return matchesModule && matchesLesson && fullStr.includes(searchTxt);
         });
 
@@ -839,9 +818,9 @@
 
         filtered.forEach((q, i) => {
             const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
-            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
-            const correctText = q.opciones ? q.opciones[q.respuesta] : 'N/A';
-            const pNum = q.pregunta_num || "?"; 
+            const lessonBadge = escapeHTML(q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`);
+            const correctText = escapeHTML(q.opciones ? q.opciones[q.respuesta] : 'N/A');
+            const pNum = escapeHTML(q.pregunta_num || "?"); 
             const delay = i > 15 ? 0 : i * 0.05;
             const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">Editar</button>`;
 
@@ -851,13 +830,13 @@
                         <div class="flashcard-front">
                             <span class="q-number-badge">Pregunta #${pNum}</span>
                             ${editBtn}
-                            <div class="meta-tags"><span class="tag">${q.modulo || 'Sin módulo'}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
-                            <div style="font-size: 1.05rem; font-weight: 500; padding-right: 4rem; line-height: 1.5; color: var(--text-dark);">${q.pregunta || 'Sin enunciado'}</div>
+                            <div class="meta-tags"><span class="tag">${escapeHTML(q.modulo || 'Sin módulo')}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
+                            <div style="font-size: 1.05rem; font-weight: 500; padding-right: 4rem; line-height: 1.5; color: var(--text-dark);">${escapeHTML(q.pregunta || 'Sin enunciado')}</div>
                             <div class="flip-hint">Haz clic para voltear la tarjeta</div>
                         </div>
                         <div class="flashcard-back">
                             <div style="color: var(--success); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.8rem; letter-spacing: 0.5px;">Respuesta Correcta</div>
-                            <div style="font-size: 1.15rem; font-weight: 500; color: var(--text-dark); line-height: 1.4;">${(q.respuesta || 'N/A').toUpperCase()}) ${correctText}</div>
+                            <div style="font-size: 1.15rem; font-weight: 500; color: var(--text-dark); line-height: 1.4;">${escapeHTML((q.respuesta || 'N/A').toUpperCase())}) ${correctText}</div>
                         </div>
                     </div>
                 </div>
@@ -870,13 +849,13 @@
         tbody.innerHTML = '';
         appData.questions.forEach(q => {
             const numRaw = String(q.leccion_num).replace(/\D/g, '');
-            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
+            const lessonBadge = escapeHTML(q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`);
             tbody.innerHTML += `
                 <tr>
-                    <td style="font-weight:600; color:var(--text-dark);">#${q.pregunta_num || '?'}</td>
-                    <td><span class="tag">${q.modulo || 'N/A'}</span></td>
+                    <td style="font-weight:600; color:var(--text-dark);">#${escapeHTML(q.pregunta_num || '?')}</td>
+                    <td><span class="tag">${escapeHTML(q.modulo || 'N/A')}</span></td>
                     <td>${lessonBadge}</td>
-                    <td>${(q.pregunta || '').substring(0, 50)}...</td>
+                    <td>${escapeHTML((q.pregunta || '').substring(0, 50))}...</td>
                     <td>
                         <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
                         <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
@@ -1011,13 +990,13 @@
             container.innerHTML += `
                 <div class="card sim-card" id="sim-q-card-${index}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta || ''}</span>
-                        <span style="font-weight: 600; color: var(--text-muted); background:#f5f5f7; padding:0.3rem 0.7rem; border-radius:8px; font-size:0.8rem; flex-shrink:0; margin-left:1rem;">Orig #${q.pregunta_num || "?"}</span>
+                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${escapeHTML(q.pregunta || '')}</span>
+                        <span style="font-weight: 600; color: var(--text-muted); background:#f5f5f7; padding:0.3rem 0.7rem; border-radius:8px; font-size:0.8rem; flex-shrink:0; margin-left:1rem;">Orig #${escapeHTML(q.pregunta_num || "?")}</span>
                     </div>
                     <ul class="options-list">
                         ${Object.entries(q.opciones).map(([key, text]) => `
                             <li class="option-item sim-opt-${q.id}" onclick="window.selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
-                                <strong style="margin-right: 10px; color:var(--text-muted);">${key.toUpperCase()})</strong> ${text}
+                                <strong style="margin-right: 10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
                             </li>
                         `).join('')}
                     </ul>
@@ -1076,17 +1055,17 @@
                 blankCount++;
             } else if (userSelected === correct) {
                 correctCount++; statusClass = 'is-correct'; icon = '✅';
-                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${escapeHTML(userSelected.toUpperCase())}) ${escapeHTML(q.opciones[userSelected])}</strong></div>`;
             } else {
                 errorCount++; statusClass = 'is-incorrect'; icon = '❌';
-                userAnswerText = `<div class="r-ans user-wrong">Error: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+                userAnswerText = `<div class="r-ans user-wrong">Error: <strong>${escapeHTML(userSelected.toUpperCase())}) ${escapeHTML(q.opciones[userSelected])}</strong></div>`;
             }
 
             reviewHTML += `
                 <div class="review-item ${statusClass}">
-                    <div class="r-question">${icon} Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta || ''}</div>
+                    <div class="r-question">${icon} Q${index + 1} (Orig. #${escapeHTML(q.pregunta_num || "?")}): ${escapeHTML(q.pregunta || '')}</div>
                     ${userAnswerText}
-                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${(correct || 'N/A').toUpperCase()}) ${q.opciones ? q.opciones[correct] : 'N/A'}</strong></div>
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${escapeHTML((correct || 'N/A').toUpperCase())}) ${escapeHTML(q.opciones ? q.opciones[correct] : 'N/A')}</strong></div>
                 </div>
             `;
         });
@@ -1103,3 +1082,4 @@
 </script>
 </body>
 </html>
+
