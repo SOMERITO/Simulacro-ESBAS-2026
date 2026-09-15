@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V11 (Fix Red QUIC + Animaciones Minimalistas tipo Apple) -->
+    <!-- VERSIÓN: V12 (Estable, Red QUIC Fix, Animaciones Premium) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESBAS - Sistema de Evaluación</title>
+    <title>ESBAS - Sistema de Evaluación V12</title>
     <style>
         :root {
             --bg-main: #f5f5f7; /* Tono Apple gris ultra claro */
@@ -79,7 +79,7 @@
             transition: var(--transition-smooth);
         }
         .cloud-status.syncing { background: #f59e0b; color: white; }
-        .cloud-status.success { background: var(--success); color: white; } /* Bucle infinito removido */
+        .cloud-status.success { background: var(--success); color: white; } 
         .cloud-status.error { background: var(--error); color: white; }
 
         .nav-links button { 
@@ -251,7 +251,7 @@
         .alt-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: white; cursor: pointer; transition: var(--transition-smooth); }
         .alt-row:has(input:checked) { border-color: var(--success); box-shadow: 0 0 0 1px var(--success);}
         .alt-row input[type="radio"] { width: 1.1rem; height: 1.1rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
-        .alt-label { font-weight: 600; color: var(--text-muted); width: 1.5rem; font-size: 1rem; text-align: center; }
+        .alt-label { font-weight: 600; color: var(--text-muted); width: 1.5rem; font-size: 1.1rem; text-align: center; }
         .alt-row:has(input:checked) .alt-label { color: var(--success); }
         .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; width: 100%;}
         .alt-row input[type="text"]:focus { border: none; background: transparent; }
