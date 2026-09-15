@@ -253,4 +253,853 @@
         .alt-row input[type="radio"] { width: 1.1rem; height: 1.1rem; cursor: pointer; accent-color: var(--success); margin: 0; flex-shrink: 0; }
         .alt-label { font-weight: 600; color: var(--text-muted); width: 1.5rem; font-size: 1rem; text-align: center; }
         .alt-row:has(input:checked) .alt-label { color: var(--success); }
-        .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; widt
+        .alt-row input[type="text"] { border: none; background: transparent; padding: 0; box-shadow: none !important; width: 100%;}
+        .alt-row input[type="text"]:focus { border: none; background: transparent; }
+        .wizard-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1rem; }
+        .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); animation: fadeInScale 0.4s; }
+        .empty-state text { display: block; font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;}
+
+        /* Ocultar elementos para usuarios estandar */
+        body:not(.role-admin) .admin-only { display: none !important; }
+
+        @media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<div id="login-wrapper">
+    <div class="login-box">
+        <h1>🚒 ESBAS 2026</h1>
+        <form id="login-form">
+            <div class="login-form-group">
+                <label>Usuario</label>
+                <input type="text" id="login-user" placeholder="Ej: JCARRANZA" required autocomplete="off">
+            </div>
+            <div class="login-form-group">
+                <label>Contraseña</label>
+                <div class="password-container">
+                    <input type="password" id="login-pass" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" id="eye-icon">👁️</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-login">Ingresar al Sistema</button>
+        </form>
+    </div>
+</div>
+
+<nav id="main-nav">
+    <div class="nav-brand">
+        <div class="brand-title">🚒 ESBAS 2026</div>
+        <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
+    </div>
+    <div class="nav-links">
+        <button onclick="switchView('repo')" id="btn-repo" class="active">Repositorio</button>
+        <button onclick="switchView('sim')" id="btn-sim">Simulación</button>
+        <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
+        <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: var(--primary-orange); color: var(--primary-orange);">Usuarios</button>
+        <button onclick="logout()" style="color: rgba(255,255,255,0.7);">Salir</button>
+    </div>
+</nav>
+
+<div class="container" id="main-container">
+    
+    <div id="view-repo" class="view-section active">
+        <div class="card" style="padding: 1.5rem;">
+            <div class="filter-header">
+                <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                    Banco de Preguntas <span class="global-counter" id="global-count-badge">0 Preguntas</span>
+                </h2>
+                <button class="btn admin-only" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal; margin-right:4px;">+</span> Agregar Pregunta</button>
+            </div>
+            <div class="filter-group" id="moduleFilters"></div>
+            <div class="lesson-filters" id="lessonFiltersContainer"></div>
+            <div style="margin-top: 1.5rem;">
+                <input type="text" id="searchInput" placeholder="Buscar palabras clave en la pregunta..." onkeyup="renderRepo()">
+            </div>
+        </div>
+        <div id="repo-container"></div>
+    </div>
+
+    <div id="view-sim" class="view-section">
+        <div id="sim-setup" class="card">
+            <h2 class="card-header">Configurar Simulador de Examen</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="form-group">
+                    <label>Módulo a Evaluar</label>
+                    <select id="sim-module" onchange="updateSimLessonDropdown(this.value)">
+                        <option value="all">Todos los Módulos (100 Preguntas)</option>
+                        <option value="Módulo I">Módulo I</option>
+                        <option value="Módulo II">Módulo II</option>
+                        <option value="Módulo III">Módulo III</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lección Específica</label>
+                    <select id="sim-lesson" disabled>
+                        <option value="all">Todas las lecciones</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
+        </div>
+
+        <div id="sim-active" style="display: none;">
+            <div class="sim-controls">
+                <span id="sim-progress" style="font-weight: 500; color: var(--text-dark);">Pregunta 1 de X</span>
+                <button class="btn btn-outline" style="color:var(--error); border-color:var(--error);" onclick="cancelSimulation()">Cancelar Examen</button>
+            </div>
+            <div id="sim-questions-container"></div>
+            <div class="sim-nav-footer">
+                <button class="btn btn-outline" id="btn-sim-prev" onclick="navigateSim(-1)">← Anterior</button>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn" id="btn-sim-next" onclick="navigateSim(1)">Siguiente ➝</button>
+                    <button class="btn" id="btn-sim-finish" style="background:var(--success); display:none;" onclick="finishSimulation()">Entregar Examen ✔</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sim-results" style="display: none;">
+            <div class="card" style="text-align: center;">
+                <h2 class="card-header" style="justify-content: center; border:none;">Resultados del Examen</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card"><div class="metric-value m-precision" id="res-precision">0%</div><div class="metric-label">Precisión</div></div>
+                    <div class="metric-card"><div class="metric-value m-correct" id="res-correct">0</div><div class="metric-label">Aciertos</div></div>
+                    <div class="metric-card"><div class="metric-value m-error" id="res-error">0</div><div class="metric-label">Errores</div></div>
+                    <div class="metric-card"><div class="metric-value m-blank" id="res-blank">0</div><div class="metric-label">Sin responder</div></div>
+                </div>
+                <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block';">Volver a Configurar Examen</button>
+            </div>
+            <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
+            <div id="sim-detailed-review" class="detailed-review"></div>
+            <br><br>
+        </div>
+    </div>
+
+    <div id="view-config" class="view-section admin-only">
+        <div class="card">
+            <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
+                <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Base de Datos</h2>
+                <button class="btn" onclick="openModal('new')">+ Nueva Pregunta</button>
+            </div>
+            <div class="table-container">
+                <table id="questionsTable">
+                    <thead><tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-users" class="view-section admin-only">
+        <div class="card">
+            <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
+                <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Accesos (Usuarios)</h2>
+            </div>
+            <form id="userForm" style="display:flex; gap:1rem; margin-bottom: 2rem; align-items:flex-end; flex-wrap:wrap;">
+                <div class="form-group" style="flex:1;">
+                    <label>Nuevo Usuario (Ej: JPPEREZ)</label>
+                    <input type="text" id="u-name" required autocomplete="off" style="text-transform: uppercase;">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Contraseña Asignada</label>
+                    <input type="text" id="u-pass" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="u-role" required style="padding:0.85rem; border-radius:10px; border:1px solid var(--border-color); outline:none;">
+                        <option value="estudiante">Estudiante (Solo Lectura/Examen)</option>
+                        <option value="admin">Propietario / Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="background:var(--text-dark);">+ Añadir</button>
+            </form>
+
+            <div class="table-container">
+                <table id="usersTable">
+                    <thead><tr><th>Usuario</th><th>Contraseña</th><th>Nivel de Acceso</th><th style="width: 100px;">Acciones</th></tr></thead>
+                    <tbody id="users-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-form" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" type="button" onclick="closeModal()">×</button>
+        <h2 class="card-header" id="modal-title" style="margin-top: 0; border:none; margin-bottom:0.5rem;">Registrar Pregunta</h2>
+        
+        <div class="wizard-progress">
+            <div class="wizard-dot active" id="dot-1"></div>
+            <div class="wizard-dot" id="dot-2"></div>
+            <div class="wizard-dot" id="dot-3"></div>
+        </div>
+
+        <form id="questionForm" novalidate>
+            <input type="hidden" id="q-id">
+            
+            <div id="step-1" class="form-step active">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 1: Ubicación y Orden</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Módulo del ESBAS</label>
+                        <select id="q-module" required onchange="handleModuleMemory(this.value); autoIncrementQuestionNumber();" style="padding:0.85rem; border-radius:10px; border:1px solid var(--border-color); outline:none; background:#fbfbfd;">
+                            <option value="" disabled selected>Selecciona un módulo...</option>
+                            <option value="Módulo I">Módulo I</option>
+                            <option value="Módulo II">Módulo II</option>
+                            <option value="Módulo III">Módulo III</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Lección (N°)</label>
+                        <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName(); autoIncrementQuestionNumber();">
+                    </div>
+                    <div class="form-group">
+                        <label>Lección (Nombre)</label>
+                        <input type="text" id="q-lesson-name" placeholder="Ej: Rescate en Ascensores" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>N° de Pregunta</label>
+                        <input type="number" id="q-num" placeholder="Ej: 1" min="1" required>
+                    </div>
+                </div>
+                <div class="wizard-footer" style="justify-content: flex-end;">
+                    <button type="button" class="btn" onclick="goToStep(2)">Siguiente ➝</button>
+                </div>
+            </div>
+
+            <div id="step-2" class="form-step">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 2: Enunciado</h3>
+                <div class="form-group full-width">
+                    <label>Pregunta</label>
+                    <textarea id="q-text" rows="5" placeholder="Redacta la pregunta aquí..." required></textarea>
+                </div>
+                <div class="wizard-footer">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(1)">← Atrás</button>
+                    <button type="button" class="btn" onclick="goToStep(3)">Siguiente ➝</button>
+                </div>
+            </div>
+
+            <div id="step-3" class="form-step">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 3: Alternativas de Respuesta</h3>
+                <div class="form-group full-width alts-vertical">
+                    <label style="color: var(--text-muted); margin-bottom: -0.2rem;">Selecciona el círculo de la opción correcta:</label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="a" required><span class="alt-label">A</span><input type="text" id="q-opt-a" required placeholder="Redacta la opción A..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="b" required><span class="alt-label">B</span><input type="text" id="q-opt-b" required placeholder="Redacta la opción B..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="c" required><span class="alt-label">C</span><input type="text" id="q-opt-c" required placeholder="Redacta la opción C..."></label>
+                    <label class="alt-row"><input type="radio" name="q-correct" value="d" required><span class="alt-label">D</span><input type="text" id="q-opt-d" required placeholder="Redacta la opción D..."></label>
+                </div>
+                <div class="wizard-footer">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Atrás</button>
+                    <button type="submit" class="btn" id="btn-save" style="background: var(--text-dark);">✔ Guardar Pregunta</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    // FIX DE RED: Importamos initializeFirestore para forzar Long Polling y saltar el bloqueo QUIC
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { 
+        getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { 
+        getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
+        authDomain: "esbas-2026.firebaseapp.com",
+        projectId: "esbas-2026",
+        storageBucket: "esbas-2026.firebasestorage.app",
+        messagingSenderId: "524580412919",
+        appId: "1:524580412919:web:9104e66780fc4c61c9e2f2",
+        measurementId: "G-WL19S67089"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    // FORZAMOS LONG POLLING AQUÍ PARA EVITAR EL ERROR DE QUIC_NETWORK_IDLE_TIMEOUT
+    const db = initializeFirestore(app, {
+        experimentalForceLongPolling: true
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const eyeBtn = document.getElementById('eye-icon');
+        const passInput = document.getElementById('login-pass');
+        if(eyeBtn && passInput) {
+            eyeBtn.addEventListener('click', () => {
+                if(passInput.type === 'password') {
+                    passInput.type = 'text';
+                    eyeBtn.innerText = '🙈';
+                } else {
+                    passInput.type = 'password';
+                    eyeBtn.innerText = '👁️';
+                }
+            });
+        }
+
+        const loginForm = document.getElementById('login-form');
+        if(loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
+                const inputPass = document.getElementById('login-pass').value.trim();
+                const email = inputUser.includes('@') ? inputUser : `${inputUser}@esbas.pe`;
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, inputPass);
+                } catch (error) {
+                    console.error("Error Auth:", error.code);
+                    if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+                        window.showToast("Usuario o contraseña incorrectos.", "error");
+                    } else if (error.code === 'auth/wrong-password') {
+                        window.showToast("La contraseña es incorrecta.", "error");
+                    } else {
+                        window.showToast("Fallo de acceso. Revisa tu red.", "error");
+                    }
+                }
+            });
+        }
+
+        const questionForm = document.getElementById('questionForm');
+        if(questionForm) {
+            questionForm.addEventListener('submit', (e) => { window.saveQuestion(e); });
+        }
+
+        const userForm = document.getElementById('userForm');
+        if(userForm) {
+            userForm.addEventListener('submit', (e) => { window.saveUser(e); });
+        }
+    });
+
+    let appData = { questions: [], users: [] };
+    let currentUser = null;
+    let currentUserRole = 'estudiante';
+    let currentSimulationQuestions = [];
+    let userAnswers = {};
+    let currentSimIndex = 0;
+    let activeModuleFilter = 'all';
+    let activeLessonFilter = 'all';
+    let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
+    const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
+
+    window.showToast = function(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = type === 'success' ? `✅ ${message}` : `⚠️ ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000); 
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                currentUserRole = userDoc.exists() ? userDoc.data().role : 'estudiante';
+            } catch(e) { currentUserRole = 'estudiante'; }
+
+            document.getElementById('login-wrapper').style.display = 'none';
+            document.getElementById('main-nav').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'block';
+            
+            if (currentUserRole === 'admin') document.body.classList.add('role-admin');
+            else document.body.classList.remove('role-admin');
+
+            window.showToast(`Bienvenido al sistema ESBAS`);
+            fetchQuestions();
+            if(currentUserRole === 'admin') fetchUsers();
+        } else {
+            document.body.classList.remove('role-admin');
+            document.getElementById('login-wrapper').style.display = 'flex';
+            document.getElementById('main-nav').style.display = 'none';
+            document.getElementById('main-container').style.display = 'none';
+        }
+    });
+
+    window.logout = function() { signOut(auth); };
+
+    async function fetchUsers() {
+        try {
+            const querySnapshot = await getDocs(collection(db, "users"));
+            appData.users = [];
+            querySnapshot.forEach((doc) => { appData.users.push({ uid: doc.id, ...doc.data() }); });
+            window.renderUsers();
+        } catch (error) { console.error(error); }
+    }
+
+    window.renderUsers = function() {
+        const tbody = document.getElementById('users-body');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        appData.users.forEach(u => {
+            const roleBadge = u.role === 'admin' ? '<span style="color:var(--text-dark); font-weight:600;">Admin</span>' : '<span style="color:var(--text-muted);">Estudiante</span>';
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:600;">${(u.email || '').split('@')[0].toUpperCase()}</td>
+                    <td style="font-family:monospace; color:var(--text-muted);">[Protegido]</td>
+                    <td>${roleBadge}</td>
+                    <td><button class="action-btn btn-delete" onclick="deleteUserRecord('${u.uid}')">Borrar</button></td>
+                </tr>
+            `;
+        });
+    };
+
+    window.saveUser = async function(e) {
+        if(e) e.preventDefault();
+        const username = document.getElementById('u-name').value.trim().toLowerCase();
+        const password = document.getElementById('u-pass').value.trim();
+        const role = document.getElementById('u-role').value;
+        const email = `${username}@esbas.pe`;
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, "users", userCredential.user.uid), { email: email, role: role, createdAt: new Date() });
+            document.getElementById('u-name').value = '';
+            document.getElementById('u-pass').value = '';
+            window.showToast("Usuario registrado exitosamente.");
+            fetchUsers();
+        } catch (error) { window.showToast(error.message, "error"); }
+    };
+
+    window.deleteUserRecord = async function(uid) {
+        if(confirm("Se eliminarán sus permisos de acceso al sistema. ¿Continuar?")) {
+            await deleteDoc(doc(db, "users", uid));
+            fetchUsers();
+            window.showToast("Usuario deshabilitado.");
+        }
+    };
+
+    window.setCloudStatus = function(status) {
+        document.querySelectorAll('.cloud-status').forEach(indicator => {
+            indicator.className = 'cloud-status admin-only ' + status;
+            if(status === 'success') indicator.innerHTML = '☁️ Sincronizado';
+            if(status === 'syncing') indicator.innerHTML = '🔄 Cargando...';
+            if(status === 'error') indicator.innerHTML = '⚠️ Error Conexión';
+        });
+    };
+
+    async function fetchQuestions() {
+        window.setCloudStatus('syncing');
+        try {
+            const querySnapshot = await getDocs(collection(db, "questions"));
+            appData.questions = [];
+            querySnapshot.forEach((doc) => { appData.questions.push({ id: doc.id, ...doc.data() }); });
+            window.updateIndexesAndCounters();
+            window.renderRepo();
+            window.renderTable();
+            window.setCloudStatus('success');
+        } catch (error) {
+            window.setCloudStatus('error');
+            window.showToast("No se pudo descargar el banco de preguntas.", "error");
+        }
+    }
+
+    window.saveQuestion = async function(e) {
+        if(e) e.preventDefault();
+        const form = document.getElementById('questionForm');
+        if (!form.checkValidity()) {
+            const invalidElement = form.querySelector(':invalid');
+            if (invalidElement) {
+                const stepContainer = invalidElement.closest('.form-step');
+                if (stepContainer) {
+                    window.goToStep(parseInt(stepContainer.id.replace('step-', '')));
+                    window.showToast("Faltan campos por completar.", "error");
+                    setTimeout(() => invalidElement.focus(), 300);
+                }
+            }
+            return; 
+        }
+
+        const id = document.getElementById('q-id').value;
+        const currentModule = document.getElementById('q-module').value;
+        const currentLessonNum = document.getElementById('q-lesson').value;
+        const currentQNum = document.getElementById('q-num').value;
+        const currentLessonName = document.getElementById('q-lesson-name').value;
+        const qText = document.getElementById('q-text').value.trim();
+        const optA = document.getElementById('q-opt-a').value.trim();
+        const optB = document.getElementById('q-opt-b').value.trim();
+        const optC = document.getElementById('q-opt-c').value.trim();
+        const optD = document.getElementById('q-opt-d').value.trim();
+        
+        const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
+        if(!checkedRadio) { window.showToast("Selecciona la respuesta correcta.", "error"); return; }
+        const optsLower = [optA, optB, optC, optD].map(o => o.toLowerCase());
+        if (new Set(optsLower).size < 4) { window.showToast("Error: Hay alternativas con texto duplicado.", "error"); return; }
+
+        const nuevaPregunta = {
+            modulo: currentModule, leccion_num: Number(currentLessonNum), leccion_nombre: currentLessonName,
+            pregunta_num: Number(currentQNum), pregunta: qText,
+            opciones: { a: optA, b: optB, c: optC, d: optD }, respuesta: checkedRadio.value
+        };
+
+        window.setCloudStatus('syncing');
+        try {
+            if (id) await setDoc(doc(db, "questions", id), nuevaPregunta);
+            else await addDoc(collection(db, "questions"), nuevaPregunta);
+            
+            formMemory.lastModule = currentModule;
+            formMemory[currentModule].num = currentLessonNum;
+            formMemory[currentModule].name = currentLessonName;
+            window.closeModal();
+            fetchQuestions();
+        } catch(error) {
+            window.showToast("Error subiendo la pregunta a Firebase.", "error");
+            window.setCloudStatus('error');
+        }
+    };
+
+    window.deleteQuestion = async function(id) {
+        if(confirm("¿Estás seguro de eliminar permanentemente esta pregunta?")) {
+            window.setCloudStatus('syncing');
+            try {
+                await deleteDoc(doc(db, "questions", id));
+                fetchQuestions();
+            } catch (error) { window.setCloudStatus('error'); }
+        }
+    };
+
+    window.switchView = function(viewName) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
+        document.getElementById(`view-${viewName}`).classList.add('active');
+        document.getElementById(`btn-${viewName}`).classList.add('active');
+        if(viewName === 'repo') window.renderRepo();
+        if(viewName === 'config') window.renderTable();
+        if(viewName === 'users') window.renderUsers();
+    };
+
+    window.updateIndexesAndCounters = function() {
+        appData.questions.sort((a,b) => {
+            if(a.modulo !== b.modulo) return (a.modulo || '').localeCompare(b.modulo || '');
+            if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num || 0) - parseInt(b.leccion_num || 0);
+            return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
+        });
+
+        document.getElementById('global-count-badge').innerText = `${appData.questions.length} Preguntas`;
+        const modContainer = document.getElementById('moduleFilters');
+        modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${appData.questions.length}</span></button>`;
+        ['Módulo I', 'Módulo II', 'Módulo III'].forEach(mod => {
+            const count = appData.questions.filter(q => q.modulo === mod).length;
+            modContainer.innerHTML += `<button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">${mod} <span class="badge-count">${count}</span></button>`;
+        });
+    };
+
+    window.setModuleFilter = function(moduleName) {
+        activeModuleFilter = moduleName;
+        activeLessonFilter = 'all';
+        window.updateIndexesAndCounters(); 
+        const lessonContainer = document.getElementById('lessonFiltersContainer');
+        if(moduleName === 'all') {
+            lessonContainer.classList.remove('active');
+        } else {
+            const range = moduleLessonsMap[moduleName];
+            const modCount = appData.questions.filter(q => q.modulo === moduleName).length;
+            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas <span class="badge-count">${modCount}</span></button>`;
+            if(range) {
+                for(let i = range.start; i <= range.end; i++) {
+                    const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+                    html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i} <span class="badge-count">${count}</span></button>`;
+                }
+            }
+            lessonContainer.innerHTML = html;
+            lessonContainer.classList.add('active');
+        }
+        window.renderRepo();
+    };
+
+    window.setLessonFilter = function(lessonNumberStr, btnElement) {
+        activeLessonFilter = lessonNumberStr;
+        document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+        window.renderRepo();
+    };
+
+    window.renderRepo = function() {
+        const container = document.getElementById('repo-container');
+        const searchTxt = (document.getElementById('searchInput').value || '').toLowerCase();
+        container.innerHTML = '';
+        const filtered = appData.questions.filter(q => {
+            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
+            const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
+            const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
+            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''}`.toLowerCase();
+            return matchesModule && matchesLesson && fullStr.includes(searchTxt);
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><text>📂</text><h3>Sin resultados</h3></div>`;
+            return;
+        }
+
+        filtered.forEach((q, i) => {
+            const numRaw = String(q.leccion_num).replace(/\D/g, ''); 
+            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
+            const correctText = q.opciones ? q.opciones[q.respuesta] : 'N/A';
+            const pNum = q.pregunta_num || "?"; 
+            const delay = i > 15 ? 0 : i * 0.05;
+            const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">Editar</button>`;
+
+            container.innerHTML += `
+                <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard">
+                        <div class="flashcard-front">
+                            <span class="q-number-badge">Pregunta #${pNum}</span>
+                            ${editBtn}
+                            <div class="meta-tags"><span class="tag">${q.modulo || 'Sin módulo'}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
+                            <div style="font-size: 1.05rem; font-weight: 500; padding-right: 4rem; line-height: 1.5; color: var(--text-dark);">${q.pregunta || 'Sin enunciado'}</div>
+                            <div class="flip-hint">Haz clic para voltear la tarjeta</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div style="color: var(--success); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.8rem; letter-spacing: 0.5px;">Respuesta Correcta</div>
+                            <div style="font-size: 1.15rem; font-weight: 500; color: var(--text-dark); line-height: 1.4;">${(q.respuesta || 'N/A').toUpperCase()}) ${correctText}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    window.renderTable = function() {
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        appData.questions.forEach(q => {
+            const numRaw = String(q.leccion_num).replace(/\D/g, '');
+            const lessonBadge = q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`;
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:600; color:var(--text-dark);">#${q.pregunta_num || '?'}</td>
+                    <td><span class="tag">${q.modulo || 'N/A'}</span></td>
+                    <td>${lessonBadge}</td>
+                    <td>${(q.pregunta || '').substring(0, 50)}...</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="openModal('edit', '${q.id}')">Editar</button>
+                        <button class="action-btn btn-delete" onclick="deleteQuestion('${q.id}')">Borrar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    };
+
+    window.handleModuleMemory = function(selectedModule) {
+        if (!selectedModule) return;
+        if (formMemory[selectedModule].num !== '') {
+            document.getElementById('q-lesson').value = formMemory[selectedModule].num;
+            document.getElementById('q-lesson-name').value = formMemory[selectedModule].name;
+        }
+    };
+
+    window.autoFillLessonName = function() {
+        const numInput = document.getElementById('q-lesson').value.trim();
+        if(!numInput) return;
+        const existing = appData.questions.find(q => String(q.leccion_num).replace(/\D/g, '') === numInput && (q.leccion_nombre || '').trim() !== '');
+        if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
+    };
+
+    window.autoIncrementQuestionNumber = function() {
+        const mod = document.getElementById('q-module').value;
+        const lec = document.getElementById('q-lesson').value.trim();
+        if (!document.getElementById('q-id').value && mod && lec) {
+            const questionsInLesson = appData.questions.filter(q => q.modulo === mod && String(q.leccion_num) === lec);
+            if (questionsInLesson.length === 0) document.getElementById('q-num').value = 1;
+            else {
+                const maxNum = Math.max(...questionsInLesson.map(q => parseInt(q.pregunta_num) || 0));
+                document.getElementById('q-num').value = maxNum + 1;
+            }
+        }
+    };
+
+    window.goToStep = function(step) {
+        document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+        document.querySelectorAll('.wizard-dot').forEach((el, index) => {
+            if(index < step) el.classList.add('active'); else el.classList.remove('active');
+        });
+    };
+
+    window.openModal = function(mode, id = null) {
+        document.getElementById('modal-form').classList.add('active');
+        window.goToStep(1); 
+        if (mode === 'new') {
+            document.getElementById('modal-title').innerText = "Registrar Pregunta";
+            document.getElementById('q-id').value = '';
+            if (formMemory.lastModule !== '') {
+                document.getElementById('q-module').value = formMemory.lastModule;
+                document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
+                document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
+                window.autoIncrementQuestionNumber(); 
+            } else {
+                document.getElementById('q-module').value = '';
+                document.getElementById('q-lesson').value = '';
+                document.getElementById('q-lesson-name').value = '';
+                document.getElementById('q-num').value = '';
+            }
+            document.getElementById('q-text').value = '';
+            document.getElementById('q-opt-a').value = '';
+            document.getElementById('q-opt-b').value = '';
+            document.getElementById('q-opt-c').value = '';
+            document.getElementById('q-opt-d').value = '';
+            document.querySelectorAll('input[name="q-correct"]').forEach(r => r.checked = false);
+        } else if (mode === 'edit' && id) {
+            document.getElementById('modal-title').innerText = "Modificar Tarjeta";
+            const q = appData.questions.find(item => String(item.id) === String(id));
+            if(q) {
+                document.getElementById('q-id').value = q.id;
+                document.getElementById('q-module').value = q.modulo || '';
+                document.getElementById('q-lesson').value = String(q.leccion_num).replace(/\D/g, ''); 
+                document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
+                document.getElementById('q-num').value = q.pregunta_num || '';
+                document.getElementById('q-text').value = q.pregunta || '';
+                document.getElementById('q-opt-a').value = q.opciones ? q.opciones.a : '';
+                document.getElementById('q-opt-b').value = q.opciones ? q.opciones.b : '';
+                document.getElementById('q-opt-c').value = q.opciones ? q.opciones.c : '';
+                document.getElementById('q-opt-d').value = q.opciones ? q.opciones.d : '';
+                const correctRadio = document.querySelector(`input[name="q-correct"][value="${q.respuesta}"]`);
+                if(correctRadio) correctRadio.checked = true;
+            }
+        }
+    };
+
+    window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); };
+
+    window.updateSimLessonDropdown = function(moduleName) {
+        const lessonSelect = document.getElementById('sim-lesson');
+        lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
+        if (moduleName === 'all') { lessonSelect.disabled = true; return; }
+        lessonSelect.disabled = false;
+        const range = moduleLessonsMap[moduleName];
+        if(!range) return;
+        for(let i = range.start; i <= range.end; i++) {
+            const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
+            if(count > 0) lessonSelect.innerHTML += `<option value="${i}">Lección ${i} (${count} pregs)</option>`;
+        }
+    };
+
+    window.startSimulation = function() {
+        const modFilter = document.getElementById('sim-module').value;
+        const lessonFilter = document.getElementById('sim-lesson').value;
+        let pool = appData.questions.filter(q => {
+            const qNumRaw = String(q.leccion_num).replace(/\D/g, '');
+            return (modFilter === 'all' || q.modulo === modFilter) && (lessonFilter === 'all' || qNumRaw === lessonFilter);
+        });
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        let targetCount = (modFilter === 'all') ? 100 : (lessonFilter === 'all') ? 20 : 10;
+        currentSimulationQuestions = pool.slice(0, Math.min(targetCount, pool.length));
+        userAnswers = {};
+        currentSimIndex = 0; 
+        if(currentSimulationQuestions.length === 0) { window.showToast("No hay preguntas registradas.", "error"); return; }
+        document.getElementById('sim-setup').style.display = 'none';
+        document.getElementById('sim-active').style.display = 'block';
+        document.getElementById('sim-results').style.display = 'none';
+        window.renderSimulationQuestions();
+        window.showSimQuestion(0);
+    };
+
+    window.renderSimulationQuestions = function() {
+        const container = document.getElementById('sim-questions-container');
+        container.innerHTML = '';
+        currentSimulationQuestions.forEach((q, index) => {
+            if(!q.opciones) return;
+            container.innerHTML += `
+                <div class="card sim-card" id="sim-q-card-${index}">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                        <span style="font-size:1.1rem; font-weight: 500; color: var(--text-dark);">${q.pregunta || ''}</span>
+                        <span style="font-weight: 600; color: var(--text-muted); background:#f5f5f7; padding:0.3rem 0.7rem; border-radius:8px; font-size:0.8rem; flex-shrink:0; margin-left:1rem;">Orig #${q.pregunta_num || "?"}</span>
+                    </div>
+                    <ul class="options-list">
+                        ${Object.entries(q.opciones).map(([key, text]) => `
+                            <li class="option-item sim-opt-${q.id}" onclick="window.selectAnswer('${q.id}', '${key}')" id="opt-${q.id}-${key}">
+                                <strong style="margin-right: 10px; color:var(--text-muted);">${key.toUpperCase()})</strong> ${text}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        });
+    };
+
+    window.showSimQuestion = function(index) {
+        document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
+        const activeCard = document.getElementById(`sim-q-card-${index}`);
+        if(activeCard) activeCard.classList.add('active');
+        document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
+        document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+        if (index === currentSimulationQuestions.length - 1) {
+            document.getElementById('btn-sim-next').style.display = 'none';
+            document.getElementById('btn-sim-finish').style.display = 'inline-flex';
+        } else {
+            document.getElementById('btn-sim-next').style.display = 'inline-flex';
+            document.getElementById('btn-sim-finish').style.display = 'none';
+        }
+    };
+
+    window.navigateSim = function(direction) {
+        const nextIndex = currentSimIndex + direction;
+        if(nextIndex >= 0 && nextIndex < currentSimulationQuestions.length) {
+            currentSimIndex = nextIndex;
+            window.showSimQuestion(currentSimIndex);
+        }
+    };
+
+    window.selectAnswer = function(questionId, selectedKey) {
+        userAnswers[questionId] = selectedKey;
+        document.querySelectorAll(`.sim-opt-${questionId}`).forEach(el => el.classList.remove('selected'));
+        document.getElementById(`opt-${questionId}-${selectedKey}`).classList.add('selected');
+    };
+
+    window.cancelSimulation = function() {
+        if(confirm("¿Seguro que deseas cancelar el examen?")) {
+            document.getElementById('sim-active').style.display = 'none';
+            document.getElementById('sim-setup').style.display = 'block';
+        }
+    };
+
+    window.finishSimulation = function() {
+        const total = currentSimulationQuestions.length;
+        const answered = Object.keys(userAnswers).length;
+        if(answered < total && !confirm(`Faltan ${total - answered} preguntas. ¿Entregar?`)) return;
+
+        let correctCount = 0; let errorCount = 0; let blankCount = 0; let reviewHTML = '';
+        currentSimulationQuestions.forEach((q, index) => {
+            const correct = q.respuesta; const userSelected = userAnswers[q.id];
+            let statusClass = 'is-blank'; let icon = '⚠️'; let userAnswerText = '<i style="color:var(--text-muted);">Sin responder</i>';
+
+            if (!userSelected) {
+                blankCount++;
+            } else if (userSelected === correct) {
+                correctCount++; statusClass = 'is-correct'; icon = '✅';
+                userAnswerText = `<div class="r-ans user-right">Marcaste: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            } else {
+                errorCount++; statusClass = 'is-incorrect'; icon = '❌';
+                userAnswerText = `<div class="r-ans user-wrong">Error: <strong>${userSelected.toUpperCase()}) ${q.opciones[userSelected]}</strong></div>`;
+            }
+
+            reviewHTML += `
+                <div class="review-item ${statusClass}">
+                    <div class="r-question">${icon} Q${index + 1} (Orig. #${q.pregunta_num || "?"}): ${q.pregunta || ''}</div>
+                    ${userAnswerText}
+                    <div class="r-ans actual-correct">La respuesta correcta era: <strong>${(correct || 'N/A').toUpperCase()}) ${q.opciones ? q.opciones[correct] : 'N/A'}</strong></div>
+                </div>
+            `;
+        });
+
+        document.getElementById('res-precision').innerText = `${total > 0 ? Math.round((correctCount / total) * 100) : 0}%`;
+        document.getElementById('res-correct').innerText = correctCount;
+        document.getElementById('res-error').innerText = errorCount;
+        document.getElementById('res-blank').innerText = blankCount;
+        document.getElementById('sim-detailed-review').innerHTML = reviewHTML;
+        document.getElementById('sim-active').style.display = 'none';
+        document.getElementById('sim-results').style.display = 'block';
+        window.scrollTo(0, 0);
+    };
+</script>
+</body>
+</html>
