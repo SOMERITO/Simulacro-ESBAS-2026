@@ -358,6 +358,288 @@
             .user-actions { flex-direction:column; }
             .user-actions .action-btn { width:100%; }
         }
+
+        /* =========================================================
+           V17 — Identidad visual profesional del Simulador ESBAS
+           ========================================================= */
+        :root {
+            --bg-main: #f3f5f9;
+            --primary-red: #c92d32;
+            --primary-red-hover: #aa2228;
+            --text-dark: #172235;
+            --text-muted: #788397;
+            --border-color: #e7ebf1;
+            --glass-bg: #ffffff;
+            --glass-nav: #132238;
+            --shadow-card: 0 12px 34px rgba(22, 35, 55, .07);
+            --shadow-hover: 0 18px 44px rgba(22, 35, 55, .12);
+        }
+        body {
+            background:
+                radial-gradient(ellipse at 8% 0%, rgba(201,45,50,.07), transparent 28rem),
+                radial-gradient(ellipse at 94% 8%, rgba(43,76,117,.07), transparent 26rem),
+                #f3f5f9;
+            color: var(--text-dark);
+        }
+        #main-nav {
+            min-height: 78px;
+            padding: .85rem clamp(1rem, 4vw, 3.5rem);
+            background: linear-gradient(110deg, #111e32 0%, #1b304b 100%);
+            box-shadow: 0 8px 28px rgba(15, 29, 49, .16);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .nav-brand { gap: .9rem; min-width: 0; }
+        .brand-mark {
+            width: 44px; height: 44px; flex: 0 0 44px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 14px; color: white; font-size: 1.35rem;
+            background: linear-gradient(145deg, #d9474b, #a91f2b);
+            box-shadow: 0 7px 18px rgba(201,45,50,.28);
+        }
+        .brand-lockup { display: flex; flex-direction: column; gap: .14rem; }
+        .brand-title { color: #fff; font-size: 1.12rem; font-weight: 750; letter-spacing: .025em; line-height: 1.15; }
+        .brand-title span { color: #f3a4a5; font-weight: 600; }
+        .brand-subtitle { color: rgba(255,255,255,.58); font-size: .58rem; letter-spacing: .14em; font-weight: 700; }
+        .cloud-status { font-size: .7rem; margin-left: .45rem; padding: .32rem .62rem; }
+        .nav-links { gap: .35rem; }
+        .nav-links button {
+            color: rgba(255,255,255,.72);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: .62rem .95rem;
+            font-weight: 650;
+            letter-spacing: .005em;
+            transition: background .2s ease, color .2s ease, border-color .2s ease;
+        }
+        .nav-links button.active {
+            color: #172235;
+            background: #fff;
+            border-color: rgba(255,255,255,.65);
+            box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        }
+        .nav-links button:hover:not(.active) {
+            color: #fff;
+            background: rgba(255,255,255,.09);
+        }
+        .container {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 2.55rem 1.35rem 3.2rem;
+        }
+        .view-section { animation: fadeInScale .32s ease-out; }
+        .simulator-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            margin: .15rem 0 1.8rem;
+            padding: .25rem .25rem .3rem;
+        }
+        .simulator-heading-copy { max-width: 760px; }
+        .simulator-eyebrow {
+            display: inline-flex; align-items: center; gap: .55rem;
+            color: #b52a31; font-size: .69rem; line-height: 1;
+            font-weight: 800; letter-spacing: .15em;
+            margin-bottom: 1rem;
+        }
+        .eyebrow-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #d33b40; box-shadow: 0 0 0 4px rgba(211,59,64,.11);
+        }
+        .simulator-heading h1 {
+            color: #142239; font-size: clamp(2rem, 4vw, 2.85rem);
+            line-height: 1.08; letter-spacing: -.045em;
+            font-weight: 780; max-width: 740px;
+        }
+        .simulator-heading-copy > p {
+            color: #6e7a8e; font-size: 1rem; line-height: 1.7;
+            max-width: 690px; margin-top: .85rem;
+        }
+        .simulator-highlights {
+            display: flex; flex-wrap: wrap; gap: .55rem 1.15rem;
+            margin-top: 1.1rem;
+        }
+        .simulator-highlights > span {
+            display: inline-flex; align-items: center; gap: .42rem;
+            color: #536176; font-size: .78rem; font-weight: 650;
+        }
+        .highlight-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 17px; height: 17px; border-radius: 50%;
+            background: #e5f4eb; color: #16804b; font-size: .68rem; font-weight: 900;
+        }
+        .simulator-emblem {
+            flex: 0 0 170px; width: 170px; height: 170px;
+            display: grid; place-items: center;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0 44%, #eef1f6 45% 65%, #e2e7ef 66% 100%);
+            box-shadow: inset 0 0 0 1px #dfe5ee, 0 12px 30px rgba(30,48,75,.08);
+            transform: rotate(7deg);
+        }
+        .emblem-ring {
+            width: 124px; height: 124px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px solid rgba(201,45,50,.45);
+            outline: 5px solid rgba(201,45,50,.08);
+            color: #182b45; background: rgba(255,255,255,.8);
+        }
+        .emblem-symbol { color: #c92d32; font-size: 1.65rem; line-height: 1; }
+        .emblem-name { font-size: .93rem; font-weight: 850; letter-spacing: .13em; margin-top: .25rem; }
+        .emblem-year { font-size: .62rem; font-weight: 750; color: #7a8799; letter-spacing: .2em; margin-top: .15rem; }
+        #sim-setup.card {
+            padding: 2rem 2.15rem 1.65rem;
+            border: 1px solid rgba(220,226,235,.9);
+            border-radius: 22px;
+            background: rgba(255,255,255,.96);
+            box-shadow: 0 14px 38px rgba(24,39,62,.075);
+            overflow: hidden;
+        }
+        #sim-setup.card::before {
+            content: ""; position: absolute; left: 0; top: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #bd2931, #ed7776 55%, #f0b1a2);
+        }
+        .setup-heading { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.6rem; }
+        .setup-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 46px; height: 46px; flex: 0 0 46px;
+            border-radius: 14px; color: #fff; font-size: 1.35rem;
+            background: linear-gradient(145deg, #d94b50, #b4242d);
+            box-shadow: 0 8px 18px rgba(201,45,50,.2);
+        }
+        .setup-heading-copy { min-width: 0; }
+        .setup-eyebrow {
+            color: #b52a31; font-size: .65rem; font-weight: 800;
+            letter-spacing: .14em; margin: .1rem 0 .35rem;
+        }
+        #sim-setup .card-header {
+            display: block; border: 0; padding: 0; margin: 0;
+            color: #17263d; font-size: 1.28rem; line-height: 1.3; font-weight: 760;
+        }
+        .setup-description { color: #7a8596; font-size: .88rem; line-height: 1.55; margin-top: .35rem; }
+        .sim-fields {
+            display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 1.15rem; margin-bottom: 1.35rem;
+        }
+        #sim-setup .form-group { gap: .55rem; }
+        #sim-setup .form-group label {
+            color: #44536a; font-size: .77rem; font-weight: 750;
+            letter-spacing: .015em;
+        }
+        #sim-setup select {
+            min-height: 52px; padding: .85rem 2.8rem .85rem 1rem;
+            border: 1px solid #dce2eb; border-radius: 12px;
+            color: #26354b; background-color: #f9fafc;
+            font-size: .9rem; font-weight: 550;
+            box-shadow: inset 0 1px 2px rgba(17,31,51,.025);
+        }
+        #sim-setup select:focus {
+            border-color: #c92d32; background: #fff;
+            box-shadow: 0 0 0 4px rgba(201,45,50,.09);
+        }
+        #sim-setup select:disabled { color: #a2aab6; background: #f2f4f7; cursor: not-allowed; }
+        #btn-start-sim {
+            min-height: 52px; min-width: 245px;
+            padding: .85rem 1.25rem; gap: 1.25rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #cf3439, #b9232b);
+            box-shadow: 0 8px 18px rgba(185,35,43,.2);
+            color: #fff; font-size: .9rem; font-weight: 750;
+        }
+        #btn-start-sim:hover {
+            background: linear-gradient(135deg, #d83c41, #a91f27);
+            box-shadow: 0 11px 22px rgba(185,35,43,.25);
+            transform: translateY(-1px);
+        }
+        .start-arrow { font-size: 1.2rem; line-height: 1; transition: transform .2s ease; }
+        #btn-start-sim:hover .start-arrow { transform: translateX(3px); }
+        .sim-secure-note {
+            display: flex; align-items: center; gap: .7rem;
+            margin-top: 1.2rem; padding: .85rem 1rem;
+            border: 1px solid #e3eaf2; border-radius: 12px;
+            color: #6f7d91; background: #f7f9fc;
+            font-size: .78rem; line-height: 1.5;
+        }
+        .sim-secure-note strong { color: #33445d; font-weight: 750; }
+        .secure-note-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 31px; height: 31px; flex: 0 0 31px;
+            border-radius: 9px; background: #eaf0f8; font-size: 1rem;
+        }
+        .simulator-footer {
+            display: flex; justify-content: space-between; gap: 1rem;
+            margin-top: 2.3rem; padding: 1.1rem .2rem 0;
+            border-top: 1px solid #e1e6ee;
+            color: #929bab; font-size: .72rem; font-weight: 650;
+            letter-spacing: .025em;
+        }
+        .card {
+            border: 1px solid rgba(220,226,235,.9);
+            box-shadow: 0 10px 30px rgba(24,39,62,.055);
+        }
+        .btn { border-radius: 10px; font-weight: 650; }
+        .btn-outline { background: #fff; border-color: #dce2eb; color: #41516a; }
+        .btn-outline:hover { background: #f5f7fa; border-color: #c8d1df; }
+        .sim-controls {
+            padding: 1rem 1.2rem; border: 1px solid #e0e6ef;
+            border-radius: 15px; box-shadow: 0 6px 20px rgba(24,39,62,.05);
+        }
+        .sim-controls #sim-progress { color: #26364d !important; font-weight: 750 !important; }
+        .sim-card.card { border-radius: 18px; padding: clamp(1.15rem, 3vw, 2rem); }
+        .option-item {
+            border-color: #e4e9f0; border-radius: 11px;
+            padding: .95rem 1.05rem; color: #34445b;
+        }
+        .option-item:hover { border-color: #c6d0de; background: #f9fafc; }
+        .option-item.selected {
+            border-color: #c92d32; background: #fff7f7;
+            box-shadow: 0 0 0 2px rgba(201,45,50,.09);
+        }
+        #sim-results .card { border-radius: 20px; padding: 2rem; }
+        #sim-results .card-header { color: #17263d; font-size: 1.35rem; }
+        .metric-card { border-radius: 15px; border-color: #e4e9f0; }
+        .review-item { border-radius: 14px; border-color: #e4e9f0; }
+        .welcome-banner {
+            border: 1px solid #e3e8f0;
+            box-shadow: 0 8px 22px rgba(24,39,62,.06);
+        }
+        .toast { border-radius: 13px; }
+        @media (max-width: 760px) {
+            #main-nav { align-items: flex-start; gap: .9rem; flex-direction: column; padding: .85rem 1rem; }
+            .nav-brand { width: 100%; }
+            .nav-links { width: 100%; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: .1rem; }
+            .nav-links button { flex: 0 0 auto; }
+            .container { padding: 1.5rem 1rem 2.5rem; }
+            .simulator-heading { align-items: flex-start; margin-bottom: 1.25rem; }
+            .simulator-heading h1 { font-size: clamp(1.8rem, 7vw, 2.35rem); }
+            .simulator-heading-copy > p { font-size: .9rem; }
+            .simulator-emblem { flex-basis: 112px; width: 112px; height: 112px; margin-top: 1.4rem; }
+            .emblem-ring { width: 82px; height: 82px; }
+            .emblem-symbol { font-size: 1.1rem; }
+            .emblem-name { font-size: .65rem; }
+            .emblem-year { font-size: .48rem; }
+            #sim-setup.card { padding: 1.45rem 1.2rem 1.25rem; }
+        }
+        @media (max-width: 540px) {
+            .brand-mark { width: 39px; height: 39px; flex-basis: 39px; }
+            .brand-subtitle { font-size: .5rem; }
+            .cloud-status { margin-left: auto; }
+            .simulator-heading { gap: .35rem; }
+            .simulator-emblem { display: none; }
+            .simulator-highlights { gap: .5rem .8rem; }
+            .simulator-highlights > span { font-size: .7rem; }
+            .setup-heading { gap: .75rem; }
+            .setup-icon { width: 40px; height: 40px; flex-basis: 40px; }
+            #sim-setup .card-header { font-size: 1.15rem; }
+            .setup-description { font-size: .82rem; }
+            .sim-fields { grid-template-columns: 1fr; gap: .9rem; }
+            #btn-start-sim { width: 100%; }
+            .simulator-footer { flex-direction: column; gap: .35rem; text-align: center; }
+            .metrics-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .sim-nav-footer { gap: .5rem; }
+            .sim-nav-footer .btn { padding: .7rem .8rem; font-size: .82rem; }
+            #sim-results .card { padding: 1.25rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -372,7 +654,11 @@
 </div>
 <nav id="main-nav">
     <div class="nav-brand">
-        <div class="brand-title">🚒 ESBAS 2026</div>
+        <div class="brand-mark" aria-hidden="true">🚒</div>
+        <div class="brand-lockup">
+            <div class="brand-title">ESBAS <span>2026</span></div>
+            <div class="brand-subtitle">ENTRENAMIENTO Y EVALUACIÓN</div>
+        </div>
         <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
     </div>
     <div class="nav-links">
@@ -409,9 +695,36 @@
         <div id="repo-container"></div>
     </div>
     <div id="view-sim" class="view-section active">
+        <section class="simulator-heading" aria-labelledby="simulator-title">
+            <div class="simulator-heading-copy">
+                <div class="simulator-eyebrow"><span class="eyebrow-dot"></span> PREPARACIÓN BOMBERIL · 2026</div>
+                <h1 id="simulator-title">Entrena hoy. Responde con seguridad.</h1>
+                <p>Fortalece tus conocimientos ESBAS con simulacros aleatorios y revisa tu desempeño al finalizar cada evaluación.</p>
+                <div class="simulator-highlights">
+                    <span><span class="highlight-icon">✓</span> Evaluación aleatoria</span>
+                    <span><span class="highlight-icon">✓</span> Resultados al instante</span>
+                    <span><span class="highlight-icon">✓</span> Tres módulos de estudio</span>
+                </div>
+            </div>
+            <div class="simulator-emblem" aria-hidden="true">
+                <div class="emblem-ring">
+                    <div class="emblem-symbol">✦</div>
+                    <div class="emblem-name">ESBAS</div>
+                    <div class="emblem-year">2026</div>
+                </div>
+            </div>
+        </section>
+
         <div id="sim-setup" class="card">
-            <h2 class="card-header">Configurar Simulador de Examen</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="setup-heading">
+                <div class="setup-icon" aria-hidden="true">▤</div>
+                <div class="setup-heading-copy">
+                    <div class="setup-eyebrow">PERSONALIZA TU PRÁCTICA</div>
+                    <h2 class="card-header">Configura tu simulacro</h2>
+                    <p class="setup-description">Elige el módulo y la lección que deseas practicar. También puedes evaluar todo el contenido disponible.</p>
+                </div>
+            </div>
+            <div class="sim-fields">
                 <div class="form-group">
                     <label>Módulo a Evaluar</label>
                     <select id="sim-module" onchange="updateSimLessonDropdown(this.value)">
@@ -428,8 +741,8 @@
                     </select>
                 </div>
             </div>
-            <button class="btn" id="btn-start-sim" onclick="startSimulation()">Iniciar Simulación Aleatoria</button>
-            <div class="sim-secure-note">🔒 El banco completo de preguntas solo está disponible para administradores. El simulacro de estudiantes se genera de forma segura en el servidor y no expone las respuestas antes de entregar el examen.</div>
+            <button class="btn" id="btn-start-sim" onclick="startSimulation()"><span>Comenzar simulacro</span><span class="start-arrow" aria-hidden="true">→</span></button>
+            <div class="sim-secure-note"><span class="secure-note-icon" aria-hidden="true">🛡️</span><span><strong>Evaluación protegida.</strong> Las respuestas correctas se mostrarán al finalizar y entregar tu examen.</span></div>
         </div>
         <div id="sim-active" style="display: none;">
             <div class="sim-controls">
@@ -459,6 +772,10 @@
             <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
             <div id="sim-detailed-review" class="detailed-review"></div>
             
+        </div>
+        <div class="simulator-footer">
+            <span>ESBAS 2026</span>
+            <span>Preparación constante · Servicio seguro</span>
         </div>
     </div>
     <div id="view-config" class="view-section admin-only">
