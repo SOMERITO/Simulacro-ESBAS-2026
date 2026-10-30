@@ -399,25 +399,6 @@
         <div class="app-loader-subtitle" id="loader-subtitle">Espera un momento, por favor.</div>
     </div>
 </div>
-<div id="login-wrapper">
-    <div class="login-box">
-        <h1>🚒 ESBAS 2026</h1>
-        <form id="login-form">
-            <div class="login-form-group">
-                <label>Usuario</label>
-                <input type="text" id="login-user" placeholder="Ej: JCARRANZA" required autocomplete="off">
-            </div>
-            <div class="login-form-group">
-                <label>Contraseña</label>
-                <div class="password-container">
-                    <input type="password" id="login-pass" placeholder="••••••••" required>
-                    <button type="button" class="password-toggle" id="eye-icon">👁️</button>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-login" id="btn-login"><span>Ingresar al Sistema</span></button>
-        </form>
-    </div>
-</div>
 <nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-title">🚒 ESBAS 2026</div>
@@ -428,7 +409,6 @@
         <button onclick="switchView('sim')" id="btn-sim" class="active">Simulación</button>
         <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
         <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: var(--primary-orange); color: var(--primary-orange);">Usuarios</button>
-        <button onclick="logout()" style="color: rgba(255,255,255,0.7);">Salir</button>
     </div>
 </nav>
 <div class="container" id="main-container">
@@ -675,7 +655,7 @@
 <script type="module">
     // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-functions.js";
     const firebaseConfig = {
@@ -703,14 +683,6 @@
         }[tag] || tag));
     }
     document.addEventListener("DOMContentLoaded", () => {
-        const eyeBtn = document.getElementById('eye-icon');
-        const passInput = document.getElementById('login-pass');
-        if(eyeBtn && passInput) {
-            eyeBtn.addEventListener('click', () => {
-                if(passInput.type === 'password') { passInput.type = 'text'; eyeBtn.innerText = '🙈'; }
-                else { passInput.type = 'password'; eyeBtn.innerText = '👁️'; }
-            });
-        }
         const userEyeBtn = document.getElementById('user-pass-toggle');
         const userPassInput = document.getElementById('u-pass');
         if(userEyeBtn && userPassInput) {
@@ -725,29 +697,6 @@
             editEyeBtn.addEventListener('click', () => {
                 if(editPassInput.type === 'password') { editPassInput.type = 'text'; editEyeBtn.innerText = '🙈'; }
                 else { editPassInput.type = 'password'; editEyeBtn.innerText = '👁️'; }
-            });
-        }
-        const loginForm = document.getElementById('login-form');
-        if(loginForm) {
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const inputUser = document.getElementById('login-user').value.trim().toLowerCase();
-                const inputPass = document.getElementById('login-pass').value.trim();
-                if (!inputUser || !inputPass) { window.showToast("Completa usuario y contraseña.", "error"); return; }
-                const email = inputUser.includes('@') ? inputUser : `${inputUser}@esbas.pe`;
-                const btn = document.getElementById('btn-login');
-                setButtonLoading(btn, true);
-                setAppLoading(true, 'Verificando tu acceso', 'Conectando con Firebase y preparando tu espacio ESBAS.', '🚒');
-                try {
-                    await signInWithEmailAndPassword(auth, email, inputPass);
-                } catch (error) {
-                    hideAppLoading();
-                    setButtonLoading(btn, false);
-                    if(error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') window.showToast("Usuario o contraseña incorrectos.", "error");
-                    else if (error.code === 'auth/wrong-password') window.showToast("La contraseña es incorrecta.", "error");
-                    else if (error.code === 'auth/too-many-requests') window.showToast("Demasiados intentos. Espera unos minutos y vuelve a intentarlo.", "error");
-                    else window.showToast("Fallo de acceso. Revisa tu conexión.", "error");
-                }
             });
         }
         const questionForm = document.getElementById('questionForm');
@@ -828,6 +777,18 @@
     async function loadAuthenticatedUser(user) {
         setAppLoading(true, 'Preparando tu acceso', 'Validando permisos y preparando tu espacio ESBAS.', '🔐');
         try {
+            if (user.isAnonymous) {
+                currentUser = user;
+                currentUserRole = 'estudiante';
+                document.getElementById('main-nav').style.display = 'flex';
+                document.getElementById('main-container').style.display = 'block';
+                document.body.classList.remove('role-admin');
+                switchView('sim');
+                updateSimLessonDropdown('all');
+                showWelcomeBanner('estudiante');
+                return;
+            }
+
             const userRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userRef);
             if (!userDoc.exists()) {
@@ -843,7 +804,6 @@
             }
             currentUser = user;
             currentUserRole = data.role === 'admin' ? 'admin' : 'estudiante';
-            document.getElementById('login-wrapper').style.display = 'none';
             document.getElementById('main-nav').style.display = 'flex';
             document.getElementById('main-container').style.display = 'block';
             document.body.classList.toggle('role-admin', currentUserRole === 'admin');
@@ -859,7 +819,6 @@
             showWelcomeBanner(currentUserRole);
         } finally {
             hideAppLoading();
-            setButtonLoading(document.getElementById('btn-login'), false);
         }
     }
 
@@ -868,11 +827,12 @@
             currentUser = null;
             currentUserRole = 'estudiante';
             document.body.classList.remove('role-admin');
-            document.getElementById('login-wrapper').style.display = 'flex';
-            document.getElementById('main-nav').style.display = 'none';
-            document.getElementById('main-container').style.display = 'none';
-            hideAppLoading();
-            setButtonLoading(document.getElementById('btn-login'), false);
+            setAppLoading(true, 'Preparando simulador', 'Ingresando sin cuenta…', '🚒');
+            signInAnonymously(auth).catch((error) => {
+                console.error(error);
+                hideAppLoading();
+                window.showToast('No se pudo habilitar el acceso sin cuenta. Activa el proveedor Anónimo en Firebase Authentication.', 'error');
+            });
             return;
         }
         try {
@@ -881,7 +841,6 @@
             console.error(error);
             await signOut(auth);
             hideAppLoading();
-            setButtonLoading(document.getElementById('btn-login'), false);
             window.showToast(error?.code === 'permission-denied' ? 'Firebase rechazó la lectura del perfil. Revisa las Rules.' : 'No se pudo validar tu acceso. Revisa la conexión.', 'error');
         }
     });
