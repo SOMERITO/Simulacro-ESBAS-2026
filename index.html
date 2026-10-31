@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V27 (Identificadores seguros en acciones administrativas y respuestas) -->
+    <!-- VERSIÓN: V28 (Editor accesible y tarjetas con acciones explícitas) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1052,6 +1052,46 @@
             .sim-answered-count { white-space: normal; }
         }
 
+
+        /* V28 — Acciones explícitas en tarjetas del repositorio */
+        .flashcard-wrapper { cursor: default; }
+        .flashcard-front, .flashcard-back { gap: .35rem; }
+        .flip-hint {
+            width: fit-content;
+            align-self: center;
+            margin: 1rem auto 0;
+            padding: .58rem .9rem;
+            border: 1px solid #dce3ec;
+            border-radius: 9px;
+            color: #43536a;
+            background: #f6f8fb;
+            font-size: .77rem;
+            font-weight: 750;
+            cursor: pointer;
+            opacity: 1;
+            transition: color .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .flip-hint:hover,
+        .flip-hint:focus-visible {
+            color: #a92730;
+            background: #fff3f3;
+            border-color: #e7b9bc;
+            box-shadow: 0 3px 8px rgba(148,31,39,.08);
+            opacity: 1;
+        }
+        .flashcard-back .flip-hint { margin-top: 1.25rem; }
+        .alt-row { cursor: default; }
+        .alt-row .alt-label { cursor: pointer; }
+        .alt-row input[type="text"] { min-width: 0; }
+        .alt-row input[type="radio"]:focus-visible + .alt-label {
+            outline: 2px solid rgba(201,45,50,.25);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+        @media (max-width: 540px) {
+            .flip-hint { min-height: 40px; padding: .6rem .85rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -1303,7 +1343,7 @@
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 1: Ubicación y Orden</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Módulo del ESBAS</label>
+                        <label for="q-module">Módulo del ESBAS</label>
                         <select id="q-module" required onchange="handleModuleMemory(this.value); autoIncrementQuestionNumber();" style="padding:0.85rem; border-radius:10px; border:1px solid var(--border-color); outline:none; background:#fbfbfd;">
                             <option value="" disabled selected>Selecciona un módulo...</option>
                             <option value="Módulo I">Módulo I</option>
@@ -1312,15 +1352,15 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Lección (N°)</label>
+                        <label for="q-lesson">Lección (N°)</label>
                         <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName(); autoIncrementQuestionNumber();">
                     </div>
                     <div class="form-group">
-                        <label>Lección (Nombre)</label>
+                        <label for="q-lesson-name">Lección (Nombre)</label>
                         <input type="text" id="q-lesson-name" placeholder="Ej: Rescate en Ascensores" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>N° de Pregunta</label>
+                        <label for="q-num">N° de Pregunta</label>
                         <input type="number" id="q-num" placeholder="Ej: 1" min="1" required>
                     </div>
                 </div>
@@ -1331,7 +1371,7 @@
             <div id="step-2" class="form-step">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 2: Enunciado</h3>
                 <div class="form-group full-width">
-                    <label>Pregunta</label>
+                    <label for="q-text">Pregunta</label>
                     <textarea id="q-text" rows="5" placeholder="Redacta la pregunta aquí..." required></textarea>
                 </div>
                 <div class="wizard-footer">
@@ -1343,10 +1383,10 @@
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight:500;">Paso 3: Alternativas de Respuesta</h3>
                 <div class="form-group full-width alts-vertical">
                     <label style="color: var(--text-muted); margin-bottom: -0.2rem;">Selecciona el círculo de la opción correcta:</label>
-                    <label class="alt-row"><input type="radio" name="q-correct" value="a" required><span class="alt-label">A</span><input type="text" id="q-opt-a" required placeholder="Redacta la opción A..."></label>
-                    <label class="alt-row"><input type="radio" name="q-correct" value="b" required><span class="alt-label">B</span><input type="text" id="q-opt-b" required placeholder="Redacta la opción B..."></label>
-                    <label class="alt-row"><input type="radio" name="q-correct" value="c" required><span class="alt-label">C</span><input type="text" id="q-opt-c" required placeholder="Redacta la opción C..."></label>
-                    <label class="alt-row"><input type="radio" name="q-correct" value="d" required><span class="alt-label">D</span><input type="text" id="q-opt-d" required placeholder="Redacta la opción D..."></label>
+                    <div class="alt-row"><input type="radio" id="q-correct-a" name="q-correct" value="a" required><label class="alt-label" for="q-correct-a">A</label><input type="text" id="q-opt-a" aria-label="Texto de la alternativa A" required placeholder="Redacta la opción A..."></div>
+                    <div class="alt-row"><input type="radio" id="q-correct-b" name="q-correct" value="b" required><label class="alt-label" for="q-correct-b">B</label><input type="text" id="q-opt-b" aria-label="Texto de la alternativa B" required placeholder="Redacta la opción B..."></div>
+                    <div class="alt-row"><input type="radio" id="q-correct-c" name="q-correct" value="c" required><label class="alt-label" for="q-correct-c">C</label><input type="text" id="q-opt-c" aria-label="Texto de la alternativa C" required placeholder="Redacta la opción C..."></div>
+                    <div class="alt-row"><input type="radio" id="q-correct-d" name="q-correct" value="d" required><label class="alt-label" for="q-correct-d">D</label><input type="text" id="q-opt-d" aria-label="Texto de la alternativa D" required placeholder="Redacta la opción D..."></div>
                 </div>
                 <div class="wizard-footer">
                     <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Atrás</button>
@@ -2039,6 +2079,19 @@
         btnElement.classList.add('active');
         window.renderRepo();
     };
+    window.toggleQuestionCard = function(button) {
+        const wrapper = button?.closest('.flashcard-wrapper');
+        if (!wrapper) return;
+        const flipped = wrapper.classList.toggle('flipped');
+        wrapper.querySelectorAll('[data-flip-card]').forEach(control => {
+            control.setAttribute('aria-pressed', String(flipped));
+        });
+        const nextControl = wrapper.querySelector(flipped
+            ? '.flashcard-back [data-flip-card]'
+            : '.flashcard-front [data-flip-card]');
+        requestAnimationFrame(() => nextControl?.focus());
+    };
+
     window.renderRepo = function() {
         if (!isAdmin()) return;
         const container = document.getElementById('repo-container');
@@ -2064,20 +2117,21 @@
             const correctText = escapeHTML(q.opciones ? q.opciones[q.respuesta] : 'N/A');
             const pNum = escapeHTML(q.pregunta_num || "?");
             const delay = i > 15 ? 0 : i * 0.05;
-            const editBtn = `<button type="button" class="btn-card-edit admin-only" data-question-id="${escapeHTML(q.id)}" onclick="event.stopPropagation(); openModal('edit', this.dataset.questionId)">Editar</button>`;
+            const editBtn = `<button type="button" class="btn-card-edit admin-only" data-question-id="${escapeHTML(q.id)}" onclick="openModal('edit', this.dataset.questionId)">Editar</button>`;
             container.innerHTML += `
-                <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-wrapper" style="animation-delay: ${delay}s">
                     <div class="flashcard">
                         <div class="flashcard-front">
                             <span class="q-number-badge">Pregunta #${pNum}</span>
                             ${editBtn}
                             <div class="meta-tags"><span class="tag">${escapeHTML(q.modulo || 'Sin módulo')}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
                             <div style="font-size: 1.05rem; font-weight: 500; padding-right: 4rem; line-height: 1.5; color: var(--text-dark);">${escapeHTML(q.pregunta || 'Sin enunciado')}</div>
-                            <div class="flip-hint">Haz clic para voltear la tarjeta</div>
+                            <button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Ver respuesta</button>
                         </div>
                         <div class="flashcard-back">
                             <div style="color: var(--success); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.8rem; letter-spacing: 0.5px;">Respuesta Correcta</div>
                             <div style="font-size: 1.15rem; font-weight: 500; color: var(--text-dark); line-height: 1.4;">${escapeHTML((q.respuesta || 'N/A').toUpperCase())}) ${correctText}</div>
+                            <button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Volver a la pregunta</button>
                         </div>
                     </div>
                 </div>
