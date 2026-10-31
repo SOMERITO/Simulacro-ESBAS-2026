@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V24 (Marca de cabecera con la misma llama del favicon) -->
+    <!-- VERSIÓN: V25 (Mejoras de evaluación, accesibilidad y formularios) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -964,6 +964,94 @@
             .custom-select-option { min-height: 42px; font-size: .84rem; }
         }
 
+
+        /* =========================================================
+           V25 — Revisión de experiencia y accesibilidad
+           ========================================================= */
+        .sim-controls {
+            gap: 1.15rem;
+            align-items: center;
+        }
+        .sim-progress-panel {
+            min-width: 0;
+            flex: 1 1 auto;
+            max-width: 680px;
+        }
+        .sim-progress-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: .8rem;
+            margin-bottom: .65rem;
+        }
+        #sim-progress {
+            color: #20334d;
+            font-size: .9rem;
+            font-weight: 780;
+        }
+        .sim-answered-count {
+            color: #758299;
+            font-size: .75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .sim-progress-track {
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #edf1f6;
+            box-shadow: inset 0 1px 2px rgba(24,39,62,.06);
+        }
+        #sim-progress-fill {
+            display: block;
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #c62e37, #ed7776);
+            transition: width .25s ease;
+        }
+        .sim-cancel-button {
+            flex: 0 0 auto;
+            color: #a92b33 !important;
+            border-color: #edc9cc !important;
+            background: #fff !important;
+        }
+        .sim-cancel-button:hover {
+            color: #8f2028 !important;
+            border-color: #e4aeb2 !important;
+            background: #fff6f6 !important;
+        }
+        .option-item[role="button"] {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .option-item[role="button"]:focus-visible {
+            outline: 3px solid rgba(201,45,50,.22);
+            outline-offset: 2px;
+            border-color: #c92d32;
+        }
+        .option-item[aria-pressed="true"] {
+            border-color: #c92d32;
+            background: #fff5f5;
+            box-shadow: 0 0 0 2px rgba(201,45,50,.08);
+        }
+        .modal-content [tabindex="-1"]:focus { outline: none; }
+        @media (max-width: 620px) {
+            .sim-controls {
+                align-items: stretch;
+                flex-direction: column;
+                gap: .9rem;
+                padding: .9rem;
+            }
+            .sim-progress-panel { max-width: none; width: 100%; }
+            .sim-cancel-button { width: 100%; }
+        }
+        @media (max-width: 420px) {
+            .sim-progress-top { align-items: flex-start; flex-direction: column; gap: .25rem; }
+            .sim-answered-count { white-space: normal; }
+        }
+
     </style>
 </head>
 <body>
@@ -1066,8 +1154,16 @@
         </div>
         <div id="sim-active" style="display: none;">
             <div class="sim-controls">
-                <span id="sim-progress" style="font-weight: 500; color: var(--text-dark);">Pregunta 1 de X</span>
-                <button class="btn btn-outline" style="color:var(--error); border-color:var(--error);" onclick="cancelSimulation()">Cancelar Examen</button>
+                <div class="sim-progress-panel">
+                    <div class="sim-progress-top">
+                        <span id="sim-progress" role="status" aria-live="polite">Pregunta 1 de X</span>
+                        <span id="sim-answered-count" class="sim-answered-count">0 de X respondidas</span>
+                    </div>
+                    <div id="sim-progress-track" class="sim-progress-track" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% respondido">
+                        <span id="sim-progress-fill"></span>
+                    </div>
+                </div>
+                <button class="btn btn-outline sim-cancel-button" onclick="cancelSimulation()">Cancelar examen</button>
             </div>
             <div id="sim-questions-container"></div>
             <div class="sim-nav-footer">
@@ -1412,8 +1508,63 @@
         }
         const questionForm = document.getElementById('questionForm');
         if(questionForm) questionForm.addEventListener('submit', (e) => window.saveQuestion(e));
+
+        const simOptionsContainer = document.getElementById('sim-questions-container');
+        if (simOptionsContainer) {
+            simOptionsContainer.addEventListener('keydown', (event) => {
+                const option = event.target.closest('.option-item[role="button"]');
+                if (!option) return;
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    window.selectAnswer(option.dataset.questionId, option.dataset.optionKey);
+                } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    const options = Array.from(option.parentElement.querySelectorAll('.option-item[role="button"]'));
+                    const index = options.indexOf(option);
+                    const delta = event.key === 'ArrowDown' ? 1 : -1;
+                    options[(index + delta + options.length) % options.length]?.focus();
+                }
+            });
+        }
+
         const userForm = document.getElementById('userForm');
         if(userForm) userForm.addEventListener('submit', (e) => window.saveUser(e));
+
+        document.addEventListener('keydown', (event) => {
+            const activeModal = document.querySelector('.modal-overlay.active');
+            if (!activeModal) return;
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                if (activeModal.id === 'user-modal') window.closeUserModal();
+                else if (activeModal.id === 'modal-form') window.closeModal();
+                return;
+            }
+
+            if (event.key === 'Tab') {
+                const focusable = Array.from(activeModal.querySelectorAll(
+                    'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+                )).filter(el => el.getClientRects().length > 0);
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (event) => {
+                if (event.target !== overlay) return;
+                if (overlay.id === 'user-modal') window.closeUserModal();
+                else if (overlay.id === 'modal-form') window.closeModal();
+            });
+        });
 
         // Microinteracción de toque para botones: estilo iOS.
         document.addEventListener('click', (event) => {
@@ -1442,6 +1593,7 @@
     let activeModuleFilter = 'all';
     let activeLessonFilter = 'all';
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
+    let lastModalTrigger = null;
     const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
     function setButtonLoading(button, loading) {
         if (!button) return;
@@ -1662,6 +1814,7 @@
 
     window.openUserEditor = function(uid) {
         if (!requireAdmin()) return;
+        lastModalTrigger = document.activeElement;
         const user = appData.users.find(u => u.uid === uid);
         if (!user) return;
         document.getElementById('edit-user-uid').value = user.uid;
@@ -1670,8 +1823,12 @@
         document.getElementById('edit-user-disabled').value = user.disabled === true ? 'true' : 'false';
         document.getElementById('edit-user-password').value = '';
         document.getElementById('user-modal').classList.add('active');
+        document.querySelector('#user-modal .modal-close')?.focus();
     };
-    window.closeUserModal = function() { document.getElementById('user-modal').classList.remove('active'); };
+    window.closeUserModal = function() {
+        document.getElementById('user-modal').classList.remove('active');
+        if (lastModalTrigger && document.contains(lastModalTrigger)) lastModalTrigger.focus();
+    };
 
     window.updateUserAccess = async function() {
         if (!requireAdmin()) return;
@@ -1948,15 +2105,38 @@
         }
     };
     window.goToStep = function(step) {
+        const targetStep = Number(step);
+        const activeStep = document.querySelector('.form-step.active');
+        const currentStep = activeStep ? Number(activeStep.id.replace('step-', '')) : targetStep;
+
+        if (targetStep > currentStep && activeStep) {
+            const invalidField = Array.from(activeStep.querySelectorAll('input, select, textarea'))
+                .find(field => !field.disabled && !field.checkValidity());
+            if (invalidField) {
+                invalidField.reportValidity();
+                invalidField.focus();
+                return;
+            }
+        }
+
         document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-        document.getElementById(`step-${step}`).classList.add('active');
+        const nextStepElement = document.getElementById(`step-${targetStep}`);
+        if (!nextStepElement) return;
+        nextStepElement.classList.add('active');
         document.querySelectorAll('.wizard-dot').forEach((el, index) => {
-            if(index < step) el.classList.add('active'); else el.classList.remove('active');
+            if(index < targetStep) el.classList.add('active'); else el.classList.remove('active');
         });
+        const heading = nextStepElement.querySelector('h3');
+        if (heading) {
+            heading.setAttribute('tabindex', '-1');
+            heading.focus();
+        }
     };
     window.openModal = function(mode, id = null) {
         if (!requireAdmin()) return;
+        lastModalTrigger = document.activeElement;
         document.getElementById('modal-form').classList.add('active');
+        document.querySelector('#modal-form .modal-close')?.focus();
         window.goToStep(1);
         if (mode === 'new') {
             document.getElementById('modal-title').innerText = "Registrar Pregunta";
@@ -1997,7 +2177,10 @@
             }
         }
     };
-    window.closeModal = function() { document.getElementById('modal-form').classList.remove('active'); };
+    window.closeModal = function() {
+        document.getElementById('modal-form').classList.remove('active');
+        if (lastModalTrigger && document.contains(lastModalTrigger)) lastModalTrigger.focus();
+    };
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
@@ -2030,6 +2213,7 @@
             currentSimulationSessionId = result.data.sessionId;
             userAnswers = {};
             currentSimIndex = 0;
+            window.updateSimulationProgress();
             if(currentSimulationQuestions.length === 0) {
                 window.showToast('No hay preguntas disponibles para ese filtro.', 'error');
                 return;
@@ -2056,7 +2240,11 @@
         currentSimulationQuestions.forEach((q, index) => {
             if(!q.opciones) return;
             const optionIds = Object.entries(q.opciones).map(([key, text]) => `
-                <li class="option-item sim-opt-${escapeHTML(q.id)}" onclick="window.selectAnswer('${escapeHTML(q.id)}', '${escapeHTML(key)}')" id="opt-${escapeHTML(q.id)}-${escapeHTML(key)}">
+                <li class="option-item" role="button" tabindex="0" aria-pressed="false"
+                    aria-label="Opción ${escapeHTML(key.toUpperCase())}: ${escapeHTML(text)}"
+                    data-question-id="${escapeHTML(q.id)}" data-option-key="${escapeHTML(key)}"
+                    onclick="window.selectAnswer('${escapeHTML(q.id)}', '${escapeHTML(key)}')"
+                    id="opt-${escapeHTML(q.id)}-${escapeHTML(key)}">
                     <strong style="margin-right:10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
                 </li>`).join('');
             container.innerHTML += `
@@ -2065,15 +2253,33 @@
                         <span style="font-size:1.05rem; font-weight:500; color:var(--text-dark); line-height:1.5;">${escapeHTML(q.pregunta || '')}</span>
                         <span style="font-weight:600; color:var(--text-muted); background:#f5f5f7; padding:.3rem .7rem; border-radius:8px; font-size:.8rem; flex-shrink:0;">Orig #${escapeHTML(q.pregunta_num || '?')}</span>
                     </div>
-                    <ul class="options-list">${optionIds}</ul>
+                    <ul class="options-list" aria-label="Alternativas de respuesta">${optionIds}</ul>
                 </div>`;
         });
     };
+    window.updateSimulationProgress = function() {
+        const total = currentSimulationQuestions.length;
+        const validQuestionIds = new Set(currentSimulationQuestions.map(question => String(question.id)));
+        const answered = Object.keys(userAnswers).filter(id => validQuestionIds.has(String(id))).length;
+        const percent = total ? Math.round((answered / total) * 100) : 0;
+
+        const answeredLabel = document.getElementById('sim-answered-count');
+        const progressTrack = document.getElementById('sim-progress-track');
+        const progressFill = document.getElementById('sim-progress-fill');
+        if (answeredLabel) answeredLabel.textContent = `${answered} de ${total} respondidas`;
+        if (progressTrack) {
+            progressTrack.setAttribute('aria-valuenow', String(percent));
+            progressTrack.setAttribute('aria-valuetext', `${percent}% respondido`);
+        }
+        if (progressFill) progressFill.style.width = `${percent}%`;
+    };
+
     window.showSimQuestion = function(index) {
         document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
         const activeCard = document.getElementById(`sim-q-card-${index}`);
         if(activeCard) activeCard.classList.add('active');
         document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
+        window.updateSimulationProgress();
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
         if (index === currentSimulationQuestions.length - 1) {
             document.getElementById('btn-sim-next').style.display = 'none';
@@ -2091,9 +2297,17 @@
         }
     };
     window.selectAnswer = function(questionId, selectedKey) {
-        userAnswers[questionId] = selectedKey;
-        document.querySelectorAll(`.sim-opt-${questionId}`).forEach(el => el.classList.remove('selected'));
-        document.getElementById(`opt-${questionId}-${selectedKey}`).classList.add('selected');
+        const questionExists = currentSimulationQuestions.some(question => String(question.id) === String(questionId));
+        if (!questionExists || !['a', 'b', 'c', 'd'].includes(String(selectedKey).toLowerCase())) return;
+
+        userAnswers[questionId] = String(selectedKey).toLowerCase();
+        document.querySelectorAll('.option-item[data-question-id]').forEach(option => {
+            if (option.dataset.questionId !== String(questionId)) return;
+            const isSelected = option.dataset.optionKey === String(selectedKey).toLowerCase();
+            option.classList.toggle('selected', isSelected);
+            option.setAttribute('aria-pressed', String(isSelected));
+        });
+        window.updateSimulationProgress();
     };
     window.cancelSimulation = function() {
         if(confirm("¿Seguro que deseas cancelar el examen?")) {
