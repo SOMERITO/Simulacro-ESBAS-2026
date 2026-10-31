@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V26 (Accesibilidad semántica, validación y controles refinados) -->
+    <!-- VERSIÓN: V27 (Identificadores seguros en acciones administrativas y respuestas) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1769,8 +1769,8 @@
                     <td><span class="password-protected">🔒 Protegida</span></td>
                     <td>
                         <div class="user-actions">
-                            <button class="action-btn btn-edit" onclick="openUserEditor('${escapeHTML(u.uid)}')">Editar</button>
-                            <button class="action-btn ${toggleClass}" onclick="toggleUserDisabled('${escapeHTML(u.uid)}')">${toggleLabel}</button>
+                            <button type="button" class="action-btn btn-edit" data-user-id="${escapeHTML(u.uid)}" onclick="openUserEditor(this.dataset.userId)">Editar</button>
+                            <button type="button" class="action-btn ${toggleClass}" data-user-id="${escapeHTML(u.uid)}" onclick="toggleUserDisabled(this.dataset.userId)">${toggleLabel}</button>
                         </div>
                     </td>
                 </tr>
@@ -2064,7 +2064,7 @@
             const correctText = escapeHTML(q.opciones ? q.opciones[q.respuesta] : 'N/A');
             const pNum = escapeHTML(q.pregunta_num || "?");
             const delay = i > 15 ? 0 : i * 0.05;
-            const editBtn = `<button class="btn-card-edit admin-only" onclick="event.stopPropagation(); openModal('edit', '${q.id}')">Editar</button>`;
+            const editBtn = `<button type="button" class="btn-card-edit admin-only" data-question-id="${escapeHTML(q.id)}" onclick="event.stopPropagation(); openModal('edit', this.dataset.questionId)">Editar</button>`;
             container.innerHTML += `
                 <div class="flashcard-wrapper" style="animation-delay: ${delay}s" onclick="this.classList.toggle('flipped')">
                     <div class="flashcard">
@@ -2098,7 +2098,7 @@
                     <td>${lessonBadge}</td>
                     <td>${escapeHTML((q.pregunta || '').substring(0, 50))}...</td>
                     <td>
-                        ${isAdmin() ? `<button class="action-btn btn-edit" onclick="openModal('edit', '${escapeHTML(q.id)}')">Editar</button><button class="action-btn btn-delete" onclick="deleteQuestion('${escapeHTML(q.id)}')">Borrar</button>` : '<span style="color:var(--text-muted);">Solo lectura</span>'}
+                        ${isAdmin() ? `<button type="button" class="action-btn btn-edit" data-question-id="${escapeHTML(q.id)}" onclick="openModal('edit', this.dataset.questionId)">Editar</button><button type="button" class="action-btn btn-delete" data-question-id="${escapeHTML(q.id)}" onclick="deleteQuestion(this.dataset.questionId)">Borrar</button>` : '<span style="color:var(--text-muted);">Solo lectura</span>'}
                     </td>
                 </tr>
             `;
@@ -2268,7 +2268,7 @@
                 <li class="option-item" role="button" tabindex="0" aria-pressed="false"
                     aria-label="Opción ${escapeHTML(key.toUpperCase())}: ${escapeHTML(text)}"
                     data-question-id="${escapeHTML(q.id)}" data-option-key="${escapeHTML(key)}"
-                    onclick="window.selectAnswer('${escapeHTML(q.id)}', '${escapeHTML(key)}')"
+                    onclick="window.selectAnswer(this.dataset.questionId, this.dataset.optionKey)"
                     id="opt-${escapeHTML(q.id)}-${escapeHTML(key)}">
                     <strong style="margin-right:10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
                 </li>`).join('');
