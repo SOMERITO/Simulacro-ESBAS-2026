@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V25 (Mejoras de evaluación, accesibilidad y formularios) -->
+    <!-- VERSIÓN: V26 (Accesibilidad semántica, validación y controles refinados) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1101,7 +1101,7 @@
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
-                <input type="text" id="searchInput" placeholder="Buscar palabras clave en enunciados y alternativas..." onkeyup="renderRepo()">
+                <input type="search" id="searchInput" aria-label="Buscar preguntas por enunciado o alternativa" placeholder="Buscar enunciados y alternativas..." oninput="renderRepo()">
             </div>
         </div>
         <div id="repo-container"></div>
@@ -1122,7 +1122,7 @@
                 <div class="form-group">
                     <label id="sim-module-label" for="sim-module-trigger">Módulo a Evaluar</label>
                     <div class="custom-select" data-custom-select="sim-module">
-                        <button type="button" class="custom-select-trigger" id="sim-module-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sim-module-label">
+                        <button type="button" class="custom-select-trigger" id="sim-module-trigger" role="combobox" aria-haspopup="listbox" aria-controls="sim-module-options" aria-autocomplete="none" aria-expanded="false" aria-labelledby="sim-module-label">
                             <span class="custom-select-value">Todos los Módulos (100 Preguntas)</span>
                             <span class="custom-select-chevron" aria-hidden="true">⌄</span>
                         </button>
@@ -1138,7 +1138,7 @@
                 <div class="form-group">
                     <label id="sim-lesson-label" for="sim-lesson-trigger">Lección Específica</label>
                     <div class="custom-select" data-custom-select="sim-lesson">
-                        <button type="button" class="custom-select-trigger" id="sim-lesson-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sim-lesson-label" disabled>
+                        <button type="button" class="custom-select-trigger" id="sim-lesson-trigger" role="combobox" aria-haspopup="listbox" aria-controls="sim-lesson-options" aria-autocomplete="none" aria-expanded="false" aria-labelledby="sim-lesson-label" disabled>
                             <span class="custom-select-value">Todas las lecciones</span>
                             <span class="custom-select-chevron" aria-hidden="true">⌄</span>
                         </button>
@@ -1202,7 +1202,7 @@
             </div>
             <div class="table-container">
                 <table id="questionsTable">
-                    <thead><tr><th>N°</th><th>Módulo</th><th>Lección</th><th>Pregunta</th><th style="width: 150px;">Acciones</th></tr></thead>
+                    <thead><tr><th scope="col">N°</th><th scope="col">Módulo</th><th scope="col">Lección</th><th scope="col">Pregunta</th><th scope="col" style="width: 150px;">Acciones</th></tr></thead>
                     <tbody id="table-body"></tbody>
                 </table>
             </div>
@@ -1239,18 +1239,18 @@
             </form>
             <div class="table-container">
                 <table id="usersTable">
-                    <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Contraseña</th><th style="width: 290px;">Acciones</th></tr></thead>
+                    <thead><tr><th scope="col">Usuario</th><th scope="col">Rol</th><th scope="col">Estado</th><th scope="col">Contraseña</th><th scope="col" style="width: 290px;">Acciones</th></tr></thead>
                     <tbody id="users-body"></tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-<div id="user-modal" class="modal-overlay">
-    <div class="modal-content small">
-        <button class="modal-close" type="button" onclick="closeUserModal()">×</button>
-        <h2 class="card-header" style="margin-top:0; border:none; margin-bottom:.25rem;">Editar acceso</h2>
-        <div class="modal-subtitle">Puedes cambiar el rol y habilitar/deshabilitar el acceso. El cambio se aplica inmediatamente en Firestore.</div>
+<div id="user-modal" class="modal-overlay" role="presentation">
+    <div class="modal-content small" role="dialog" aria-modal="true" aria-labelledby="user-modal-title" aria-describedby="user-modal-description">
+        <button class="modal-close" type="button" aria-label="Cerrar ventana" onclick="closeUserModal()">×</button>
+        <h2 class="card-header" id="user-modal-title" style="margin-top:0; border:none; margin-bottom:.25rem;">Editar acceso</h2>
+        <div class="modal-subtitle" id="user-modal-description">Puedes cambiar el rol y habilitar/deshabilitar el acceso. El cambio se aplica inmediatamente en Firestore.</div>
         <input type="hidden" id="edit-user-uid">
         <div class="form-grid" style="margin-bottom:1.2rem;">
             <div class="form-group">
@@ -1286,9 +1286,9 @@
         </div>
     </div>
 </div>
-<div id="modal-form" class="modal-overlay">
-    <div class="modal-content">
-        <button class="modal-close" type="button" onclick="closeModal()">×</button>
+<div id="modal-form" class="modal-overlay" role="presentation">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" type="button" aria-label="Cerrar ventana" onclick="closeModal()">×</button>
         <h2 class="card-header" id="modal-title" style="margin-top: 0; border:none; margin-bottom:0.5rem;">Registrar Pregunta</h2>
 
         <div class="wizard-progress">
@@ -1412,8 +1412,7 @@
             menu.replaceChildren();
 
             Array.from(source.options).forEach((option) => {
-                const item = document.createElement('button');
-                item.type = 'button';
+                const item = document.createElement('div');
                 item.className = 'custom-select-option';
                 item.setAttribute('role', 'option');
                 item.setAttribute('aria-selected', String(option.value === source.value));
@@ -1430,7 +1429,14 @@
                 item.addEventListener('keydown', (event) => {
                     const items = Array.from(menu.querySelectorAll('.custom-select-option'));
                     const index = items.indexOf(item);
-                    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        if (source.disabled) return;
+                        source.value = option.value;
+                        source.dispatchEvent(new Event('change', { bubbles: true }));
+                        sync();
+                        closeMenu(true);
+                    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
                         event.preventDefault();
                         const delta = event.key === 'ArrowDown' ? 1 : -1;
                         items[(index + delta + items.length) % items.length]?.focus();
@@ -1443,6 +1449,8 @@
                     } else if (event.key === 'Escape') {
                         event.preventDefault();
                         closeMenu(true);
+                    } else if (event.key === 'Tab') {
+                        closeMenu();
                     }
                 });
                 menu.appendChild(item);
@@ -1924,9 +1932,26 @@
         const optC = document.getElementById('q-opt-c').value.trim();
         const optD = document.getElementById('q-opt-d').value.trim();
 
+        const blankField = [
+            ['q-text', qText],
+            ['q-opt-a', optA],
+            ['q-opt-b', optB],
+            ['q-opt-c', optC],
+            ['q-opt-d', optD]
+        ].find(([, value]) => !value);
+
+        if (blankField) {
+            const field = document.getElementById(blankField[0]);
+            const step = field?.closest('.form-step');
+            if (step) window.goToStep(Number(step.id.replace('step-', '')));
+            window.showToast('Completa todos los campos de pregunta y alternativas. No dejes campos solo con espacios.', 'error');
+            field?.focus();
+            return;
+        }
+
         const checkedRadio = document.querySelector('input[name="q-correct"]:checked');
         if(!checkedRadio) { window.showToast("Selecciona la respuesta correcta.", "error"); return; }
-        const optsLower = [optA, optB, optC, optD].map(o => o.toLowerCase());
+        const optsLower = [optA, optB, optC, optD].map(o => o.normalize('NFC').replace(/\s+/g, ' ').toLowerCase());
         if (new Set(optsLower).size < 4) { window.showToast("Error: Hay alternativas con texto duplicado.", "error"); return; }
         const nuevaPregunta = {
             modulo: currentModule, leccion_num: Number(currentLessonNum), leccion_nombre: currentLessonName,
