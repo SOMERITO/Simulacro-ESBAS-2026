@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V21 (Pantalla de simulación simplificada, acceso directo a configuración) -->
+    <!-- VERSIÓN: V23 (Desplegables personalizados para módulo y lección) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -794,6 +794,169 @@
             #btn-start-sim { min-width: 0; }
         }
 
+
+        /* =========================================================
+           V23 — Menús desplegables personalizados
+           ========================================================= */
+        #sim-setup.card { overflow: visible; }
+        #sim-setup.card::before { border-radius: 22px 22px 0 0; }
+        .custom-select {
+            position: relative;
+            width: 100%;
+            z-index: 1;
+        }
+        .custom-select.open { z-index: 80; }
+        .native-select-source {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0,0,0,0) !important;
+            clip-path: inset(50%) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        .custom-select-trigger {
+            width: 100%;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .85rem 1rem;
+            border: 1px solid #dce2eb;
+            border-radius: 12px;
+            background: #f9fafc;
+            color: #26354b;
+            text-align: left;
+            font-size: .9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            box-shadow: inset 0 1px 2px rgba(17,31,51,.025);
+            transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .custom-select-trigger:hover:not(:disabled) {
+            border-color: #bac6d6;
+            background: #fff;
+        }
+        .custom-select-trigger:focus-visible {
+            outline: none;
+            border-color: #c92d32;
+            box-shadow: 0 0 0 4px rgba(201,45,50,.1);
+        }
+        .custom-select-trigger:disabled {
+            color: #a2aab6;
+            background: #f2f4f7;
+            border-color: #e4e8ee;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .custom-select-value {
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .custom-select-chevron {
+            flex: 0 0 auto;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 7px;
+            color: #64738a;
+            background: #edf1f6;
+            font-size: 1.15rem;
+            line-height: 1;
+            transform: translateY(-2px);
+            transition: transform .18s ease, background .18s ease, color .18s ease;
+        }
+        .custom-select.open .custom-select-chevron {
+            transform: rotate(180deg) translateY(-1px);
+            color: #b52a31;
+            background: #fff0f1;
+        }
+        .custom-select-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-height: 270px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 6px;
+            border: 1px solid #e0e6ee;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 16px 36px rgba(20,35,56,.16), 0 3px 8px rgba(20,35,56,.06);
+            scrollbar-width: thin;
+            scrollbar-color: #c8d1de transparent;
+            animation: customMenuIn .16s ease-out;
+        }
+        .custom-select-menu[hidden] { display: none !important; }
+        @keyframes customMenuIn {
+            from { opacity: 0; transform: translateY(-5px) scale(.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .custom-select-option {
+            width: 100%;
+            min-height: 41px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .8rem;
+            padding: .65rem .8rem;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            background: transparent;
+            color: #3b4b62;
+            text-align: left;
+            font-size: .86rem;
+            font-weight: 550;
+            line-height: 1.35;
+            transition: background .15s ease, color .15s ease, border-color .15s ease;
+        }
+        .custom-select-option:hover,
+        .custom-select-option:focus-visible {
+            outline: none;
+            color: #1c304a;
+            background: #f3f6fa;
+        }
+        .custom-select-option[aria-selected="true"] {
+            color: #a92730;
+            background: #fff2f2;
+            border-color: #f5d9db;
+            font-weight: 750;
+        }
+        .custom-select-option[aria-selected="true"]::after {
+            content: "✓";
+            flex: 0 0 auto;
+            width: 21px;
+            height: 21px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            color: #fff;
+            background: #c52d35;
+            font-size: .72rem;
+            font-weight: 800;
+        }
+        @media (max-width: 540px) {
+            .custom-select-trigger { min-height: 49px; padding: .78rem .85rem; }
+            .custom-select-menu { max-height: 235px; border-radius: 12px; }
+            .custom-select-option { min-height: 42px; font-size: .84rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -862,8 +1025,15 @@
             </div>
             <div class="sim-fields">
                 <div class="form-group">
-                    <label>Módulo a Evaluar</label>
-                    <select id="sim-module" onchange="updateSimLessonDropdown(this.value)">
+                    <label id="sim-module-label" for="sim-module-trigger">Módulo a Evaluar</label>
+                    <div class="custom-select" data-custom-select="sim-module">
+                        <button type="button" class="custom-select-trigger" id="sim-module-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sim-module-label">
+                            <span class="custom-select-value">Todos los Módulos (100 Preguntas)</span>
+                            <span class="custom-select-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                        <div class="custom-select-menu" id="sim-module-options" role="listbox" aria-labelledby="sim-module-label" hidden></div>
+                    </div>
+                    <select id="sim-module" class="native-select-source" tabindex="-1" aria-hidden="true" onchange="updateSimLessonDropdown(this.value)">
                         <option value="all">Todos los Módulos (100 Preguntas)</option>
                         <option value="Módulo I">Módulo I</option>
                         <option value="Módulo II">Módulo II</option>
@@ -871,8 +1041,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Lección Específica</label>
-                    <select id="sim-lesson" disabled>
+                    <label id="sim-lesson-label" for="sim-lesson-trigger">Lección Específica</label>
+                    <div class="custom-select" data-custom-select="sim-lesson">
+                        <button type="button" class="custom-select-trigger" id="sim-lesson-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sim-lesson-label" disabled>
+                            <span class="custom-select-value">Todas las lecciones</span>
+                            <span class="custom-select-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                        <div class="custom-select-menu" id="sim-lesson-options" role="listbox" aria-labelledby="sim-lesson-label" hidden></div>
+                    </div>
+                    <select id="sim-lesson" class="native-select-source" tabindex="-1" aria-hidden="true" disabled>
                         <option value="all">Todas las lecciones</option>
                     </select>
                 </div>
@@ -1106,6 +1283,109 @@
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
         }[tag] || tag));
     }
+
+    // DESPLEGABLES PERSONALIZADOS PARA EL SIMULADOR
+    const customSelectInstances = {};
+    function initializeCustomSelect(selectId) {
+        const source = document.getElementById(selectId);
+        const root = document.querySelector(`[data-custom-select="${selectId}"]`);
+        if (!source || !root) return;
+
+        const trigger = root.querySelector('.custom-select-trigger');
+        const valueLabel = root.querySelector('.custom-select-value');
+        const menu = root.querySelector('.custom-select-menu');
+
+        function closeMenu(returnFocus = false) {
+            root.classList.remove('open');
+            menu.hidden = true;
+            trigger.setAttribute('aria-expanded', 'false');
+            if (returnFocus) trigger.focus();
+        }
+
+        function sync() {
+            const selected = source.options[source.selectedIndex];
+            valueLabel.textContent = selected ? selected.textContent : '';
+            trigger.disabled = source.disabled;
+            menu.replaceChildren();
+
+            Array.from(source.options).forEach((option) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'custom-select-option';
+                item.setAttribute('role', 'option');
+                item.setAttribute('aria-selected', String(option.value === source.value));
+                item.dataset.value = option.value;
+                item.tabIndex = -1;
+                item.textContent = option.textContent;
+                item.addEventListener('click', () => {
+                    if (source.disabled) return;
+                    source.value = option.value;
+                    source.dispatchEvent(new Event('change', { bubbles: true }));
+                    sync();
+                    closeMenu(true);
+                });
+                item.addEventListener('keydown', (event) => {
+                    const items = Array.from(menu.querySelectorAll('.custom-select-option'));
+                    const index = items.indexOf(item);
+                    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                        event.preventDefault();
+                        const delta = event.key === 'ArrowDown' ? 1 : -1;
+                        items[(index + delta + items.length) % items.length]?.focus();
+                    } else if (event.key === 'Home') {
+                        event.preventDefault();
+                        items[0]?.focus();
+                    } else if (event.key === 'End') {
+                        event.preventDefault();
+                        items[items.length - 1]?.focus();
+                    } else if (event.key === 'Escape') {
+                        event.preventDefault();
+                        closeMenu(true);
+                    }
+                });
+                menu.appendChild(item);
+            });
+        }
+
+        function openMenu() {
+            if (trigger.disabled) return;
+            Object.values(customSelectInstances).forEach(instance => instance.close());
+            root.classList.add('open');
+            menu.hidden = false;
+            trigger.setAttribute('aria-expanded', 'true');
+            const selected = menu.querySelector('[aria-selected="true"]') || menu.querySelector('.custom-select-option');
+            selected?.focus();
+        }
+
+        trigger.addEventListener('click', () => {
+            if (menu.hidden) openMenu();
+            else closeMenu();
+        });
+        trigger.addEventListener('keydown', (event) => {
+            if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(event.key)) {
+                event.preventDefault();
+                openMenu();
+            } else if (event.key === 'Escape') {
+                closeMenu();
+            }
+        });
+        document.addEventListener('click', (event) => {
+            if (!root.contains(event.target)) closeMenu();
+        });
+        source.addEventListener('change', sync);
+
+        const instance = { sync, close: () => closeMenu() };
+        customSelectInstances[selectId] = instance;
+        sync();
+        return instance;
+    }
+
+    window.refreshCustomSelect = function(selectId) {
+        customSelectInstances[selectId]?.sync();
+    };
+
+    initializeCustomSelect('sim-module');
+    initializeCustomSelect('sim-lesson');
+
     document.addEventListener("DOMContentLoaded", () => {
         const userEyeBtn = document.getElementById('user-pass-toggle');
         const userPassInput = document.getElementById('u-pass');
@@ -1714,7 +1994,11 @@
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
-        if (moduleName === 'all') { lessonSelect.disabled = true; return; }
+        if (moduleName === 'all') {
+            lessonSelect.disabled = true;
+            window.refreshCustomSelect('sim-lesson');
+            return;
+        }
         lessonSelect.disabled = false;
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
@@ -1724,6 +2008,7 @@
                 lessonSelect.innerHTML += `<option value="${i}">${isAdmin() && count ? `Lección ${i} (${count} pregs)` : `Lección ${i}`}</option>`;
             }
         }
+        window.refreshCustomSelect('sim-lesson');
     };
     window.startSimulation = async function() {
         if (!currentUser) return;
