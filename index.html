@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V19 (Diseño refinado sin emblema decorativo y botones profesionales) -->
+    <!-- VERSIÓN: V21 (Pantalla de simulación simplificada, acceso directo a configuración) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS 2026</title>
@@ -430,46 +430,6 @@
             padding: 2.55rem 1.35rem 3.2rem;
         }
         .view-section { animation: fadeInScale .32s ease-out; }
-        .simulator-heading {
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
-            margin: .15rem 0 1.8rem;
-            padding: .25rem .25rem .3rem;
-        }
-        .simulator-heading-copy { max-width: 760px; }
-        .simulator-eyebrow {
-            display: inline-flex; align-items: center; gap: .55rem;
-            color: #b52a31; font-size: .69rem; line-height: 1;
-            font-weight: 800; letter-spacing: .15em;
-            margin-bottom: 1rem;
-        }
-        .eyebrow-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: #d33b40; box-shadow: 0 0 0 4px rgba(211,59,64,.11);
-        }
-        .simulator-heading h1 {
-            color: #142239; font-size: clamp(2rem, 4vw, 2.85rem);
-            line-height: 1.08; letter-spacing: -.045em;
-            font-weight: 780; max-width: 740px;
-        }
-        .simulator-heading-copy > p {
-            color: #6e7a8e; font-size: 1rem; line-height: 1.7;
-            max-width: 690px; margin-top: .85rem;
-        }
-        .simulator-highlights {
-            display: flex; flex-wrap: wrap; gap: .55rem 1.15rem;
-            margin-top: 1.1rem;
-        }
-        .simulator-highlights > span {
-            display: inline-flex; align-items: center; gap: .42rem;
-            color: #536176; font-size: .78rem; font-weight: 650;
-        }
-        .highlight-icon {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 17px; height: 17px; border-radius: 50%;
-            background: #e5f4eb; color: #16804b; font-size: .68rem; font-weight: 900;
-        }
         
         
         
@@ -598,9 +558,6 @@
             .nav-links { width: 100%; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: .1rem; }
             .nav-links button { flex: 0 0 auto; }
             .container { padding: 1.5rem 1rem 2.5rem; }
-            .simulator-heading { align-items: flex-start; margin-bottom: 1.25rem; }
-            .simulator-heading h1 { font-size: clamp(1.8rem, 7vw, 2.35rem); }
-            .simulator-heading-copy > p { font-size: .9rem; }
             #sim-setup.card { padding: 1.45rem 1.2rem 1.25rem; }
         }
         @media (max-width: 540px) {
@@ -608,8 +565,6 @@
             .brand-subtitle { font-size: .5rem; }
             .cloud-status { margin-left: auto; }
             .simulator-heading { gap: .35rem; }
-            .simulator-highlights { gap: .5rem .8rem; }
-            .simulator-highlights > span { font-size: .7rem; }
             .setup-heading { gap: .75rem; }
             .setup-icon { width: 40px; height: 40px; flex-basis: 40px; }
             #sim-setup .card-header { font-size: 1.15rem; }
@@ -894,18 +849,7 @@
         <div id="repo-container"></div>
     </div>
     <div id="view-sim" class="view-section active">
-        <section class="simulator-heading" aria-labelledby="simulator-title">
-            <div class="simulator-heading-copy">
-                <div class="simulator-eyebrow"><span class="eyebrow-dot"></span> PREPARACIÓN BOMBERIL · 2026</div>
-                <h1 id="simulator-title">Entrena hoy. Responde con seguridad.</h1>
-                <p>Fortalece tus conocimientos ESBAS con simulacros aleatorios y revisa tu desempeño al finalizar cada evaluación.</p>
-                <div class="simulator-highlights">
-                    <span><span class="highlight-icon">✓</span> Evaluación aleatoria</span>
-                    <span><span class="highlight-icon">✓</span> Resultados al instante</span>
-                    <span><span class="highlight-icon">✓</span> Tres módulos de estudio</span>
-                </div>
-            </div>
-        </section>
+
 
         <div id="sim-setup" class="card">
             <div class="setup-heading">
