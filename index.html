@@ -2802,7 +2802,7 @@
                 <div class="setup-heading-copy">
                     <div class="setup-eyebrow">PERSONALIZA TU PRÁCTICA</div>
                     <h2 class="card-header">Configura tu simulacro</h2>
-                    <p class="setup-description">Elige el módulo y la lección que deseas practicar. También puedes evaluar todo el contenido disponible.</p>
+                    <p class="setup-description">Elige primero el banco de preguntas y después el módulo y la lección que deseas practicar.</p>
                 </div>
             </div>
             <section class="bank-mode-section" aria-label="Modalidad de preguntas">
@@ -3497,7 +3497,7 @@
         });
         rawBank.final_exams.forEach(examEntry => {
             const moduleName = normalizeRealModuleName(examEntry.module, null, examEntry.exam_id);
-            const moduleNumber = moduleName.endsWith('II') ? 2 : 3;
+            const moduleNumber = moduleName === 'Módulo II' ? 2 : 3;
             if (!Array.isArray(examEntry.questions)) throw new Error('Un examen final del banco real no contiene preguntas.');
             examEntry.questions.forEach(question => questions.push(normalizeRealQuestionEntry(question, {
                 modulo: moduleName,
