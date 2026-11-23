@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V43 (Copiar resultados como imagen) -->
+    <!-- VERSIÓN: V44 (Botones de exportación animados y profesionales) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1801,22 +1801,201 @@
         .m-blank { color: #9a681b; }
         .metric-label { color: #788497; font-weight: 700; }
         .review-export-panel {
-            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-            flex-wrap: wrap; margin: 1.2rem 0 1.6rem; padding: 1rem 1.15rem;
-            border: 1px solid #e2e7ee; border-radius: 13px; background: #fff;
-            box-shadow: 0 4px 14px rgba(20,35,55,.035);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.1rem;
+            flex-wrap: wrap;
+            margin: 1.2rem 0 1.6rem;
+            padding: 1.15rem 1.25rem;
+            border: 1px solid #e4e9f0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #fff 0%, #fbfcfe 100%);
+            box-shadow: 0 6px 22px rgba(25, 39, 58, .045);
+            opacity: 0;
         }
-        .review-export-copy h3 { color: #253449; font-size: 1rem; font-weight: 800; margin-bottom: .25rem; }
-        .review-export-copy p { color: #788497; font-size: .78rem; line-height: 1.45; }
-        .review-export-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
-        .review-export-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; }
-        .review-export-actions .btn:disabled { opacity: .65; cursor: wait; }
-        .review-export-actions .export-correct { color: #176b47; border-color: #b9dfc9; background: #f0f8f3; }
-        .review-export-actions .export-incorrect { color: #a51e2a; border-color: #efc6ca; background: #fff4f4; }
-        @media (max-width: 650px) {
-            .review-export-panel { align-items: stretch; }
-            .review-export-actions { display: grid; grid-template-columns: 1fr; width: 100%; }
-            .review-export-actions .btn { width: 100%; }
+        .review-export-panel.is-visible { animation: exportPanelIn .55s cubic-bezier(.2,.75,.25,1) forwards; }
+        @keyframes exportPanelIn {
+            from { opacity: 0; transform: translateY(13px); filter: blur(3px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .review-export-copy { min-width: 190px; flex: 1 1 220px; }
+        .review-export-eyebrow {
+            display: inline-block;
+            margin-bottom: .35rem;
+            color: #a52a35;
+            font-size: .63rem;
+            font-weight: 850;
+            letter-spacing: .12em;
+        }
+        .review-export-copy h3 {
+            color: #253449;
+            font-size: 1rem;
+            font-weight: 820;
+            letter-spacing: -.015em;
+            margin-bottom: .28rem;
+        }
+        .review-export-copy p { color: #788497; font-size: .78rem; line-height: 1.5; max-width: 360px; }
+        .review-export-actions { display: flex; flex: 0 1 auto; flex-wrap: wrap; gap: .62rem; align-items: center; }
+        .review-export-actions .review-export-btn {
+            --export-accent: #a51e2a;
+            position: relative;
+            isolation: isolate;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: .68rem;
+            min-width: 158px;
+            min-height: 49px;
+            padding: .48rem .68rem .48rem .58rem;
+            overflow: hidden;
+            border: 1px solid #e0e5ec;
+            border-radius: 13px;
+            background: #fff;
+            color: #34445a;
+            box-shadow: 0 2px 5px rgba(25,39,58,.025);
+            font-size: .78rem;
+            font-weight: 780;
+            letter-spacing: -.01em;
+            cursor: pointer;
+            transition: transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s ease, border-color .22s ease, background .22s ease, color .22s ease;
+            animation: exportButtonIn .5s cubic-bezier(.2,.75,.25,1) both;
+        }
+        .review-export-btn:nth-child(1) { animation-delay: .08s; }
+        .review-export-btn:nth-child(2) { animation-delay: .15s; }
+        .review-export-btn:nth-child(3) { animation-delay: .22s; }
+        @keyframes exportButtonIn {
+            from { opacity: 0; transform: translateY(9px) scale(.975); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .review-export-actions .review-export-btn::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: -60%;
+            left: -85%;
+            width: 55%;
+            height: 220%;
+            transform: rotate(22deg);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.82), transparent);
+            transition: left .62s cubic-bezier(.2,.7,.2,1);
+            pointer-events: none;
+        }
+        .review-export-actions .review-export-btn:hover::before { left: 140%; }
+        .review-export-actions .review-export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 20px rgba(25,39,58,.105);
+        }
+        .review-export-actions .review-export-btn:active { transform: translateY(-1px) scale(.98); }
+        .review-export-actions .review-export-btn:focus-visible {
+            outline: 3px solid rgba(185, 44, 55, .2);
+            outline-offset: 3px;
+        }
+        .review-export-icon {
+            position: relative;
+            display: grid;
+            place-items: center;
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            transition: transform .24s cubic-bezier(.2,.8,.2,1), background .24s ease;
+        }
+        .review-export-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .24s ease, opacity .18s ease; }
+        .review-export-btn:hover .review-export-icon { transform: translateY(-1px) rotate(-5deg); }
+        .review-export-label { white-space: nowrap; }
+        .review-export-count {
+            display: inline-grid;
+            place-items: center;
+            min-width: 25px;
+            height: 25px;
+            margin-left: auto;
+            padding: 0 .42rem;
+            border-radius: 8px;
+            background: #f0f2f5;
+            color: #667487;
+            font-size: .69rem;
+            font-weight: 850;
+            font-variant-numeric: tabular-nums;
+            transition: transform .25s ease, background .25s ease, color .25s ease;
+        }
+        .review-export-count.count-pop { animation: exportCountPop .42s cubic-bezier(.2,.8,.2,1); }
+        @keyframes exportCountPop {
+            0% { transform: scale(.75); }
+            55% { transform: scale(1.16); }
+            100% { transform: scale(1); }
+        }
+        .review-export-actions .export-correct {
+            --export-accent: #218453;
+            color: #176b47;
+            border-color: #cfe7d8;
+            background: linear-gradient(145deg, #fbfffc, #f3faf5);
+        }
+        .export-correct .review-export-icon { background: #e6f5eb; color: #218453; }
+        .export-correct .review-export-count { color: #176b47; background: #e6f5eb; }
+        .export-correct:hover { border-color: #8fcaa7 !important; }
+        .review-export-actions .export-incorrect {
+            --export-accent: #bd2934;
+            color: #a51e2a;
+            border-color: #f0d3d6;
+            background: linear-gradient(145deg, #fffdfd, #fff5f5);
+        }
+        .export-incorrect .review-export-icon { background: #ffeaec; color: #bd2934; }
+        .export-incorrect .review-export-count { color: #a51e2a; background: #ffeaec; }
+        .export-incorrect:hover { border-color: #e6a8ae !important; }
+        .review-export-actions .export-all {
+            --export-accent: #fff;
+            color: #fff;
+            border-color: #a51f2a;
+            background: linear-gradient(135deg, #c52d38 0%, #9f1e2a 100%);
+            box-shadow: 0 5px 13px rgba(165, 30, 42, .18);
+        }
+        .export-all .review-export-icon { background: rgba(255,255,255,.15); color: #fff; }
+        .export-all .review-export-count { color: #fff; background: rgba(255,255,255,.17); }
+        .export-all:hover { box-shadow: 0 10px 22px rgba(165,30,42,.26) !important; }
+        .review-export-actions .review-export-btn:disabled {
+            opacity: .82;
+            cursor: wait;
+            transform: none;
+            box-shadow: none;
+        }
+        .review-export-btn.is-loading .review-export-icon svg { opacity: 0; }
+        .review-export-btn.is-loading .review-export-icon::after {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: exportSpinner .72s linear infinite;
+        }
+        @keyframes exportSpinner { to { transform: rotate(360deg); } }
+        @media (max-width: 760px) {
+            .review-export-panel { align-items: flex-start; }
+            .review-export-copy { flex-basis: 100%; }
+            .review-export-copy p { max-width: none; }
+            .review-export-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+            .review-export-actions .review-export-btn { min-width: 0; width: 100%; gap: .45rem; }
+            .review-export-label { white-space: normal; line-height: 1.2; text-align: left; }
+        }
+        @media (max-width: 520px) {
+            .review-export-panel { padding: 1rem; }
+            .review-export-actions { grid-template-columns: 1fr; }
+            .review-export-actions .review-export-btn { min-height: 47px; }
+            .review-export-label { white-space: nowrap; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .review-export-panel.is-visible,
+            .review-export-btn,
+            .review-export-count.count-pop,
+            .review-export-btn.is-loading .review-export-icon::after { animation: none !important; }
+            .review-export-actions .review-export-btn,
+            .review-export-actions .review-export-btn::before,
+            .review-export-icon,
+            .review-export-count { transition: none !important; }
+            .review-export-actions .review-export-btn:hover,
+            .review-export-actions .review-export-btn:active { transform: none !important; }
         }
         .detailed-review { gap: .75rem; }
         .review-item {
@@ -2638,13 +2817,26 @@
             </div>
             <div class="review-export-panel">
                 <div class="review-export-copy">
-                    <h3>Copiar respuestas como imagen</h3>
-                    <p>Genera una imagen para compartir o guardar con tus respuestas y la corrección.</p>
+                    <span class="review-export-eyebrow">EXPORTAR RESULTADOS</span>
+                    <h3>Comparte tu progreso</h3>
+                    <p>Elige qué parte de tu simulacro quieres guardar o compartir como imagen.</p>
                 </div>
                 <div class="review-export-actions">
-                    <button class="btn btn-outline export-correct" type="button" onclick="copySimulationReviewAsImage('correct', this)">✓ Copiar aciertos</button>
-                    <button class="btn btn-outline export-incorrect" type="button" onclick="copySimulationReviewAsImage('incorrect', this)">✕ Copiar errores</button>
-                    <button class="btn" type="button" onclick="copySimulationReviewAsImage('all', this)">▤ Copiar todas</button>
+                    <button class="review-export-btn export-correct" type="button" onclick="copySimulationReviewAsImage('correct', this)" aria-label="Copiar respuestas correctas como imagen">
+                        <span class="review-export-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+                        <span class="review-export-label">Copiar aciertos</span>
+                        <span class="review-export-count" id="review-export-correct-count">0</span>
+                    </button>
+                    <button class="review-export-btn export-incorrect" type="button" onclick="copySimulationReviewAsImage('incorrect', this)" aria-label="Copiar respuestas incorrectas como imagen">
+                        <span class="review-export-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12"/></svg></span>
+                        <span class="review-export-label">Copiar errores</span>
+                        <span class="review-export-count" id="review-export-incorrect-count">0</span>
+                    </button>
+                    <button class="review-export-btn export-all" type="button" onclick="copySimulationReviewAsImage('all', this)" aria-label="Copiar todas las respuestas como imagen">
+                        <span class="review-export-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
+                        <span class="review-export-label">Copiar todas</span>
+                        <span class="review-export-count" id="review-export-all-count">0</span>
+                    </button>
                 </div>
             </div>
             <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
@@ -4260,10 +4452,13 @@
             return;
         }
 
-        const originalText = button ? button.textContent : '';
+        const labelElement = button ? button.querySelector('.review-export-label') : null;
+        const originalLabel = labelElement ? labelElement.textContent : '';
         if (button) {
             button.disabled = true;
-            button.textContent = 'Preparando imagen…';
+            button.classList.add('is-loading');
+            button.setAttribute('aria-busy', 'true');
+            if (labelElement) labelElement.textContent = 'Preparando PNG…';
         }
         try {
             const pngPromise = createSimulationReviewPng(items, filterType, resultData);
@@ -4305,7 +4500,9 @@
         } finally {
             if (button) {
                 button.disabled = false;
-                button.textContent = originalText;
+                button.classList.remove('is-loading');
+                button.removeAttribute('aria-busy');
+                if (labelElement) labelElement.textContent = originalLabel;
             }
         }
     };
@@ -4316,6 +4513,35 @@
         document.getElementById('res-correct').innerText = data.correctCount || 0;
         document.getElementById('res-error').innerText = data.errorCount || 0;
         document.getElementById('res-blank').innerText = data.blankCount || 0;
+        const exportItems = Array.isArray(data.review) ? data.review : [];
+        const exportStats = exportItems.reduce((stats, item) => {
+            const status = ['is-correct', 'is-incorrect', 'is-blank'].includes(item.statusClass)
+                ? item.statusClass
+                : (item.userStatus === 'user-right' ? 'is-correct' : (item.userStatus === 'user-wrong' ? 'is-incorrect' : 'is-blank'));
+            if (status === 'is-correct') stats.correct++;
+            else if (status === 'is-incorrect') stats.incorrect++;
+            else stats.blank++;
+            return stats;
+        }, {correct: 0, incorrect: 0, blank: 0});
+        [
+            ['review-export-correct-count', exportStats.correct],
+            ['review-export-incorrect-count', exportStats.incorrect],
+            ['review-export-all-count', exportItems.length]
+        ].forEach(([id, value]) => {
+            const countElement = document.getElementById(id);
+            if (countElement) {
+                countElement.textContent = value;
+                countElement.classList.remove('count-pop');
+                void countElement.offsetWidth;
+                countElement.classList.add('count-pop');
+            }
+        });
+        const exportPanel = document.querySelector('.review-export-panel');
+        if (exportPanel) {
+            exportPanel.classList.remove('is-visible');
+            void exportPanel.offsetWidth;
+            exportPanel.classList.add('is-visible');
+        }
         document.getElementById('sim-detailed-review').innerHTML = (data.review || []).map((item, index) => {
             const statusClass = ['is-correct', 'is-incorrect', 'is-blank'].includes(item.statusClass) ? item.statusClass : 'is-blank';
             const userStatus = ['user-right', 'user-wrong', 'actual-correct'].includes(item.userStatus) ? item.userStatus : 'actual-correct';
