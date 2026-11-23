@@ -350,8 +350,11 @@
             display:flex; align-items:center; gap:.55rem; color:var(--text-muted); font-size:.8rem;
             margin-top:.75rem;
         }
-        body:not(.role-admin) #view-repo,
-        body:not(.role-admin) #btn-repo { display:none !important; }
+        /* El repaso y la carga local del JSON son públicos; solo se oculta la administración. */
+        body:not(.role-admin) #view-config,
+        body:not(.role-admin) #view-users,
+        body:not(.role-admin) #btn-config,
+        body:not(.role-admin) #btn-users { display:none !important; }
         body:not(.role-admin) #btn-config,
         body:not(.role-admin) #btn-users { display:none !important; }
         @media (max-width: 700px) {
