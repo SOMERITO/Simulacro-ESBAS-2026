@@ -3440,7 +3440,7 @@
         if (statusLabel) statusLabel.textContent = 'CARGA COMPLETADA';
     }
 
-    window.__ESBASBootProgress = { update: paint, reset, complete: finish };
+    window.__ESBASBootProgress = { update: paint, reset, complete: finish, get: () => current };
 
     document.addEventListener('readystatechange', () => {
         if (document.readyState === 'interactive') {
@@ -4450,7 +4450,10 @@
             return cachedPublicQuestionBank;
         }
 
-        window.__ESBASBootProgress?.update(38, 'DESCARGANDO EL BANCO', 'Cargando las preguntas oficiales del simulacro…');
+        const currentProgress = window.__ESBASBootProgress?.get?.() || 0;
+        const downloadStart = Math.max(38, Math.min(currentProgress, 76));
+        const downloadSpan = 85 - downloadStart;
+        window.__ESBASBootProgress?.update(downloadStart, 'DESCARGANDO EL BANCO', 'Cargando las preguntas oficiales del simulacro…');
         const response = await fetch('./data/ESBAS-2026-Banco-400-Preguntas.json', {
             cache: 'no-store',
             headers: { 'Accept': 'application/json' }
@@ -4471,7 +4474,7 @@
                 receivedBytes += value.byteLength;
 
                 if (totalBytes > 0) {
-                    const downloadProgress = 38 + Math.min(44, (receivedBytes / totalBytes) * 44);
+                    const downloadProgress = downloadStart + Math.min(downloadSpan, (receivedBytes / totalBytes) * downloadSpan);
                     window.__ESBASBootProgress?.update(
                         downloadProgress,
                         'DESCARGANDO EL BANCO',
