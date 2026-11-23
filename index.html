@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V57 (Alternativas aleatorias al repetir exámenes) -->
+    <!-- VERSIÓN: V58 (Ingreso público directo sin validación de acceso) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -4199,21 +4199,13 @@
     }
 
     async function loadAuthenticatedUser(user) {
-        setAppLoading(true, 'Preparando tu acceso', 'Validando permisos y preparando tu espacio ESBAS.', '🔐');
+        // Las sesiones anónimas antiguas no representan cuentas: se envían directamente a la página pública.
+        if (user?.isAnonymous) {
+            await initializePublicVisitor();
+            return;
+        }
+        setAppLoading(true, 'Validando cuenta administrativa', 'Verificando los permisos de administración…', '🛡️');
         try {
-            if (user.isAnonymous) {
-                currentUser = user;
-                currentUserRole = 'estudiante';
-                document.getElementById('main-nav').style.display = 'flex';
-                document.getElementById('main-container').style.display = 'block';
-                document.body.classList.remove('role-admin');
-                await loadQuestionsFromFirestoreForStudy();
-                window.refreshSimulationModuleDropdown('all');
-                showPublicStudyView();
-                showWelcomeBanner('estudiante');
-                return;
-            }
-
             const userRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userRef);
             if (!userDoc.exists()) {
@@ -4266,7 +4258,7 @@
             repoButton.style.display = 'inline-flex';
         }
         window.setCloudStatus('success', '🌐 Acceso público');
-        setAppLoading(true, 'Preparando el simulador', 'Cargando el banco integrado de 400 preguntas…', '🚒');
+        setAppLoading(true, 'Cargando el simulador', 'Cargando las preguntas para que puedas comenzar a practicar…', '🚒');
         try {
             const questions = await loadBundledQuestionBank();
             appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
@@ -4283,7 +4275,8 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-        if (!user) {
+        // El simulador es público: sin sesión o con una sesión anónima, no se pide validar ningún acceso.
+        if (!user || user.isAnonymous) {
             await initializePublicVisitor();
             return;
         }
