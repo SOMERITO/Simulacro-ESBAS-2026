@@ -4773,8 +4773,18 @@
             button.setAttribute('aria-busy', 'true');
             if (labelElement) labelElement.textContent = 'Preparando PNG…';
         }
+        const exportLessonLabels = Array.from(new Set(items.map(item => item.lessonLabel).filter(Boolean)));
+        const exportModules = Array.from(new Set(items.map(item => item.modulo).filter(Boolean)));
+        const exportResultData = Object.assign({}, resultData, {
+            hasMultipleLessons: exportLessonLabels.length > 1,
+            exportLessonLabel: exportLessonLabels.length === 1
+                ? exportLessonLabels[0]
+                : (exportLessonLabels.length > 1
+                    ? 'Varias lecciones' + (exportModules.length === 1 ? ' · ' + exportModules[0] : ' · ESBAS 2026')
+                    : String(resultData.exportLessonLabel || 'Lección no identificada'))
+        });
         try {
-            const pngPromise = createSimulationReviewPng(items, filterType, resultData);
+            const pngPromise = createSimulationReviewPng(items, filterType, exportResultData);
             if (navigator.clipboard && typeof navigator.clipboard.write === 'function' &&
                 typeof window.ClipboardItem === 'function') {
                 try {
