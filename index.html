@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V37 (Retroalimentación inmediata y explicación por pregunta) -->
+    <!-- VERSIÓN: V38 (Acceso público sin inicio de sesión y práctica directa) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3024,7 +3024,7 @@
         if (!banner) return;
         const subtitle = role === 'admin'
             ? 'Sesión de administrador iniciada. Todo está sincronizado.'
-            : 'Tu simulador está listo. El banco completo permanece protegido.';
+            : 'Acceso público: puedes practicar directamente desde este enlace.';
         document.getElementById('welcome-title').textContent = 'Bienvenidos al Simulacro ESBAS';
         document.getElementById('welcome-subtitle').textContent = subtitle;
         document.getElementById('welcome-icon').textContent = role === 'admin' ? '🛡️' : '🚒';
@@ -3250,17 +3250,42 @@
         }
     }
 
+    let publicVisitorInitialized = false;
+    async function initializePublicVisitor() {
+        if (publicVisitorInitialized) return;
+        publicVisitorInitialized = true;
+        currentUser = { uid: 'public-link-visitor', isAnonymous: true, isPublicVisitor: true };
+        currentUserRole = 'estudiante';
+        currentSimulationMode = 'local';
+        document.body.classList.remove('role-admin');
+        document.getElementById('main-nav').style.display = 'flex';
+        document.getElementById('main-container').style.display = 'block';
+
+        const repoButton = document.getElementById('btn-repo');
+        if (repoButton) {
+            repoButton.classList.remove('admin-only');
+            repoButton.style.display = 'inline-flex';
+        }
+        window.setCloudStatus('success', '🌐 Acceso público');
+        setAppLoading(true, 'Preparando el simulador', 'Cargando el banco integrado de 400 preguntas…', '🚒');
+        try {
+            const questions = await loadBundledQuestionBank();
+            appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
+            window.updateIndexesAndCounters();
+            window.updateSimLessonDropdown('all');
+            window.switchView('sim');
+            showWelcomeBanner('estudiante');
+        } catch (error) {
+            console.error('No se pudo preparar el banco público:', error);
+            window.showToast('No se pudo cargar el banco de preguntas. Recarga la página e inténtalo nuevamente.', 'error');
+        } finally {
+            hideAppLoading();
+        }
+    }
+
     onAuthStateChanged(auth, async (user) => {
         if (!user) {
-            currentUser = null;
-            currentUserRole = 'estudiante';
-            document.body.classList.remove('role-admin');
-            setAppLoading(true, 'Preparando simulador', 'Ingresando sin cuenta…', '🚒');
-            signInAnonymously(auth).catch((error) => {
-                console.error(error);
-                hideAppLoading();
-                window.showToast('No se pudo habilitar el acceso sin cuenta. Activa el proveedor Anónimo en Firebase Authentication.', 'error');
-            });
+            await initializePublicVisitor();
             return;
         }
         try {
@@ -3274,7 +3299,7 @@
     });
 
     function isAdmin() {
-        return !!currentUser && currentUserRole === 'admin';
+        return !!currentUser && !currentUser.isPublicVisitor && currentUserRole === 'admin';
     }
 
     function requireAdmin() {
@@ -3959,7 +3984,10 @@
 
     window.startSimulation = async function() {
         if (!currentUser) {
-            window.showToast('Tu sesión todavía se está preparando. Espera unos segundos y vuelve a intentarlo.', 'error');
+            await initializePublicVisitor();
+        }
+        if (!currentUser) {
+            window.showToast('No se pudo preparar el acceso público. Recarga la página e inténtalo nuevamente.', 'error');
             return;
         }
         const modFilter = document.getElementById('sim-module').value;
@@ -3970,18 +3998,7 @@
         setAppLoading(true, 'Generando simulacro', 'Preparando las preguntas seleccionadas…', '📝');
 
         try {
-            let remoteError = null;
-            let remoteQuestions = [];
-            try {
-                const result = await callStartSimulation({ module: modFilter, lesson: lessonFilter });
-                remoteQuestions = Array.isArray(result?.data?.questions) ? result.data.questions : [];
-                if (!remoteQuestions.length) throw new Error('Firebase no devolvió preguntas para esta selección.');
-                currentSimulationQuestions = remoteQuestions;
-                currentSimulationSessionId = result.data.sessionId || null;
-                currentSimulationMode = 'firebase';
-            } catch (error) {
-                remoteError = error;
-                console.warn('Se utilizará el simulacro local porque Firebase no pudo iniciarlo:', error);
+            if (currentUser.isPublicVisitor) {
                 if (!appData.questions.length) {
                     const bundled = await loadBundledQuestionBank();
                     appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
@@ -3992,6 +4009,27 @@
                 currentSimulationQuestions = localQuestions;
                 currentSimulationSessionId = null;
                 currentSimulationMode = 'local';
+            } else {
+                try {
+                    const result = await callStartSimulation({ module: modFilter, lesson: lessonFilter });
+                    const remoteQuestions = Array.isArray(result?.data?.questions) ? result.data.questions : [];
+                    if (!remoteQuestions.length) throw new Error('Firebase no devolvió preguntas para esta selección.');
+                    currentSimulationQuestions = remoteQuestions;
+                    currentSimulationSessionId = result.data.sessionId || null;
+                    currentSimulationMode = 'firebase';
+                } catch (error) {
+                    console.warn('Se utilizará el simulacro local porque Firebase no pudo iniciarlo:', error);
+                    if (!appData.questions.length) {
+                        const bundled = await loadBundledQuestionBank();
+                        appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
+                        window.updateIndexesAndCounters();
+                    }
+                    const localQuestions = getLocalSimulationQuestions(modFilter, lessonFilter);
+                    if (!localQuestions.length) throw new Error('No hay preguntas disponibles para el módulo y la lección seleccionados.');
+                    currentSimulationQuestions = localQuestions;
+                    currentSimulationSessionId = null;
+                    currentSimulationMode = 'local';
+                }
             }
 
             userAnswers = {};
@@ -4002,15 +4040,16 @@
             document.getElementById('sim-results').style.display = 'none';
             if (modeNote) {
                 modeNote.style.display = currentSimulationMode === 'local' ? 'block' : 'none';
-                modeNote.textContent = currentSimulationMode === 'local'
-                    ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.'
-                    : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.';
+                modeNote.textContent = currentUser.isPublicVisitor
+                    ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.'
+                    : (currentSimulationMode === 'local'
+                        ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.'
+                        : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.');
             }
             window.renderSimulationQuestions();
             window.showSimQuestion(0);
-
-            if (currentSimulationMode === 'local') {
-                window.showToast('El simulacro inició correctamente en modo local. Firebase no respondió; tu avance funcionará en esta página.', 'error');
+            if (currentSimulationMode === 'local' && !currentUser.isPublicVisitor) {
+                window.showToast('El simulacro inició en modo local. El resultado no se guardará en Firebase.', 'error');
             }
         } catch (error) {
             console.error('No se pudo iniciar el simulacro:', error);
@@ -4020,98 +4059,6 @@
             setButtonLoading(btn, false);
         }
     };
-
-    function getSimulationQuestionSource(simQuestion) {
-        const bundled = Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
-        const current = Array.isArray(appData.questions) ? appData.questions : [];
-        const hasAnswerKey = question => ['a','b','c','d'].includes(String(question?.respuesta || '').toLowerCase());
-
-        // Prefer the bundled source when Firestore contains an older/incomplete copy without the answer key.
-        const bundledById = bundled.find(question => String(question.id) === String(simQuestion.id) && hasAnswerKey(question));
-        if (bundledById) return bundledById;
-
-        const currentById = current.find(question => String(question.id) === String(simQuestion.id) && hasAnswerKey(question));
-        if (currentById) return currentById;
-
-        const normalize = value => String(value || '')
-            .normalize('NFKD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toLowerCase();
-        const questionText = normalize(simQuestion.pregunta);
-        const candidates = [...bundled, ...current];
-        return candidates.find(question =>
-            hasAnswerKey(question) &&
-            normalize(question.modulo) === normalize(simQuestion.modulo) &&
-            normalize(question.pregunta) === questionText
-        ) || simQuestion;
-    }
-
-    function renderImmediateFeedback(simQuestion, selectedKey) {
-        const questionIndex = currentSimulationQuestions.findIndex(question => String(question.id) === String(simQuestion.id));
-        if (questionIndex < 0) return false;
-        const card = document.getElementById('sim-q-card-' + questionIndex);
-        if (!card) return false;
-
-        const source = getSimulationQuestionSource(simQuestion);
-        const options = source.opciones || simQuestion.opciones || {};
-        const correctKey = String(source.respuesta || simQuestion.respuesta || '').trim().toLowerCase();
-        const chosenKey = String(selectedKey || '').trim().toLowerCase();
-        if (!['a','b','c','d'].includes(correctKey) || !['a','b','c','d'].includes(chosenKey)) {
-            const feedback = card.querySelector('.sim-feedback');
-            if (feedback) {
-                feedback.hidden = false;
-                feedback.className = 'sim-feedback sim-feedback-unavailable';
-                const title = feedback.querySelector('.sim-feedback-title');
-                const details = feedback.querySelector('.sim-feedback-explanation');
-                if (title) title.textContent = 'No se pudo recuperar la clave de esta pregunta.';
-                if (details) details.textContent = 'La pregunta está disponible, pero el banco no entregó su respuesta correcta.';
-            }
-            return false;
-        }
-
-        const isCorrect = chosenKey === correctKey;
-        card.querySelectorAll('.option-item[data-option-key]').forEach(option => {
-            const key = String(option.dataset.optionKey || '').toLowerCase();
-            option.classList.remove('selected', 'is-correct', 'is-incorrect', 'is-dimmed');
-            if (key === correctKey) option.classList.add('is-correct');
-            else if (key === chosenKey) option.classList.add('is-incorrect');
-            else option.classList.add('is-dimmed');
-            option.setAttribute('aria-pressed', String(key === chosenKey));
-            option.setAttribute('aria-disabled', 'true');
-            option.tabIndex = -1;
-        });
-
-        const feedback = card.querySelector('.sim-feedback');
-        if (!feedback) return false;
-        feedback.hidden = false;
-        feedback.className = 'sim-feedback ' + (isCorrect ? 'sim-feedback-correct' : 'sim-feedback-wrong');
-
-        const title = feedback.querySelector('.sim-feedback-title');
-        const correctAnswer = feedback.querySelector('.sim-feedback-correct-answer');
-        const explanation = feedback.querySelector('.sim-feedback-explanation');
-        const summary = feedback.querySelector('summary');
-        if (title) {
-            title.textContent = isCorrect
-                ? '¡Correcto! Has elegido la respuesta adecuada.'
-                : 'Respuesta incorrecta. Revisa la alternativa marcada en verde.';
-        }
-        if (correctAnswer) {
-            correctAnswer.textContent = 'Respuesta correcta: ' + correctKey.toUpperCase() + ') ' + (options[correctKey] || 'Texto no disponible');
-        }
-        if (explanation) {
-            explanation.textContent = source.sustento
-                ? source.sustento
-                : 'El banco no incluye un sustento adicional para esta pregunta.';
-        }
-        if (summary) summary.textContent = source.sustento
-            ? '¿Por qué esta es la respuesta correcta?'
-            : 'Ver respuesta correcta';
-        const details = feedback.querySelector('details');
-        if (details) details.open = true;
-        return true;
-    }
 
     window.renderSimulationQuestions = function() {
         const container = document.getElementById('sim-questions-container');
