@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V45 (Dos modalidades: preguntas con IA y preguntas reales) -->
+    <!-- VERSIÓN: V46 (Identificación de lección en imágenes de resultados) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3427,6 +3427,7 @@
     let cachedPublicQuestionBank = null;
     let cachedRealQuestionBank = null;
     let currentSimulationBankType = 'ai'; // ai | real
+    let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'ai' };
 
     function getActiveSimulationQuestionBank() {
         if (currentSimulationBankType === 'real') {
@@ -4496,6 +4497,22 @@
         return shuffleQuestionList(selected);
     }
 
+    function formatSimulationLessonLabel(question) {
+        if (!question || typeof question !== 'object') return 'Lección no identificada';
+        const moduleName = String(question.modulo || '').trim();
+        if (question.tipo === 'examen_final_modulo' || Number(question.leccion_num) === 0) {
+            return 'Examen final' + (moduleName ? ' · ' + moduleName : '');
+        }
+        const lessonNumber = Number(question.leccion_num);
+        if (!Number.isInteger(lessonNumber) || lessonNumber < 1) return 'Lección no identificada';
+        const lessonName = String(question.leccion_nombre || ('Lección ' + String(lessonNumber).padStart(2, '0')))
+            .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
+            .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
+            .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
+            .trim();
+        return 'L' + String(lessonNumber).padStart(2, '0') + ' - ' + lessonName;
+    }
+
     function buildLocalSimulationGrade() {
         const sourceById = new Map(getActiveSimulationQuestionBank().map(question => [String(question.id), question]));
         const total = currentSimulationQuestions.length;
@@ -4517,6 +4534,7 @@
             else errorCount++;
 
             return {
+                id: String(question.id),
                 pregunta: source.pregunta || question.pregunta || '',
                 statusClass: isCorrect ? 'is-correct' : (isBlank ? 'is-blank' : 'is-incorrect'),
                 icon: isCorrect ? '✓' : (isBlank ? '○' : '✕'),
@@ -4525,7 +4543,12 @@
                     : 'Tu respuesta: ' + userKey.toUpperCase() + ') ' + userText,
                 userStatus: isCorrect ? 'user-right' : (isBlank ? 'actual-correct' : 'user-wrong'),
                 correctKey: correctKey,
-                correctText: correctText
+                correctText: correctText,
+                modulo: source.modulo || question.modulo || '',
+                leccion_num: source.leccion_num ?? question.leccion_num ?? null,
+                leccion_nombre: source.leccion_nombre || question.leccion_nombre || '',
+                tipo: source.tipo || question.tipo || '',
+                lessonLabel: formatSimulationLessonLabel(source)
             };
         });
         return {
@@ -4592,12 +4615,20 @@
                     const userText = String(item.userAnswerText || 'Sin responder');
                     const correctText = 'Respuesta correcta: ' +
                         String(item.correctKey || 'N/A').toUpperCase() + ') ' + String(item.correctText || 'N/A');
+                    const lessonLabel = String(item.lessonLabel || 'Lección no identificada');
+                    const showLessonTag = resultData.hasMultipleLessons === true;
+                    const lessonFont = Math.max(10, questionFont - 4);
+                    context.font = '700 ' + lessonFont + 'px Arial, sans-serif';
+                    const lessonLines = showLessonTag
+                        ? wrapReviewCanvasText(context, lessonLabel, columnWidth - innerPad * 2)
+                        : [];
                     context.font = '500 ' + answerFont + 'px Arial, sans-serif';
                     const userLines = wrapReviewCanvasText(context, userText, columnWidth - innerPad * 2);
                     const correctLines = wrapReviewCanvasText(context, correctText, columnWidth - innerPad * 2);
-                    const height = innerPad * 2 + questionLines.length * questionLineHeight +
+                    const lessonHeight = lessonLines.length ? 7 + lessonLines.length * Math.round(lessonFont * 1.35) : 0;
+                    const height = innerPad * 2 + lessonHeight + questionLines.length * questionLineHeight +
                         12 + userLines.length * answerLineHeight + 8 + correctLines.length * answerLineHeight;
-                    return {item, questionLines, userLines, correctLines, height};
+                    return {item, questionLines, lessonLines, lessonFont, userLines, correctLines, height};
                 });
 
                 const rowsPerColumn = Math.max(1, Math.ceil(prepared.length / columns));
@@ -4655,6 +4686,15 @@
                     context.fillRect(card.x, card.y + 10, 4, card.height - 20);
 
                     let y = card.y + innerPad;
+                    if (card.lessonLines.length) {
+                        context.fillStyle = '#a52a35';
+                        context.font = '700 ' + card.lessonFont + 'px Arial, sans-serif';
+                        card.lessonLines.forEach(line => {
+                            context.fillText(line, card.x + innerPad, y);
+                            y += Math.round(card.lessonFont * 1.35);
+                        });
+                        y += 7;
+                    }
                     context.fillStyle = '#253449';
                     context.font = '700 ' + questionFont + 'px Arial, sans-serif';
                     card.questionLines.forEach(line => {
@@ -4683,9 +4723,15 @@
                 context.fillStyle = '#8a95a5';
                 context.font = '600 13px Arial, sans-serif';
                 context.fillText('Preparación constante · Servicio seguro', padding, footerY);
-                context.font = '500 12px Arial, sans-serif';
+                context.font = '600 12px Arial, sans-serif';
                 context.textAlign = 'right';
-                context.fillText('Simulacro ESBAS', width - padding, footerY);
+                const lessonFooterLabel = String(resultData.exportLessonLabel || 'Lección no identificada');
+                const maxFooterWidth = width - padding * 2 - 300;
+                const safeFooterLabel = context.measureText(lessonFooterLabel).width <= maxFooterWidth
+                    ? lessonFooterLabel
+                    : wrapReviewCanvasText(context, lessonFooterLabel, maxFooterWidth).join(' ');
+                context.fillStyle = '#526176';
+                context.fillText(safeFooterLabel, width - padding, footerY, maxFooterWidth);
                 context.textAlign = 'left';
 
                 canvas.toBlob(blob => {
@@ -4775,6 +4821,34 @@
     };
 
     function displaySimulationResults(data) {
+        const metadataBank = getActiveSimulationQuestionBank();
+        const metadataById = new Map(metadataBank.map(question => [String(question.id), question]));
+        const simulationQuestionsById = new Map(currentSimulationQuestions.map(question => [String(question.id), question]));
+        data.review = (Array.isArray(data.review) ? data.review : []).map((item, index) => {
+            const id = item.id != null ? String(item.id) : '';
+            const simulationQuestion = simulationQuestionsById.get(id) || currentSimulationQuestions[index] || {};
+            const sourceQuestion = metadataById.get(String(simulationQuestion.id || id)) || simulationQuestion;
+            const lessonNumber = sourceQuestion.leccion_num ?? simulationQuestion.leccion_num ??
+                (/^\d+$/.test(String(currentSimulationContext.lesson)) ? Number(currentSimulationContext.lesson) : null);
+            const lessonName = sourceQuestion.leccion_nombre || simulationQuestion.leccion_nombre ||
+                (lessonNumber ? (metadataBank.find(question => Number(question.leccion_num) === Number(lessonNumber))?.leccion_nombre || '') : '');
+            const metadata = {
+                modulo: sourceQuestion.modulo || simulationQuestion.modulo || currentSimulationContext.module || '',
+                tipo: sourceQuestion.tipo || simulationQuestion.tipo || (currentSimulationContext.lesson === 'final' ? 'examen_final_modulo' : ''),
+                leccion_num: lessonNumber,
+                leccion_nombre: lessonName
+            };
+            return Object.assign({}, item, metadata, {
+                id: id || String(simulationQuestion.id || ''),
+                lessonLabel: item.lessonLabel || formatSimulationLessonLabel(metadata)
+            });
+        });
+        const lessonLabels = Array.from(new Set(data.review.map(item => item.lessonLabel).filter(Boolean)));
+        data.hasMultipleLessons = lessonLabels.length > 1;
+        data.exportLessonLabel = lessonLabels.length === 1
+            ? lessonLabels[0]
+            : (lessonLabels.length > 1 ? 'Varias lecciones · ' + (currentSimulationContext.module === 'all' ? 'ESBAS 2026' : currentSimulationContext.module) : 'Lección no identificada');
+
         window.__lastSimulationResultData = data;
         document.getElementById('res-precision').innerText = (data.precision || 0) + '%';
         document.getElementById('res-correct').innerText = data.correctCount || 0;
@@ -4836,6 +4910,7 @@
         const lessonFilter = document.getElementById('sim-lesson').value;
         const btn = document.getElementById('btn-start-sim');
         const modeNote = document.getElementById('sim-mode-note');
+        currentSimulationContext = {module: modFilter, lesson: lessonFilter, bankType: currentSimulationBankType};
         setButtonLoading(btn, true);
         setAppLoading(true, 'Generando simulacro', 'Preparando las preguntas seleccionadas…', '📝');
 
