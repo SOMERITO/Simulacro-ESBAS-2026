@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V55 (Pie de imágenes de resultados eliminado) -->
+    <!-- VERSIÓN: V56 (Filtros interactivos del desglose de resultados) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3019,6 +3019,115 @@
             .sim-session-heading { animation:none !important; }
         }
 
+
+        /* V56 — Filtros interactivos del desglose */
+        .review-filter-panel {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:1rem;
+            flex-wrap:wrap;
+            margin:-.65rem 0 1.55rem;
+            padding:.85rem 1.05rem;
+            border:1px solid #e4e9f0;
+            border-radius:14px;
+            background:linear-gradient(135deg,#fff 0%,#fbfcfe 100%);
+            box-shadow:0 4px 14px rgba(25,39,58,.035);
+        }
+        .review-filter-copy {
+            display:flex;
+            flex-direction:column;
+            gap:.2rem;
+            min-width:150px;
+        }
+        .review-filter-eyebrow {
+            color:#7d8999;
+            font-size:.61rem;
+            font-weight:850;
+            letter-spacing:.11em;
+        }
+        .review-filter-summary {
+            color:#637187;
+            font-size:.72rem;
+            line-height:1.4;
+        }
+        .review-filter-actions {
+            display:flex;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:.48rem;
+        }
+        .review-filter-btn {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:.48rem;
+            min-height:39px;
+            padding:.45rem .7rem;
+            border:1px solid #e0e6ed;
+            border-radius:10px;
+            background:#fff;
+            color:#47566c;
+            font-size:.73rem;
+            font-weight:780;
+            cursor:pointer;
+            transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
+        }
+        .review-filter-btn:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(25,39,58,.065); }
+        .review-filter-btn:active { transform:scale(.98); }
+        .review-filter-btn:focus-visible { outline:3px solid rgba(181,42,52,.17); outline-offset:2px; }
+        .review-filter-btn .filter-count {
+            display:inline-grid;
+            place-items:center;
+            min-width:21px;
+            height:21px;
+            padding:0 .32rem;
+            border-radius:7px;
+            background:#f0f2f5;
+            color:#657286;
+            font-size:.65rem;
+            font-weight:850;
+            font-variant-numeric:tabular-nums;
+        }
+        .review-filter-btn.filter-correct { color:#176b47; border-color:#d7eadf; background:#fbfefc; }
+        .review-filter-btn.filter-correct .filter-count { color:#176b47; background:#e8f5ed; }
+        .review-filter-btn.filter-incorrect { color:#a51e2a; border-color:#f0dadd; background:#fffdfd; }
+        .review-filter-btn.filter-incorrect .filter-count { color:#a51e2a; background:#ffeaec; }
+        .review-filter-btn.is-active {
+            border-color:#aebaca;
+            background:#f0f3f7;
+            color:#26364b;
+            box-shadow:inset 0 0 0 1px rgba(38,54,75,.045),0 2px 6px rgba(25,39,58,.045);
+        }
+        .review-filter-btn.filter-correct.is-active { border-color:#9dccae; color:#176b47; background:#eef8f1; }
+        .review-filter-btn.filter-incorrect.is-active { border-color:#e4aeb5; color:#a51e2a; background:#fff1f2; }
+        .review-filter-btn.filter-all.is-active { border-color:#c9d2de; background:#edf1f6; }
+        .review-filter-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+        .review-filter-empty {
+            padding:1.2rem;
+            border:1px dashed #dbe2ea;
+            border-radius:12px;
+            color:#758196;
+            background:#fbfcfe;
+            font-size:.82rem;
+            text-align:center;
+        }
+        .review-filter-empty[hidden] { display:none !important; }
+        .review-item[hidden] { display:none !important; }
+        @media(max-width:680px) {
+            .review-filter-panel { align-items:stretch; gap:.75rem; padding:.8rem; }
+            .review-filter-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+            .review-filter-btn { gap:.3rem; min-width:0; padding:.45rem .35rem; font-size:.68rem; }
+        }
+        @media(max-width:420px) {
+            .review-filter-actions { grid-template-columns:1fr; }
+            .review-filter-btn { justify-content:space-between; padding:.58rem .7rem; font-size:.75rem; }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            .review-filter-btn { transition:none !important; }
+            .review-filter-btn:hover,.review-filter-btn:active { transform:none !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -3247,8 +3356,29 @@
                     </button>
                 </div>
             </div>
-            <h3 style="margin: 2rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
+            <section class="review-filter-panel" aria-label="Filtros del desglose de preguntas">
+                <div class="review-filter-copy">
+                    <span class="review-filter-eyebrow">FILTRAR DESGLOSE</span>
+                    <span class="review-filter-summary" id="review-filter-summary" aria-live="polite">Mostrando todas las preguntas.</span>
+                </div>
+                <div class="review-filter-actions" role="group" aria-label="Filtrar por resultado">
+                    <button class="review-filter-btn filter-correct" type="button" data-review-filter="correct" aria-pressed="false" onclick="filterSimulationReview('correct', this)">
+                        <span>Respuestas correctas</span>
+                        <span class="filter-count" id="review-filter-correct-count">0</span>
+                    </button>
+                    <button class="review-filter-btn filter-incorrect" type="button" data-review-filter="incorrect" aria-pressed="false" onclick="filterSimulationReview('incorrect', this)">
+                        <span>Respuestas incorrectas</span>
+                        <span class="filter-count" id="review-filter-incorrect-count">0</span>
+                    </button>
+                    <button class="review-filter-btn filter-all is-active" type="button" data-review-filter="all" aria-pressed="true" onclick="filterSimulationReview('all', this)">
+                        <span>Ver todas</span>
+                        <span class="filter-count" id="review-filter-all-count">0</span>
+                    </button>
+                </div>
+            </section>
+            <h3 style="margin: 1.35rem 0 1rem 0; color: var(--text-dark); font-weight: 500;">Desglose de Preguntas</h3>
             <div id="sim-detailed-review" class="detailed-review"></div>
+            <div id="sim-review-filter-empty" class="review-filter-empty" hidden></div>
             
         </div>
     </div>
@@ -5209,6 +5339,51 @@
         }
     };
 
+    window.filterSimulationReview = function(filterType = 'all') {
+        const allowedFilters = ['correct', 'incorrect', 'all'];
+        const activeFilter = allowedFilters.includes(filterType) ? filterType : 'all';
+        const container = document.getElementById('sim-detailed-review');
+        if (!container) return;
+
+        const items = Array.from(container.querySelectorAll('.review-item'));
+        let visibleCount = 0;
+        items.forEach(item => {
+            const status = item.dataset.reviewStatus || '';
+            const shouldShow = activeFilter === 'all' ||
+                (activeFilter === 'correct' && status === 'is-correct') ||
+                (activeFilter === 'incorrect' && status === 'is-incorrect');
+            item.hidden = !shouldShow;
+            if (shouldShow) visibleCount++;
+        });
+
+        document.querySelectorAll('[data-review-filter]').forEach(button => {
+            const isActive = button.dataset.reviewFilter === activeFilter;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+
+        const emptyState = document.getElementById('sim-review-filter-empty');
+        if (emptyState) {
+            emptyState.hidden = visibleCount > 0;
+            emptyState.textContent = activeFilter === 'correct'
+                ? 'Este intento no tiene respuestas correctas.'
+                : (activeFilter === 'incorrect'
+                    ? 'Este intento no tiene respuestas incorrectas.'
+                    : 'No hay preguntas para mostrar.');
+        }
+
+        const summary = document.getElementById('review-filter-summary');
+        if (summary) {
+            const total = items.length;
+            const label = activeFilter === 'correct'
+                ? 'respuestas correctas'
+                : (activeFilter === 'incorrect' ? 'respuestas incorrectas' : 'preguntas');
+            summary.textContent = activeFilter === 'all'
+                ? 'Mostrando todas las ' + total + ' preguntas, incluidas las no respondidas.'
+                : 'Mostrando ' + visibleCount + ' de ' + total + ' ' + label + '.';
+        }
+    };
+
     function displaySimulationResults(data) {
         const metadataBank = getActiveSimulationQuestionBank();
         const metadataById = new Map(metadataBank.map(question => [String(question.id), question]));
@@ -5262,7 +5437,10 @@
         [
             ['review-export-correct-count', exportStats.correct],
             ['review-export-incorrect-count', exportStats.incorrect],
-            ['review-export-all-count', exportItems.length]
+            ['review-export-all-count', exportItems.length],
+            ['review-filter-correct-count', exportStats.correct],
+            ['review-filter-incorrect-count', exportStats.incorrect],
+            ['review-filter-all-count', exportItems.length]
         ].forEach(([id, value]) => {
             const countElement = document.getElementById(id);
             if (countElement) {
@@ -5281,13 +5459,14 @@
         document.getElementById('sim-detailed-review').innerHTML = (data.review || []).map((item, index) => {
             const statusClass = ['is-correct', 'is-incorrect', 'is-blank'].includes(item.statusClass) ? item.statusClass : 'is-blank';
             const userStatus = ['user-right', 'user-wrong', 'actual-correct'].includes(item.userStatus) ? item.userStatus : 'actual-correct';
-            return '<div class="review-item ' + statusClass + '">' +
+            return '<div class="review-item ' + statusClass + '" data-review-status="' + statusClass + '">' +
                 '<div class="r-question">' + escapeHTML(item.icon || '•') + ' Q' + (index + 1) + ': ' + escapeHTML(item.pregunta || '') + '</div>' +
                 (item.userAnswerText ? '<div class="r-ans ' + userStatus + '">' + escapeHTML(item.userAnswerText) + '</div>' : '') +
                 '<div class="r-ans actual-correct">La respuesta correcta era: <strong>' +
                     escapeHTML(String(item.correctKey || 'N/A').toUpperCase()) + ') ' + escapeHTML(item.correctText || 'N/A') +
                 '</strong></div></div>';
         }).join('');
+        window.filterSimulationReview('all');
         document.getElementById('sim-active').style.display = 'none';
         document.getElementById('sim-results').style.display = 'block';
         window.scrollTo(0, 0);
