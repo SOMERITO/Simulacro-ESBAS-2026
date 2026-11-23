@@ -6785,7 +6785,24 @@
         if (activePointerId !== null) finishPointerInteraction();
     });
 
-    restorePosition();
+    const simulationPanel = document.getElementById('sim-active');
+    if (dock.getBoundingClientRect().width > 0) {
+        restorePosition();
+    }
+
+    // El panel está oculto antes de iniciar un examen: restaura la posición
+    // personalizada cuando el simulacro lo muestra y su tamaño ya es real.
+    if (simulationPanel) {
+        const visibilityObserver = new MutationObserver(() => {
+            if (simulationPanel.getBoundingClientRect().width > 0 && !hasCustomPosition) {
+                restorePosition();
+            }
+        });
+        visibilityObserver.observe(simulationPanel, {
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+    }
 })();
 </script>
 </body>
