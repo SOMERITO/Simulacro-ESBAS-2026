@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V38 (Acceso público sin inicio de sesión y práctica directa) -->
+    <!-- VERSIÓN: V39 (Acceso público y retroalimentación inmediata completa) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -4059,6 +4059,109 @@
             setButtonLoading(btn, false);
         }
     };
+
+    function getSimulationQuestionSource(simQuestion) {
+        const bundled = Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
+        const current = Array.isArray(appData.questions) ? appData.questions : [];
+        const hasAnswerKey = question => ['a', 'b', 'c', 'd'].includes(String(question?.respuesta || '').toLowerCase());
+
+        // Preferir siempre la clave del banco integrado si Firestore devuelve una copia incompleta.
+        const bundledById = bundled.find(question =>
+            String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+        );
+        if (bundledById) return bundledById;
+
+        const currentById = current.find(question =>
+            String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+        );
+        if (currentById) return currentById;
+
+        const normalize = value => String(value || '')
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+        const questionText = normalize(simQuestion.pregunta);
+        return [...bundled, ...current].find(question =>
+            hasAnswerKey(question) &&
+            normalize(question.modulo) === normalize(simQuestion.modulo) &&
+            normalize(question.pregunta) === questionText
+        ) || simQuestion;
+    }
+
+    function renderImmediateFeedback(simQuestion, selectedKey) {
+        const questionIndex = currentSimulationQuestions.findIndex(question =>
+            String(question.id) === String(simQuestion.id)
+        );
+        if (questionIndex < 0) return false;
+        const card = document.getElementById('sim-q-card-' + questionIndex);
+        if (!card) return false;
+
+        const source = getSimulationQuestionSource(simQuestion);
+        const options = source.opciones || simQuestion.opciones || {};
+        const correctKey = String(source.respuesta || simQuestion.respuesta || '').trim().toLowerCase();
+        const chosenKey = String(selectedKey || '').trim().toLowerCase();
+
+        if (!['a', 'b', 'c', 'd'].includes(correctKey) || !['a', 'b', 'c', 'd'].includes(chosenKey)) {
+            const feedback = card.querySelector('.sim-feedback');
+            if (feedback) {
+                feedback.hidden = false;
+                feedback.className = 'sim-feedback sim-feedback-unavailable';
+                const title = feedback.querySelector('.sim-feedback-title');
+                const explanation = feedback.querySelector('.sim-feedback-explanation');
+                if (title) title.textContent = 'No se pudo recuperar la clave de esta pregunta.';
+                if (explanation) explanation.textContent = 'La pregunta está disponible, pero el banco no entregó su respuesta correcta.';
+            }
+            return false;
+        }
+
+        const isCorrect = chosenKey === correctKey;
+        card.querySelectorAll('.option-item[data-option-key]').forEach(option => {
+            const key = String(option.dataset.optionKey || '').toLowerCase();
+            option.classList.remove('selected', 'is-correct', 'is-incorrect', 'is-dimmed');
+            if (key === correctKey) option.classList.add('is-correct');
+            else if (key === chosenKey) option.classList.add('is-incorrect');
+            else option.classList.add('is-dimmed');
+            option.setAttribute('aria-pressed', String(key === chosenKey));
+            option.setAttribute('aria-disabled', 'true');
+            option.tabIndex = -1;
+        });
+
+        const feedback = card.querySelector('.sim-feedback');
+        if (!feedback) return false;
+        feedback.hidden = false;
+        feedback.className = 'sim-feedback ' + (isCorrect ? 'sim-feedback-correct' : 'sim-feedback-wrong');
+
+        const title = feedback.querySelector('.sim-feedback-title');
+        const correctAnswer = feedback.querySelector('.sim-feedback-correct-answer');
+        const explanation = feedback.querySelector('.sim-feedback-explanation');
+        const summary = feedback.querySelector('summary');
+
+        if (title) {
+            title.textContent = isCorrect
+                ? '¡Correcto! Has elegido la respuesta adecuada.'
+                : 'Respuesta incorrecta. Revisa la alternativa marcada en verde.';
+        }
+        if (correctAnswer) {
+            correctAnswer.textContent =
+                'Respuesta correcta: ' + correctKey.toUpperCase() + ') ' +
+                (options[correctKey] || 'Texto no disponible');
+        }
+        if (explanation) {
+            explanation.textContent = source.sustento
+                ? source.sustento
+                : 'El banco no incluye un sustento adicional para esta pregunta.';
+        }
+        if (summary) {
+            summary.textContent = source.sustento
+                ? '¿Por qué esta es la respuesta correcta?'
+                : 'Ver respuesta correcta';
+        }
+        const details = feedback.querySelector('details');
+        if (details) details.open = true;
+        return true;
+    }
 
     window.renderSimulationQuestions = function() {
         const container = document.getElementById('sim-questions-container');
