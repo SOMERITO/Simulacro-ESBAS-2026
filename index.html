@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V36 (Navegación exclusiva entre Repasar y Simulación) -->
+    <!-- VERSIÓN: V37 (Retroalimentación inmediata y explicación por pregunta) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2310,6 +2310,92 @@
             .sim-mode-note { font-size: .76rem; }
         }
 
+
+        /* V37 — Retroalimentación inmediata durante la práctica */
+        .sim-question-heading {
+            display:flex; align-items:flex-start; justify-content:space-between;
+            gap:1rem; margin-bottom:1.2rem;
+        }
+        .sim-question-text {
+            color:#202e40; font-size:1.03rem; font-weight:680; line-height:1.6;
+        }
+        .sim-question-number {
+            flex:0 0 auto; padding:.3rem .55rem; color:#8b2730;
+            background:#fff1f2; border:1px solid #f0d9dc; border-radius:7px;
+            font-size:.7rem; font-weight:800;
+        }
+        #sim-questions-container .options-list {
+            display:grid; gap:.58rem; margin-top:.4rem;
+        }
+        #sim-questions-container .option-item {
+            display:flex; align-items:flex-start; gap:.7rem; min-height:48px;
+            padding:.8rem .9rem; color:#34445a; background:#fff;
+            border:1px solid #e0e6ed; border-radius:11px;
+            font-size:.88rem; line-height:1.5;
+            transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+        }
+        #sim-questions-container .option-item:hover:not([aria-disabled="true"]) {
+            color:#25364a; background:#f8fafc; border-color:#c8d2df;
+            box-shadow:0 3px 9px rgba(24,39,56,.05);
+        }
+        .sim-option-letter {
+            flex:0 0 25px; width:25px; height:25px;
+            display:inline-flex; align-items:center; justify-content:center;
+            color:#53627a; background:#eef1f5; border-radius:7px;
+            font-size:.73rem; font-weight:850;
+        }
+        #sim-questions-container .option-item.is-correct {
+            color:#176b43; background:#eaf7ef; border:1px solid #74c495;
+            box-shadow:inset 0 0 0 1px rgba(24,121,78,.08);
+        }
+        #sim-questions-container .option-item.is-correct .sim-option-letter { color:#fff; background:#198754; }
+        #sim-questions-container .option-item.is-incorrect {
+            color:#a3212c; background:#fff0f0; border:1px solid #e5a0a5;
+            box-shadow:inset 0 0 0 1px rgba(180,35,44,.06);
+        }
+        #sim-questions-container .option-item.is-incorrect .sim-option-letter { color:#fff; background:#c73540; }
+        #sim-questions-container .option-item.is-dimmed {
+            color:#8993a2; background:#f8f9fb; border-color:#edf0f3;
+        }
+        #sim-questions-container .option-item[aria-disabled="true"] { cursor:default; pointer-events:none; }
+        .sim-feedback {
+            display:grid; gap:.6rem; margin-top:1.05rem; padding:.9rem 1rem;
+            border:1px solid #dce4eb; border-left:4px solid #64748b;
+            border-radius:11px; background:#f8fafc; animation:fadeInScale .2s ease-out;
+        }
+        .sim-feedback[hidden] { display:none !important; }
+        .sim-feedback-correct { background:#f1faf4; border-color:#c9e8d3; border-left-color:#198754; }
+        .sim-feedback-wrong { background:#fff5f5; border-color:#f0d1d4; border-left-color:#c73540; }
+        .sim-feedback-unavailable { background:#fff9eb; border-color:#f0dfb8; border-left-color:#b78327; }
+        .sim-feedback-title { color:#34445a; font-size:.87rem; line-height:1.45; font-weight:850; }
+        .sim-feedback-correct .sim-feedback-title { color:#176b43; }
+        .sim-feedback-wrong .sim-feedback-title { color:#a3212c; }
+        .sim-feedback-correct-answer { color:#26364b; font-size:.83rem; line-height:1.5; font-weight:750; }
+        .sim-feedback-details {
+            overflow:hidden; border:1px solid rgba(105,122,142,.18);
+            border-radius:9px; background:rgba(255,255,255,.82);
+        }
+        .sim-feedback-details summary {
+            display:flex; align-items:center; justify-content:space-between; gap:.8rem;
+            padding:.65rem .78rem; color:#43536a; font-size:.78rem; font-weight:800;
+            cursor:pointer; list-style:none;
+        }
+        .sim-feedback-details summary::-webkit-details-marker { display:none; }
+        .sim-feedback-details summary::after {
+            content:"⌄"; color:#8b2730; font-size:1.05rem; transition:transform .18s ease;
+        }
+        .sim-feedback-details[open] summary::after { transform:rotate(180deg); }
+        .sim-feedback-explanation {
+            padding:.05rem .78rem .8rem; color:#657287; font-size:.8rem;
+            line-height:1.65; white-space:pre-wrap;
+        }
+        @media (max-width:620px) {
+            .sim-question-heading { flex-direction:column-reverse; gap:.5rem; }
+            .sim-question-number { align-self:flex-start; }
+            #sim-questions-container .option-item { padding:.72rem .72rem; font-size:.83rem; }
+            .sim-feedback { padding:.8rem; }
+        }
+
 </style>
 </head>
 <body>
@@ -3935,29 +4021,122 @@
         }
     };
 
+    function getSimulationQuestionSource(simQuestion) {
+        const candidates = appData.questions.length ? appData.questions : (cachedPublicQuestionBank || []);
+        const idMatch = candidates.find(question => String(question.id) === String(simQuestion.id));
+        if (idMatch) return idMatch;
+
+        const normalize = value => String(value || '')
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+        const questionText = normalize(simQuestion.pregunta);
+        return candidates.find(question =>
+            normalize(question.modulo) === normalize(simQuestion.modulo) &&
+            normalize(question.pregunta) === questionText
+        ) || simQuestion;
+    }
+
+    function renderImmediateFeedback(simQuestion, selectedKey) {
+        const questionIndex = currentSimulationQuestions.findIndex(question => String(question.id) === String(simQuestion.id));
+        if (questionIndex < 0) return false;
+        const card = document.getElementById('sim-q-card-' + questionIndex);
+        if (!card) return false;
+
+        const source = getSimulationQuestionSource(simQuestion);
+        const options = source.opciones || simQuestion.opciones || {};
+        const correctKey = String(source.respuesta || simQuestion.respuesta || '').trim().toLowerCase();
+        const chosenKey = String(selectedKey || '').trim().toLowerCase();
+        if (!['a','b','c','d'].includes(correctKey) || !['a','b','c','d'].includes(chosenKey)) {
+            const feedback = card.querySelector('.sim-feedback');
+            if (feedback) {
+                feedback.hidden = false;
+                feedback.className = 'sim-feedback sim-feedback-unavailable';
+                const title = feedback.querySelector('.sim-feedback-title');
+                const details = feedback.querySelector('.sim-feedback-explanation');
+                if (title) title.textContent = 'No se pudo recuperar la clave de esta pregunta.';
+                if (details) details.textContent = 'La pregunta está disponible, pero el banco no entregó su respuesta correcta.';
+            }
+            return false;
+        }
+
+        const isCorrect = chosenKey === correctKey;
+        card.querySelectorAll('.option-item[data-option-key]').forEach(option => {
+            const key = String(option.dataset.optionKey || '').toLowerCase();
+            option.classList.remove('selected', 'is-correct', 'is-incorrect', 'is-dimmed');
+            if (key === correctKey) option.classList.add('is-correct');
+            else if (key === chosenKey) option.classList.add('is-incorrect');
+            else option.classList.add('is-dimmed');
+            option.setAttribute('aria-pressed', String(key === chosenKey));
+            option.setAttribute('aria-disabled', 'true');
+            option.tabIndex = -1;
+        });
+
+        const feedback = card.querySelector('.sim-feedback');
+        if (!feedback) return false;
+        feedback.hidden = false;
+        feedback.className = 'sim-feedback ' + (isCorrect ? 'sim-feedback-correct' : 'sim-feedback-wrong');
+
+        const title = feedback.querySelector('.sim-feedback-title');
+        const correctAnswer = feedback.querySelector('.sim-feedback-correct-answer');
+        const explanation = feedback.querySelector('.sim-feedback-explanation');
+        const summary = feedback.querySelector('summary');
+        if (title) {
+            title.textContent = isCorrect
+                ? '¡Correcto! Has elegido la respuesta adecuada.'
+                : 'Respuesta incorrecta. Revisa la alternativa marcada en verde.';
+        }
+        if (correctAnswer) {
+            correctAnswer.textContent = 'Respuesta correcta: ' + correctKey.toUpperCase() + ') ' + (options[correctKey] || 'Texto no disponible');
+        }
+        if (explanation) {
+            explanation.textContent = source.sustento
+                ? source.sustento
+                : 'El banco no incluye un sustento adicional para esta pregunta.';
+        }
+        if (summary) summary.textContent = source.sustento
+            ? '¿Por qué esta es la respuesta correcta?'
+            : 'Ver respuesta correcta';
+        const details = feedback.querySelector('details');
+        if (details) details.open = true;
+        return true;
+    }
+
     window.renderSimulationQuestions = function() {
         const container = document.getElementById('sim-questions-container');
         container.innerHTML = '';
         currentSimulationQuestions.forEach((q, index) => {
-            if(!q.opciones) return;
-            const optionIds = Object.entries(q.opciones).map(([key, text]) => `
-                <li class="option-item" role="button" tabindex="0" aria-pressed="false"
-                    aria-label="Opción ${escapeHTML(key.toUpperCase())}: ${escapeHTML(text)}"
-                    data-question-id="${escapeHTML(q.id)}" data-option-key="${escapeHTML(key)}"
-                    onclick="window.selectAnswer(this.dataset.questionId, this.dataset.optionKey)"
-                    id="opt-${escapeHTML(q.id)}-${escapeHTML(key)}">
-                    <strong style="margin-right:10px; color:var(--text-muted);">${escapeHTML(key.toUpperCase())})</strong> ${escapeHTML(text)}
-                </li>`).join('');
-            container.innerHTML += `
-                <div class="card sim-card" id="sim-q-card-${index}">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; gap:1rem;">
-                        <span style="font-size:1.05rem; font-weight:500; color:var(--text-dark); line-height:1.5;">${escapeHTML(q.pregunta || '')}</span>
-                        <span style="font-weight:600; color:var(--text-muted); background:#f5f5f7; padding:.3rem .7rem; border-radius:8px; font-size:.8rem; flex-shrink:0;">Orig #${escapeHTML(q.pregunta_num || '?')}</span>
-                    </div>
-                    <ul class="options-list" aria-label="Alternativas de respuesta">${optionIds}</ul>
-                </div>`;
+            if (!q.opciones) return;
+            const optionIds = ['a','b','c','d'].map(key => {
+                const optionText = q.opciones[key] || '';
+                return '<li class="option-item" role="button" tabindex="0" aria-pressed="false" ' +
+                    'aria-label="Opción ' + escapeHTML(key.toUpperCase()) + ': ' + escapeHTML(optionText) + '" ' +
+                    'data-question-id="' + escapeHTML(q.id) + '" data-option-key="' + key + '" ' +
+                    'onclick="window.selectAnswer(this.dataset.questionId, this.dataset.optionKey)" ' +
+                    'id="opt-' + escapeHTML(q.id) + '-' + key + '">' +
+                    '<strong class="sim-option-letter">' + key.toUpperCase() + ')</strong>' +
+                    '<span>' + escapeHTML(optionText) + '</span></li>';
+            }).join('');
+            container.innerHTML += '<div class="card sim-card" id="sim-q-card-' + index + '">' +
+                '<div class="sim-question-heading">' +
+                    '<span class="sim-question-text">' + escapeHTML(q.pregunta || '') + '</span>' +
+                    '<span class="sim-question-number">Pregunta ' + (index + 1) + '</span>' +
+                '</div>' +
+                '<ul class="options-list" aria-label="Alternativas de respuesta">' + optionIds + '</ul>' +
+                '<section class="sim-feedback" hidden aria-live="polite">' +
+                    '<div class="sim-feedback-title"></div>' +
+                    '<div class="sim-feedback-correct-answer"></div>' +
+                    '<details class="sim-feedback-details">' +
+                        '<summary>¿Por qué esta es la respuesta correcta?</summary>' +
+                        '<div class="sim-feedback-explanation"></div>' +
+                    '</details>' +
+                '</section>' +
+            '</div>';
         });
     };
+
     window.updateSimulationProgress = function() {
         const total = currentSimulationQuestions.length;
         const validQuestionIds = new Set(currentSimulationQuestions.map(question => String(question.id)));
@@ -3977,9 +4156,14 @@
 
     window.showSimQuestion = function(index) {
         document.querySelectorAll('.sim-card').forEach(el => el.classList.remove('active'));
-        const activeCard = document.getElementById(`sim-q-card-${index}`);
-        if(activeCard) activeCard.classList.add('active');
-        document.getElementById('sim-progress').innerText = `Pregunta ${index + 1} de ${currentSimulationQuestions.length}`;
+        const activeCard = document.getElementById('sim-q-card-' + index);
+        if (activeCard) activeCard.classList.add('active');
+        const currentQuestion = currentSimulationQuestions[index];
+        const progress = document.getElementById('sim-progress');
+        if (progress) progress.innerText = 'Pregunta ' + (index + 1) + ' de ' + currentSimulationQuestions.length;
+        if (currentQuestion && userAnswers[currentQuestion.id]) {
+            renderImmediateFeedback(currentQuestion, userAnswers[currentQuestion.id]);
+        }
         window.updateSimulationProgress();
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
         if (index === currentSimulationQuestions.length - 1) {
@@ -3998,16 +4182,13 @@
         }
     };
     window.selectAnswer = function(questionId, selectedKey) {
-        const questionExists = currentSimulationQuestions.some(question => String(question.id) === String(questionId));
-        if (!questionExists || !['a', 'b', 'c', 'd'].includes(String(selectedKey).toLowerCase())) return;
+        const question = currentSimulationQuestions.find(item => String(item.id) === String(questionId));
+        const answerKey = String(selectedKey || '').toLowerCase();
+        if (!question || !['a','b','c','d'].includes(answerKey)) return;
+        if (Object.prototype.hasOwnProperty.call(userAnswers, question.id)) return;
 
-        userAnswers[questionId] = String(selectedKey).toLowerCase();
-        document.querySelectorAll('.option-item[data-question-id]').forEach(option => {
-            if (option.dataset.questionId !== String(questionId)) return;
-            const isSelected = option.dataset.optionKey === String(selectedKey).toLowerCase();
-            option.classList.toggle('selected', isSelected);
-            option.setAttribute('aria-pressed', String(isSelected));
-        });
+        userAnswers[question.id] = answerKey;
+        renderImmediateFeedback(question, answerKey);
         window.updateSimulationProgress();
     };
     window.cancelSimulation = function() {
