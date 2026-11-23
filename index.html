@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V53 (Sin sección de sustento en preguntas reales) -->
+    <!-- VERSIÓN: V54 (Lección identificada sobre el contador del examen) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2955,6 +2955,70 @@
             #sim-setup .custom-select-option { transition:none !important; }
         }
 
+
+        /* V54 — Identificación de lección durante el examen */
+        .sim-session-heading {
+            display:flex;
+            align-items:center;
+            gap:.85rem;
+            margin:0 0 .7rem;
+            padding:.82rem 1rem;
+            border:1px solid #e4e9f0;
+            border-left:4px solid #b52a34;
+            border-radius:13px;
+            background:linear-gradient(110deg,#fff 0%,#fbfcfe 100%);
+            box-shadow:0 3px 10px rgba(25,39,58,.035);
+            animation:simSessionHeadingIn .35s ease-out both;
+        }
+        @keyframes simSessionHeadingIn {
+            from { opacity:0; transform:translateY(-5px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        .sim-session-heading-icon {
+            display:grid;
+            place-items:center;
+            flex:0 0 36px;
+            width:36px;
+            height:36px;
+            border-radius:10px;
+            color:#a52a35;
+            background:#fff0f1;
+        }
+        .sim-session-heading-icon svg {
+            width:19px;
+            height:19px;
+            fill:none;
+            stroke:currentColor;
+            stroke-width:1.8;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+        .sim-session-heading-copy { min-width:0; display:flex; flex-direction:column; gap:.18rem; }
+        .sim-session-eyebrow {
+            color:#9a5960;
+            font-size:.59rem;
+            font-weight:850;
+            letter-spacing:.12em;
+            line-height:1.2;
+        }
+        .sim-session-title {
+            margin:0;
+            color:#253449;
+            font-size:.95rem;
+            font-weight:820;
+            line-height:1.35;
+            letter-spacing:-.012em;
+            overflow-wrap:anywhere;
+        }
+        @media(max-width:620px) {
+            .sim-session-heading { gap:.65rem; padding:.72rem .8rem; }
+            .sim-session-heading-icon { flex-basis:32px; width:32px; height:32px; }
+            .sim-session-title { font-size:.88rem; }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            .sim-session-heading { animation:none !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -3108,7 +3172,15 @@
             <div class="sim-time-guide">Elige un módulo y una lección concreta para un examen de 15 minutos, o selecciona «Examen final del módulo» para disponer de 30 minutos.</div>
         </div>
         <div id="sim-active" style="display: none;">
-            <!-- V51: aviso de modo retirado para mantener limpia la pantalla de examen -->
+            <section class="sim-session-heading" aria-live="polite" aria-atomic="true" aria-label="Lección que se está evaluando">
+                <span class="sim-session-heading-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M8 7h8M8 11h8"/></svg>
+                </span>
+                <span class="sim-session-heading-copy">
+                    <span class="sim-session-eyebrow">LECCIÓN EN EVALUACIÓN</span>
+                    <h2 class="sim-session-title" id="sim-session-lesson-title">Preparando evaluación…</h2>
+                </span>
+            </section>
             <div class="sim-controls">
                 <div class="sim-progress-panel">
                     <div class="sim-progress-top">
@@ -4775,6 +4847,54 @@
         return 'L' + String(lessonNumber).padStart(2, '0') + ' - ' + lessonName;
     }
 
+    function getSimulationSessionLessonLabel() {
+        const selectedModule = String(currentSimulationContext?.module || 'all');
+        const selectedLesson = String(currentSimulationContext?.lesson ?? 'all');
+
+        if (selectedLesson === 'final') {
+            const moduleName = selectedModule !== 'all'
+                ? selectedModule
+                : (currentSimulationQuestions.find(question => question.modulo)?.modulo || 'Módulo');
+            return 'Examen final · ' + moduleName;
+        }
+
+        if (/^\d+$/.test(selectedLesson)) {
+            const lessonNumber = Number(selectedLesson);
+            const matchingQuestion = currentSimulationQuestions.find(question =>
+                Number(question.leccion_num) === lessonNumber
+            );
+            const activeBank = getActiveSimulationQuestionBank();
+            const sourceQuestion = activeBank.find(question =>
+                Number(question.leccion_num) === lessonNumber &&
+                (selectedModule === 'all' || question.modulo === selectedModule)
+            ) || matchingQuestion || {};
+            const fallbackQuestion = activeBank.find(question =>
+                Number(question.leccion_num) === lessonNumber
+            ) || {};
+            const metadata = {
+                ...fallbackQuestion,
+                ...sourceQuestion,
+                modulo: sourceQuestion.modulo || matchingQuestion?.modulo || selectedModule,
+                leccion_num: lessonNumber,
+                leccion_nombre: sourceQuestion.leccion_nombre || fallbackQuestion.leccion_nombre ||
+                    matchingQuestion?.leccion_nombre || ('Lección ' + String(lessonNumber).padStart(2, '0')),
+                tipo: 'leccion'
+            };
+            return formatSimulationLessonLabel(metadata);
+        }
+
+        if (selectedModule !== 'all') {
+            return 'Todas las lecciones · ' + selectedModule;
+        }
+        return 'Práctica general · Todos los módulos';
+    }
+
+    window.updateSimulationSessionHeading = function() {
+        const heading = document.getElementById('sim-session-lesson-title');
+        if (!heading) return;
+        heading.textContent = getSimulationSessionLessonLabel();
+    };
+
     function buildLocalSimulationGrade() {
         const sourceById = new Map(getActiveSimulationQuestionBank().map(question => [String(question.id), question]));
         const total = currentSimulationQuestions.length;
@@ -5267,6 +5387,7 @@
                             ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
                             : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText));
             }
+            window.updateSimulationSessionHeading();
             window.renderSimulationQuestions();
             window.showSimQuestion(0);
             if (currentSimulationMode === 'local' && !currentUser.isPublicVisitor && currentSimulationBankType !== 'real') {
@@ -5659,6 +5780,7 @@
                     : 'Repetición del mismo examen: se conservaron las mismas preguntas y el mismo orden. Este nuevo intento se corregirá en este dispositivo y no se guardará en Firebase.' + timeText);
         }
 
+        window.updateSimulationSessionHeading();
         window.updateSimulationProgress();
         window.renderSimulationQuestions();
         window.showSimQuestion(0);
