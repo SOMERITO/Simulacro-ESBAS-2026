@@ -3969,9 +3969,9 @@
             const rawTitle = lessonQuestions.find(q => q.leccion_nombre)?.leccion_nombre || '';
             // Limpiar texto editorial que quedó concatenado al nombre de la lección 29 en el JSON.
             const lessonTitle = String(rawTitle)
-                .replace(/\\s*10 Preguntas Inéditas[\\s\\S]*$/i, '')
-                .replace(/\\s*\\|\\s*Referencia:[\\s\\S]*$/i, '')
-                .replace(/\\s+Pregunta\\s+1\\s*\\(#.*$/i, '')
+                .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
+                .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
+                .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
                 .trim() || ('Lección ' + String(i).padStart(2, '0'));
             const optionLabel = 'L' + String(i).padStart(2, '0') + ' - ' + lessonTitle;
             lessonSelect.innerHTML += '<option value="' + i + '">' +
