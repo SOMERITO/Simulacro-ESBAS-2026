@@ -4022,9 +4022,16 @@
     };
 
     function getSimulationQuestionSource(simQuestion) {
-        const candidates = appData.questions.length ? appData.questions : (cachedPublicQuestionBank || []);
-        const idMatch = candidates.find(question => String(question.id) === String(simQuestion.id));
-        if (idMatch) return idMatch;
+        const bundled = Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
+        const current = Array.isArray(appData.questions) ? appData.questions : [];
+        const hasAnswerKey = question => ['a','b','c','d'].includes(String(question?.respuesta || '').toLowerCase());
+
+        // Prefer the bundled source when Firestore contains an older/incomplete copy without the answer key.
+        const bundledById = bundled.find(question => String(question.id) === String(simQuestion.id) && hasAnswerKey(question));
+        if (bundledById) return bundledById;
+
+        const currentById = current.find(question => String(question.id) === String(simQuestion.id) && hasAnswerKey(question));
+        if (currentById) return currentById;
 
         const normalize = value => String(value || '')
             .normalize('NFKD')
@@ -4033,7 +4040,9 @@
             .trim()
             .toLowerCase();
         const questionText = normalize(simQuestion.pregunta);
+        const candidates = [...bundled, ...current];
         return candidates.find(question =>
+            hasAnswerKey(question) &&
             normalize(question.modulo) === normalize(simQuestion.modulo) &&
             normalize(question.pregunta) === questionText
         ) || simQuestion;
