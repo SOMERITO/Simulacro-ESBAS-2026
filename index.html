@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V47 (Confirmaciones profesionales del simulador) -->
+    <!-- VERSIÓN: V48 (Lección identificada en el encabezado de las imágenes) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -4739,8 +4739,22 @@
                 context.textBaseline = 'top';
 
                 context.fillStyle = '#ad202c';
-                context.font = '800 17px Arial, sans-serif';
-                context.fillText('SIMULACRO ESBAS', padding, 48);
+                const lessonHeaderLabel = String(resultData.exportLessonLabel || 'Lección no identificada');
+                const maxHeaderWidth = width - padding * 2 - 160;
+                let headerFontSize = 17;
+                context.font = '800 ' + headerFontSize + 'px Arial, sans-serif';
+                while (headerFontSize > 12 && context.measureText(lessonHeaderLabel).width > maxHeaderWidth) {
+                    headerFontSize--;
+                    context.font = '800 ' + headerFontSize + 'px Arial, sans-serif';
+                }
+                let safeHeaderLabel = lessonHeaderLabel;
+                if (context.measureText(safeHeaderLabel).width > maxHeaderWidth) {
+                    while (safeHeaderLabel.length > 1 && context.measureText(safeHeaderLabel + '…').width > maxHeaderWidth) {
+                        safeHeaderLabel = safeHeaderLabel.slice(0, -1);
+                    }
+                    safeHeaderLabel += '…';
+                }
+                context.fillText(safeHeaderLabel, padding, 48, maxHeaderWidth);
                 const title = filterType === 'correct' ? 'Respuestas correctas' :
                     (filterType === 'incorrect' ? 'Respuestas incorrectas' : 'Todas tus respuestas');
                 context.fillStyle = '#1d2b3d';
@@ -4806,15 +4820,9 @@
                 context.fillStyle = '#8a95a5';
                 context.font = '600 13px Arial, sans-serif';
                 context.fillText('Preparación constante · Servicio seguro', padding, footerY);
-                context.font = '600 12px Arial, sans-serif';
+                context.font = '500 12px Arial, sans-serif';
                 context.textAlign = 'right';
-                const lessonFooterLabel = String(resultData.exportLessonLabel || 'Lección no identificada');
-                const maxFooterWidth = width - padding * 2 - 300;
-                const safeFooterLabel = context.measureText(lessonFooterLabel).width <= maxFooterWidth
-                    ? lessonFooterLabel
-                    : wrapReviewCanvasText(context, lessonFooterLabel, maxFooterWidth).join(' ');
-                context.fillStyle = '#526176';
-                context.fillText(safeFooterLabel, width - padding, footerY, maxFooterWidth);
+                context.fillText('Simulacro ESBAS', width - padding, footerY);
                 context.textAlign = 'left';
 
                 canvas.toBlob(blob => {
