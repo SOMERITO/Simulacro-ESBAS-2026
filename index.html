@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V50 (Identificar lección en el título de resultados) -->
+    <!-- VERSIÓN: V51 (Desplegables refinados y aviso amarillo retirado) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2822,6 +2822,139 @@
             .sim-results-heading { padding-inline: .35rem; }
         }
 
+
+        /* V51 — Desplegables refinados del simulador */
+        #sim-setup .custom-select { z-index: 12; }
+        #sim-setup .custom-select.open { z-index: 90; }
+        #sim-setup .custom-select-trigger {
+            min-height: 57px;
+            padding: .82rem .92rem  .82rem 1rem;
+            border: 1px solid #dce3ec;
+            border-radius: 14px;
+            background: linear-gradient(180deg,#fff 0%,#fbfcfe 100%);
+            color: #283950;
+            font-size: .89rem;
+            font-weight: 680;
+            line-height: 1.4;
+            box-shadow: 0 3px 10px rgba(25,39,58,.045), inset 0 1px 0 rgba(255,255,255,.9);
+            transition: border-color .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease;
+        }
+        #sim-setup .custom-select-trigger:hover:not(:disabled) {
+            border-color: #c1ccd9;
+            background: #fff;
+            box-shadow: 0 5px 14px rgba(25,39,58,.075);
+        }
+        #sim-setup .custom-select.open .custom-select-trigger,
+        #sim-setup .custom-select-trigger:focus-visible {
+            border-color: #c52d38;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(197,45,56,.10), 0 5px 16px rgba(25,39,58,.055);
+        }
+        #sim-setup .custom-select-trigger:disabled {
+            color: #9aa5b4;
+            border-color: #e5e9ef;
+            background: #f4f6f8;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: .88;
+        }
+        #sim-setup .custom-select-value {
+            display: block;
+            min-width: 0;
+            padding-right: .35rem;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #sim-setup .custom-select-chevron {
+            display: inline-grid;
+            place-items: center;
+            flex: 0 0 31px;
+            width: 31px;
+            height: 31px;
+            border: 1px solid #e4e9f0;
+            border-radius: 10px;
+            color: #607087;
+            background: #f3f6f9;
+            transform: none;
+            transition: color .2s ease, background .2s ease, border-color .2s ease, transform .22s cubic-bezier(.2,.8,.2,1);
+        }
+        #sim-setup .custom-select-chevron svg {
+            display: block;
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        #sim-setup .custom-select.open .custom-select-chevron {
+            color: #b52a31;
+            border-color: #f1d5d8;
+            background: #fff1f2;
+            transform: rotate(180deg);
+        }
+        #sim-setup .custom-select-trigger:hover:not(:disabled) .custom-select-chevron {
+            color: #a52a35;
+            border-color: #efd5d8;
+            background: #fff5f5;
+        }
+        #sim-setup .custom-select-menu {
+            top: calc(100% + 9px);
+            gap: 4px;
+            max-height: 300px;
+            padding: 7px;
+            border: 1px solid #e0e6ee;
+            border-radius: 15px;
+            background: rgba(255,255,255,.98);
+            box-shadow: 0 18px 42px rgba(20,35,56,.16), 0 4px 12px rgba(20,35,56,.055);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transform-origin: top center;
+        }
+        #sim-setup .custom-select-option {
+            min-height: 43px;
+            padding: .7rem .8rem;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: #3a4b62;
+            font-size: .85rem;
+            font-weight: 590;
+            line-height: 1.35;
+            transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+        }
+        #sim-setup .custom-select-option:hover,
+        #sim-setup .custom-select-option:focus-visible {
+            color: #263950;
+            background: #f5f7fa;
+            border-color: #e9edf2;
+            outline: none;
+        }
+        #sim-setup .custom-select-option[aria-selected="true"] {
+            color: #a52832;
+            background: linear-gradient(90deg,#fff3f4,#fff9f9);
+            border-color: #f1d9dc;
+            font-weight: 760;
+        }
+        #sim-setup .custom-select-option[aria-selected="true"]::after {
+            color: #fff;
+            background: #b52a34;
+            box-shadow: 0 2px 5px rgba(181,42,52,.18);
+        }
+        @media(max-width:540px) {
+            #sim-setup .custom-select-trigger { min-height: 52px; padding: .72rem .78rem .72rem .85rem; }
+            #sim-setup .custom-select-chevron { flex-basis:29px; width:29px; height:29px; }
+            #sim-setup .custom-select-menu { max-height: 250px; border-radius: 13px; }
+            #sim-setup .custom-select-option { min-height: 42px; }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            #sim-setup .custom-select-trigger,
+            #sim-setup .custom-select-chevron,
+            #sim-setup .custom-select-option { transition:none !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -2945,7 +3078,7 @@
                     <div class="custom-select" data-custom-select="sim-module">
                         <button type="button" class="custom-select-trigger" id="sim-module-trigger" role="combobox" aria-haspopup="listbox" aria-controls="sim-module-options" aria-autocomplete="none" aria-expanded="false" aria-labelledby="sim-module-label">
                             <span class="custom-select-value">Todos los Módulos (400 preguntas disponibles)</span>
-                            <span class="custom-select-chevron" aria-hidden="true">⌄</span>
+                            <span class="custom-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
                         </button>
                         <div class="custom-select-menu" id="sim-module-options" role="listbox" aria-labelledby="sim-module-label" hidden></div>
                     </div>
@@ -2961,7 +3094,7 @@
                     <div class="custom-select" data-custom-select="sim-lesson">
                         <button type="button" class="custom-select-trigger" id="sim-lesson-trigger" role="combobox" aria-haspopup="listbox" aria-controls="sim-lesson-options" aria-autocomplete="none" aria-expanded="false" aria-labelledby="sim-lesson-label" disabled>
                             <span class="custom-select-value">Todas las lecciones</span>
-                            <span class="custom-select-chevron" aria-hidden="true">⌄</span>
+                            <span class="custom-select-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
                         </button>
                         <div class="custom-select-menu" id="sim-lesson-options" role="listbox" aria-labelledby="sim-lesson-label" hidden></div>
                     </div>
@@ -2975,7 +3108,7 @@
             <div class="sim-time-guide">Elige un módulo y una lección concreta para un examen de 15 minutos, o selecciona «Examen final del módulo» para disponer de 30 minutos.</div>
         </div>
         <div id="sim-active" style="display: none;">
-            <div id="sim-mode-note" class="sim-mode-note" role="status" aria-live="polite" style="display:none;"></div>
+            <!-- V51: aviso de modo retirado para mantener limpia la pantalla de examen -->
             <div class="sim-controls">
                 <div class="sim-progress-panel">
                     <div class="sim-progress-top">
