@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V49 (Repetir el mismo examen desde resultados) -->
+    <!-- VERSIÓN: V50 (Identificar lección en el título de resultados) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2809,6 +2809,19 @@
             .sim-results-actions .btn { width:100%; }
         }
 
+
+        .sim-results-heading {
+            max-width: 100%;
+            margin-inline: auto;
+            line-height: 1.3;
+            text-wrap: balance;
+            overflow-wrap: anywhere;
+            font-size: clamp(1.05rem, 2.1vw, 1.3rem);
+        }
+        @media(max-width:520px) {
+            .sim-results-heading { padding-inline: .35rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -2990,7 +3003,7 @@
         </div>
         <div id="sim-results" style="display: none;">
             <div class="card" style="text-align: center;">
-                <h2 class="card-header" style="justify-content: center; border:none;">Resultados del Examen</h2>
+                <h2 class="card-header sim-results-heading" id="sim-results-title" style="justify-content: center; border:none;">Resultados del examen</h2>
                 <div class="metrics-grid">
                     <div class="metric-card"><div class="metric-value m-precision" id="res-precision">0%</div><div class="metric-label">Precisión</div></div>
                     <div class="metric-card"><div class="metric-value m-correct" id="res-correct">0</div><div class="metric-label">Aciertos</div></div>
@@ -4986,6 +4999,12 @@
         data.exportLessonLabel = lessonLabels.length === 1
             ? lessonLabels[0]
             : (lessonLabels.length > 1 ? 'Varias lecciones · ' + (currentSimulationContext.module === 'all' ? 'ESBAS 2026' : currentSimulationContext.module) : 'Lección no identificada');
+
+        const resultsHeading = document.getElementById('sim-results-title');
+        if (resultsHeading) {
+            resultsHeading.textContent = 'Resultados del examen: ' + data.exportLessonLabel;
+            resultsHeading.setAttribute('aria-label', 'Resultados del examen: ' + data.exportLessonLabel);
+        }
 
         window.__lastSimulationResultData = data;
         document.getElementById('res-precision').innerText = (data.precision || 0) + '%';
