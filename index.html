@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V40 (Simulación como pantalla principal y primera opción) -->
+    <!-- VERSIÓN: V41 (Cronómetro por lección y examen final de módulo) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2396,6 +2396,68 @@
             .sim-feedback { padding:.8rem; }
         }
 
+
+        /* V41 — Tiempo límite por evaluación y cronómetro visible */
+        .sim-time-guide {
+            margin-top:.65rem;
+            padding:.65rem .85rem;
+            color:#6c788b;
+            background:#f8f9fb;
+            border:1px solid #e6eaf0;
+            border-radius:9px;
+            font-size:.76rem;
+            line-height:1.5;
+        }
+        .sim-timer-panel {
+            flex:0 0 auto;
+            min-width:132px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:.55rem;
+            padding:.62rem .85rem;
+            color:#25364c;
+            background:#f1f4f8;
+            border:1px solid #dfe5ec;
+            border-radius:11px;
+            font-variant-numeric:tabular-nums;
+        }
+        .sim-timer-panel[hidden] { display:none !important; }
+        .sim-timer-panel span {
+            color:#69778b;
+            font-size:.7rem;
+            font-weight:750;
+        }
+        .sim-timer-panel strong {
+            color:#20334c;
+            font-size:1.16rem;
+            font-weight:900;
+            letter-spacing:.04em;
+            font-variant-numeric:tabular-nums;
+        }
+        .sim-timer-panel.is-warning {
+            color:#855c17;
+            background:#fff8e9;
+            border-color:#efddaF;
+        }
+        .sim-timer-panel.is-warning strong { color:#956317; }
+        .sim-timer-panel.is-urgent {
+            color:#a51f2b;
+            background:#fff0f1;
+            border-color:#eab9bf;
+            animation:simTimerPulse 1s ease-in-out infinite;
+        }
+        .sim-timer-panel.is-urgent strong { color:#b4232c; }
+        @keyframes simTimerPulse {
+            0%,100% { box-shadow:0 0 0 0 rgba(180,35,44,0); }
+            50% { box-shadow:0 0 0 4px rgba(180,35,44,.09); }
+        }
+        @media(max-width:620px) {
+            .sim-timer-panel { width:100%; justify-content:space-between; }
+            .sim-controls { align-items:stretch; }
+            .sim-progress-panel { min-width:0; }
+        }
+
 </style>
 </head>
 <body>
@@ -2515,7 +2577,8 @@
                 </div>
             </div>
             <button class="btn" id="btn-start-sim" onclick="startSimulation()"><span>Comenzar simulacro</span><span class="start-arrow" aria-hidden="true">→</span></button>
-            <div class="sim-secure-note"><span class="secure-note-icon" aria-hidden="true">🛡️</span><span><strong>Evaluación protegida.</strong> Las respuestas correctas se mostrarán al finalizar y entregar tu examen.</span></div>
+            <div class="sim-secure-note"><span class="secure-note-icon" aria-hidden="true">⏱️</span><span><strong>Tiempo por evaluación.</strong> 15 minutos por lección y 30 minutos para el examen final de cada módulo.</span></div>
+            <div class="sim-time-guide">Elige un módulo y una lección concreta para un examen de 15 minutos, o selecciona «Examen final del módulo» para disponer de 30 minutos.</div>
         </div>
         <div id="sim-active" style="display: none;">
             <div id="sim-mode-note" class="sim-mode-note" role="status" aria-live="polite" style="display:none;"></div>
@@ -2528,6 +2591,10 @@
                     <div id="sim-progress-track" class="sim-progress-track" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% respondido">
                         <span id="sim-progress-fill"></span>
                     </div>
+                </div>
+                <div id="sim-timer-panel" class="sim-timer-panel" hidden role="timer" aria-live="off">
+                    <span>Tiempo restante</span>
+                    <strong id="sim-time-remaining">15:00</strong>
                 </div>
                 <button class="btn btn-outline sim-cancel-button" onclick="cancelSimulation()">Cancelar examen</button>
             </div>
@@ -2997,6 +3064,10 @@
     let currentSimulationQuestions = [];
     let currentSimulationSessionId = null;
     let currentSimulationMode = 'firebase'; // firebase | local
+    let simulationTimerInterval = null;
+    let simulationDeadline = null;
+    let simulationTimeExpired = false;
+    let simulationFinishing = false;
     let userAnswers = {};
     let currentSimIndex = 0;
     let activeModuleFilter = 'all';
@@ -3884,13 +3955,31 @@
         }
         lessonSelect.disabled = false;
         const range = moduleLessonsMap[moduleName];
-        if(!range) return;
+        if (!range) {
+            window.refreshCustomSelect('sim-lesson');
+            return;
+        }
         for (let i = range.start; i <= range.end; i++) {
-            const count = appData.questions.filter(q => q.modulo === moduleName && q.tipo !== 'examen_final_modulo' && Number(q.leccion_num) === i).length;
-            lessonSelect.innerHTML += '<option value="' + i + '">Lección ' + String(i).padStart(2, '0') + (count ? ' (' + count + ' preguntas)' : '') + '</option>';
+            const count = appData.questions.filter(q =>
+                q.modulo === moduleName &&
+                q.tipo !== 'examen_final_modulo' &&
+                Number(q.leccion_num) === i
+            ).length;
+            lessonSelect.innerHTML += '<option value="' + i + '">Lección ' +
+                String(i).padStart(2, '0') +
+                (count ? ' (' + count + ' preguntas · 15 min)' : ' · 15 min') +
+                '</option>';
+        }
+        const finalCount = appData.questions.filter(q =>
+            q.modulo === moduleName && q.tipo === 'examen_final_modulo'
+        ).length;
+        if (finalCount) {
+            lessonSelect.innerHTML += '<option value="final">Examen final del ' +
+                moduleName + ' (' + finalCount + ' preguntas · 30 min)</option>';
         }
         window.refreshCustomSelect('sim-lesson');
     };
+
     function shuffleQuestionList(items) {
         const shuffled = items.slice();
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -3904,7 +3993,9 @@
         const selected = appData.questions.filter(question => {
             const sameModule = moduleFilter === 'all' || question.modulo === moduleFilter;
             const sameLesson = lessonFilter === 'all'
-                || (question.tipo !== 'examen_final_modulo' && Number(question.leccion_num) === Number(lessonFilter));
+                || (lessonFilter === 'final'
+                    ? question.tipo === 'examen_final_modulo'
+                    : (question.tipo !== 'examen_final_modulo' && Number(question.leccion_num) === Number(lessonFilter)));
             return sameModule && sameLesson;
         });
         return shuffleQuestionList(selected);
@@ -4003,6 +4094,14 @@
                     const result = await callStartSimulation({ module: modFilter, lesson: lessonFilter });
                     const remoteQuestions = Array.isArray(result?.data?.questions) ? result.data.questions : [];
                     if (!remoteQuestions.length) throw new Error('Firebase no devolvió preguntas para esta selección.');
+                    if (lessonFilter === 'final') {
+                        const isCompleteFinal = remoteQuestions.length === 20 && remoteQuestions.every(question =>
+                            question.tipo === 'examen_final_modulo' || Number(question.leccion_num) === 0
+                        );
+                        if (!isCompleteFinal) {
+                            throw new Error('Firebase no devolvió las 20 preguntas del examen final; se utilizará el banco integrado.');
+                        }
+                    }
                     currentSimulationQuestions = remoteQuestions;
                     currentSimulationSessionId = result.data.sessionId || null;
                     currentSimulationMode = 'firebase';
@@ -4023,17 +4122,23 @@
 
             userAnswers = {};
             currentSimIndex = 0;
+            simulationFinishing = false;
+            const timeLimitMinutes = getSimulationTimeLimitMinutes(lessonFilter);
+            startSimulationTimer(timeLimitMinutes);
             window.updateSimulationProgress();
             document.getElementById('sim-setup').style.display = 'none';
             document.getElementById('sim-active').style.display = 'block';
             document.getElementById('sim-results').style.display = 'none';
             if (modeNote) {
                 modeNote.style.display = currentSimulationMode === 'local' ? 'block' : 'none';
+                const timeText = timeLimitMinutes
+                    ? ' Tiempo límite: ' + timeLimitMinutes + ' minutos.'
+                    : ' Esta práctica combinada no tiene un límite de tiempo asignado.';
                 modeNote.textContent = currentUser.isPublicVisitor
-                    ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.'
+                    ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText
                     : (currentSimulationMode === 'local'
-                        ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.'
-                        : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.');
+                        ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
+                        : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText);
             }
             window.renderSimulationQuestions();
             window.showSimQuestion(0);
@@ -4185,6 +4290,63 @@
         });
     };
 
+    function getSimulationTimeLimitMinutes(lessonFilter) {
+        if (lessonFilter === 'final') return 30;
+        if (/^\d+$/.test(String(lessonFilter))) return 15;
+        return null;
+    }
+
+    function formatSimulationTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    function stopSimulationTimer() {
+        if (simulationTimerInterval) {
+            clearInterval(simulationTimerInterval);
+            simulationTimerInterval = null;
+        }
+        simulationDeadline = null;
+        const panel = document.getElementById('sim-timer-panel');
+        if (panel) {
+            panel.hidden = true;
+            panel.classList.remove('is-warning', 'is-urgent');
+        }
+    }
+
+    function updateSimulationTimerDisplay() {
+        if (!simulationDeadline) return;
+        const remaining = Math.max(0, Math.ceil((simulationDeadline - Date.now()) / 1000));
+        const display = document.getElementById('sim-time-remaining');
+        const panel = document.getElementById('sim-timer-panel');
+        if (display) display.textContent = formatSimulationTime(remaining);
+        if (panel) {
+            panel.classList.toggle('is-warning', remaining <= 300 && remaining > 60);
+            panel.classList.toggle('is-urgent', remaining <= 60);
+        }
+        if (remaining <= 0 && !simulationTimeExpired) {
+            simulationTimeExpired = true;
+            if (simulationTimerInterval) {
+                clearInterval(simulationTimerInterval);
+                simulationTimerInterval = null;
+            }
+            window.showToast('Se agotó el tiempo. El examen se entregará automáticamente.', 'error');
+            window.finishSimulation({ timeExpired: true });
+        }
+    }
+
+    function startSimulationTimer(durationMinutes) {
+        stopSimulationTimer();
+        simulationTimeExpired = false;
+        if (!durationMinutes || durationMinutes <= 0) return;
+        const panel = document.getElementById('sim-timer-panel');
+        if (panel) panel.hidden = false;
+        simulationDeadline = Date.now() + durationMinutes * 60 * 1000;
+        updateSimulationTimerDisplay();
+        simulationTimerInterval = setInterval(updateSimulationTimerDisplay, 250);
+    }
+
     window.updateSimulationProgress = function() {
         const total = currentSimulationQuestions.length;
         const validQuestionIds = new Set(currentSimulationQuestions.map(question => String(question.id)));
@@ -4241,6 +4403,9 @@
     };
     window.cancelSimulation = function() {
         if(confirm("¿Seguro que deseas cancelar el examen?")) {
+            stopSimulationTimer();
+            simulationTimeExpired = false;
+            simulationFinishing = false;
             document.getElementById('sim-active').style.display = 'none';
             document.getElementById('sim-setup').style.display = 'block';
             currentSimulationSessionId = null;
@@ -4250,7 +4415,9 @@
             updateSimLessonDropdown(document.getElementById('sim-module').value);
         }
     };
-    window.finishSimulation = async function() {
+    window.finishSimulation = async function(options = {}) {
+        if (simulationFinishing) return;
+        const timeExpired = options === true || options?.timeExpired === true || simulationTimeExpired;
         const total = currentSimulationQuestions.length;
         if (!total) {
             window.showToast('No hay preguntas activas para entregar.', 'error');
@@ -4258,8 +4425,16 @@
         }
         const validIds = new Set(currentSimulationQuestions.map(question => String(question.id)));
         const answered = Object.keys(userAnswers).filter(id => validIds.has(String(id))).length;
-        if (answered < total && !confirm('Faltan ' + (total - answered) + ' preguntas. ¿Deseas entregar el examen?')) return;
+        if (answered < total && !timeExpired && !confirm('Faltan ' + (total - answered) + ' preguntas. ¿Deseas entregar el examen?')) return;
 
+        simulationFinishing = true;
+        if (simulationTimerInterval) {
+            clearInterval(simulationTimerInterval);
+            simulationTimerInterval = null;
+        }
+        simulationDeadline = null;
+        const timerPanel = document.getElementById('sim-timer-panel');
+        if (timerPanel) timerPanel.hidden = true;
         const btn = document.getElementById('btn-sim-finish');
         setButtonLoading(btn, true);
         setAppLoading(true, 'Corrigiendo examen', 'Revisando tus respuestas…', '✅');
@@ -4285,12 +4460,17 @@
             if (usedLocalGrading) {
                 window.showToast('Examen corregido en este dispositivo. El resultado no se guardó en Firebase.', 'error');
             }
+            if (timeExpired) {
+                window.showToast('Tiempo finalizado: el examen se entregó automáticamente.', 'error');
+            }
         } catch (error) {
             console.error('Error al corregir el simulacro:', error);
             window.showToast(error.message || 'No se pudo corregir el examen.', 'error');
         } finally {
             hideAppLoading();
             setButtonLoading(btn, false);
+            simulationFinishing = false;
+            simulationTimeExpired = false;
         }
     };
 </script>
