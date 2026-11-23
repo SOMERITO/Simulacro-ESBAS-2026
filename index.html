@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V52 (Pie de página y subtítulo de marca retirados) -->
+    <!-- VERSIÓN: V53 (Sin sección de sustento en preguntas reales) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -5371,18 +5371,22 @@
                 'Respuesta correcta: ' + correctKey.toUpperCase() + ') ' +
                 (options[correctKey] || 'Texto no disponible');
         }
-        if (explanation) {
+        const details = feedback.querySelector('details');
+        const showExplanation = currentSimulationBankType !== 'real';
+        if (details) {
+            details.hidden = !showExplanation;
+            details.open = showExplanation;
+        }
+        if (showExplanation && explanation) {
             explanation.textContent = source.sustento
                 ? source.sustento
                 : 'El banco no incluye un sustento adicional para esta pregunta.';
         }
-        if (summary) {
+        if (showExplanation && summary) {
             summary.textContent = source.sustento
                 ? '¿Por qué esta es la respuesta correcta?'
                 : 'Ver respuesta correcta';
         }
-        const details = feedback.querySelector('details');
-        if (details) details.open = true;
         return true;
     }
 
