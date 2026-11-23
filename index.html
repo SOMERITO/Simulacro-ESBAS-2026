@@ -2879,9 +2879,9 @@
             if(!loaded) return;
         }
         if(!confirm('Se importarán o actualizarán las 400 preguntas del Banco Integral ESBAS 2026-1 en Firestore. Los registros ajenos a este banco no se eliminarán. ¿Continuar?')) return;
-        const button=document.getElementById('btn-import-bank');
         const pageButton=document.querySelector('#view-repo button[onclick="importOfficialBank()"]');
-        setButtonLoading(button||pageButton,true);
+        const button=pageButton||document.getElementById('btn-import-bank');
+        setButtonLoading(button,true);
         setAppLoading(true,'Importando banco oficial','Guardando 400 preguntas en Firestore por lotes…','☁️');
         window.setCloudStatus('syncing');
         try {
@@ -2899,7 +2899,7 @@
             window.showToast(error.message||'No se pudo importar el banco a Firestore. Revisa las reglas de escritura.','error');
         } finally {
             hideAppLoading();
-            setButtonLoading(button||pageButton,false);
+            setButtonLoading(button,false);
         }
     };
     window.saveQuestion = async function(e) {
