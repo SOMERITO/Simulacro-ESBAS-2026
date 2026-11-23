@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V54 (Lección identificada sobre el contador del examen) -->
+    <!-- VERSIÓN: V55 (Pie de imágenes de resultados eliminado) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -5022,7 +5022,7 @@
                     columnHeights[column] += card.height + 14;
                 });
 
-                const footerSpace = 92;
+                const footerSpace = 34;
                 const height = Math.max(startY + 180, Math.max.apply(null, columnHeights) - 14 + footerSpace);
                 if (height > 32000 || width * height > 120000000) {
                     reject(new Error('El resultado es demasiado extenso para una sola imagen. Prueba copiando los aciertos o los errores por separado.'));
@@ -5112,17 +5112,6 @@
                         y += answerLineHeight;
                     });
                 });
-
-                const footerY = height - 58;
-                context.fillStyle = '#dce2e9';
-                context.fillRect(padding, footerY - 18, width - padding * 2, 1);
-                context.fillStyle = '#8a95a5';
-                context.font = '600 13px Arial, sans-serif';
-                context.fillText('Preparación constante · Servicio seguro', padding, footerY);
-                context.font = '500 12px Arial, sans-serif';
-                context.textAlign = 'right';
-                context.fillText('Simulacro ESBAS', width - padding, footerY);
-                context.textAlign = 'left';
 
                 canvas.toBlob(blob => {
                     if (blob) resolve(blob);
