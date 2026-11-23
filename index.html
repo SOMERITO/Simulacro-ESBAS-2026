@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V44 (Botones de exportación animados y profesionales) -->
+    <!-- VERSIÓN: V45 (Dos modalidades: preguntas con IA y preguntas reales) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2654,7 +2654,71 @@
             .sim-progress-panel { min-width:0; }
         }
 
-</style>
+
+        /* V45 — Selector de bancos independientes */
+        .bank-mode-section { margin: .25rem 0 1.5rem; }
+        .bank-mode-heading { display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.7rem; }
+        .bank-mode-heading strong { color:#3b4b60; font-size:.76rem; font-weight:850; letter-spacing:.065em; }
+        .bank-mode-heading span { color:#8a95a5; font-size:.68rem; font-weight:650; }
+        .bank-mode-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.85rem; }
+        .bank-mode-card {
+            position:relative; display:flex; align-items:flex-start; gap:.85rem; width:100%; min-width:0;
+            padding:1rem 1.05rem; border:1px solid #e1e7ef; border-radius:15px; background:#fff;
+            color:#26364b; text-align:left; cursor:pointer; overflow:hidden;
+            box-shadow:0 3px 11px rgba(20,35,55,.025);
+            transition:transform .22s cubic-bezier(.2,.8,.2,1), border-color .22s ease, box-shadow .22s ease, background .22s ease;
+        }
+        .bank-mode-card::after {
+            content:""; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:15px 0 0 15px;
+            background:transparent; transition:background .22s ease;
+        }
+        .bank-mode-card:hover { transform:translateY(-2px); border-color:#cbd4e0; box-shadow:0 8px 19px rgba(20,35,55,.075); }
+        .bank-mode-card:active { transform:translateY(0) scale(.99); }
+        .bank-mode-card:focus-visible { outline:3px solid rgba(185,35,43,.2); outline-offset:3px; }
+        .bank-mode-card.is-active { border-color:#c44a52; background:linear-gradient(145deg,#fff,#fff8f8); box-shadow:0 0 0 2px rgba(189,41,49,.07),0 8px 20px rgba(20,35,55,.06); }
+        .bank-mode-card.is-active::after { background:linear-gradient(180deg,#db5960,#a51e2a); }
+        .bank-mode-symbol {
+            display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; border-radius:12px;
+            color:#5555a5; background:#f0efff; font-size:1.3rem;
+            transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s ease;
+        }
+        .bank-mode-real .bank-mode-symbol { color:#a51e2a; background:#fff0f1; }
+        .bank-mode-card:hover .bank-mode-symbol { transform:rotate(-6deg) scale(1.06); }
+        .bank-mode-card-copy { display:flex; flex:1 1 auto; min-width:0; flex-direction:column; gap:.27rem; }
+        .bank-mode-title { color:#253449; font-size:.9rem; font-weight:830; letter-spacing:-.015em; }
+        .bank-mode-description { color:#778498; font-size:.72rem; line-height:1.45; }
+        .bank-mode-meta { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin-top:.28rem; }
+        .bank-mode-count {
+            display:inline-flex; align-items:center; min-height:23px; padding:.18rem .5rem; border-radius:7px;
+            color:#4f558e; background:#f0efff; font-size:.64rem; font-weight:820; letter-spacing:.01em;
+        }
+        .bank-mode-real .bank-mode-count { color:#9b2430; background:#fff0f1; }
+        .bank-mode-badge {
+            display:inline-flex; align-items:center; min-height:22px; padding:.15rem .45rem; border-radius:7px;
+            color:#8b641d; background:#fff7e7; font-size:.6rem; font-weight:820; letter-spacing:.035em;
+        }
+        .bank-mode-check {
+            display:grid; place-items:center; flex:0 0 23px; width:23px; height:23px; margin-left:auto;
+            border:1px solid #dce2ea; border-radius:50%; color:transparent; background:#fff;
+            font-size:.72rem; font-weight:900; transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+        }
+        .bank-mode-card.is-active .bank-mode-check { color:#fff; border-color:#b52a34; background:#b52a34; transform:scale(1.04); }
+        .bank-mode-card.is-loading { opacity:.75; cursor:progress; }
+        .bank-mode-card.is-loading .bank-mode-symbol { animation:bankModePulse .75s ease-in-out infinite alternate; }
+        @keyframes bankModePulse { from { transform:scale(.94); opacity:.65; } to { transform:scale(1.06); opacity:1; } }
+        .bank-mode-note { display:flex; align-items:flex-start; gap:.5rem; margin-top:.72rem; color:#718096; font-size:.72rem; line-height:1.5; }
+        .bank-mode-note::before { content:"ⓘ"; color:#a52a35; font-weight:900; }
+        @media (max-width:680px) {
+            .bank-mode-grid { grid-template-columns:1fr; gap:.65rem; }
+            .bank-mode-card { padding:.85rem .9rem; }
+            .bank-mode-description { font-size:.74rem; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            .bank-mode-card,.bank-mode-symbol,.bank-mode-check { transition:none !important; animation:none !important; }
+            .bank-mode-card:hover,.bank-mode-card:active { transform:none !important; }
+        }
+
+    </style>
 </head>
 <body>
 <div id="toast-container"></div>
@@ -2741,6 +2805,36 @@
                     <p class="setup-description">Elige el módulo y la lección que deseas practicar. También puedes evaluar todo el contenido disponible.</p>
                 </div>
             </div>
+            <section class="bank-mode-section" aria-label="Modalidad de preguntas">
+                <div class="bank-mode-heading">
+                    <strong>MODALIDAD DE PRÁCTICA</strong>
+                    <span>Elige tu banco de preguntas</span>
+                </div>
+                <div class="bank-mode-grid" role="group" aria-label="Seleccionar banco de preguntas">
+                    <button class="bank-mode-card bank-mode-ai is-active" type="button" id="btn-bank-ai" aria-pressed="true" onclick="selectSimulationBank('ai', this)">
+                        <span class="bank-mode-symbol" aria-hidden="true">✦</span>
+                        <span class="bank-mode-card-copy">
+                            <span class="bank-mode-title">Preguntas con IA</span>
+                            <span class="bank-mode-description">Practica con el banco de preguntas generado con inteligencia artificial.</span>
+                            <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-ai-count">400 preguntas</span></span>
+                        </span>
+                        <span class="bank-mode-check" aria-hidden="true">✓</span>
+                    </button>
+                    <button class="bank-mode-card bank-mode-real" type="button" id="btn-bank-real" aria-pressed="false" onclick="selectSimulationBank('real', this)">
+                        <span class="bank-mode-symbol" aria-hidden="true">▤</span>
+                        <span class="bank-mode-card-copy">
+                            <span class="bank-mode-title">Preguntas reales</span>
+                            <span class="bank-mode-description">Preguntas recopiladas de evaluaciones que sí fueron tomadas.</span>
+                            <span class="bank-mode-meta">
+                                <span class="bank-mode-count" id="bank-real-count">289 preguntas registradas</span>
+                                <span class="bank-mode-badge">BANCO INCOMPLETO</span>
+                            </span>
+                        </span>
+                        <span class="bank-mode-check" aria-hidden="true">✓</span>
+                    </button>
+                </div>
+                <p class="bank-mode-note" id="sim-bank-mode-note" role="status" aria-live="polite">Estás utilizando el banco de práctica con IA. Los dos bancos se mantienen separados.</p>
+            </section>
             <div class="sim-fields">
                 <div class="form-group">
                     <label id="sim-module-label" for="sim-module-trigger">Módulo a Evaluar</label>
@@ -3331,6 +3425,165 @@
 
 
     let cachedPublicQuestionBank = null;
+    let cachedRealQuestionBank = null;
+    let currentSimulationBankType = 'ai'; // ai | real
+
+    function getActiveSimulationQuestionBank() {
+        if (currentSimulationBankType === 'real') {
+            return Array.isArray(cachedRealQuestionBank) ? cachedRealQuestionBank : [];
+        }
+        if (Array.isArray(appData.questions) && appData.questions.length) return appData.questions;
+        return Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
+    }
+
+    function normalizeRealModuleName(rawModule, lessonNumber = null, examId = '') {
+        const match = String(rawModule || examId || '').match(/M[oó]dulo\s*(III|II|I|3|2|1)/i);
+        let token = match ? String(match[1]).toUpperCase() : '';
+        const roman = {'1':'I','2':'II','3':'III',I:'I',II:'II',III:'III'};
+        if (!token && Number.isFinite(Number(lessonNumber))) token = Number(lessonNumber) >= 22 ? 'III' : 'II';
+        const normalized = roman[token];
+        if (!normalized) throw new Error('No se pudo identificar el módulo de una pregunta real.');
+        return 'Módulo ' + normalized;
+    }
+
+    function normalizeRealQuestionEntry(question, metadata) {
+        if (!question || question.answer_verified !== true ||
+            !['a','b','c','d'].includes(String(question.correct_answer || '').toLowerCase())) {
+            throw new Error('El banco real contiene una pregunta cuya clave no está verificada.');
+        }
+        const options = {};
+        (Array.isArray(question.options) ? question.options : []).forEach(option => {
+            const key = String(option?.id || '').toLowerCase();
+            if (['a','b','c','d'].includes(key)) options[key] = String(option.text || '');
+        });
+        if (!['a','b','c','d'].every(key => typeof options[key] === 'string' && options[key].length)) {
+            throw new Error('El banco real contiene una pregunta sin las cuatro alternativas.');
+        }
+        return {
+            id: String(question.id),
+            modulo: metadata.modulo,
+            tipo: metadata.tipo,
+            leccion_num: metadata.leccion_num,
+            leccion_nombre: metadata.leccion_nombre,
+            examen_modulo_num: metadata.examen_modulo_num ?? null,
+            pregunta_num: Number(question.number || 0),
+            pregunta_global: null,
+            pregunta: String(question.statement || ''),
+            opciones: options,
+            respuesta: String(question.correct_answer).toLowerCase(),
+            sustento: '',
+            _source: 'real-bank'
+        };
+    }
+
+    function normalizeRealQuestionBank(rawBank) {
+        if (!rawBank || !Array.isArray(rawBank.lessons) || !Array.isArray(rawBank.final_exams)) {
+            throw new Error('El archivo de preguntas reales no tiene la estructura esperada.');
+        }
+        const questions = [];
+        rawBank.lessons.forEach(lessonEntry => {
+            const lessonNumber = Number(lessonEntry?.lesson?.number);
+            if (!Number.isInteger(lessonNumber) || !Array.isArray(lessonEntry.questions)) {
+                throw new Error('El banco real contiene una lección incompleta.');
+            }
+            const moduleName = normalizeRealModuleName(lessonEntry.module, lessonNumber);
+            lessonEntry.questions.forEach(question => questions.push(normalizeRealQuestionEntry(question, {
+                modulo: moduleName,
+                tipo: 'leccion',
+                leccion_num: lessonNumber,
+                leccion_nombre: String(lessonEntry.lesson.name || 'Lección ' + lessonNumber),
+                examen_modulo_num: null
+            })));
+        });
+        rawBank.final_exams.forEach(examEntry => {
+            const moduleName = normalizeRealModuleName(examEntry.module, null, examEntry.exam_id);
+            const moduleNumber = moduleName.endsWith('II') ? 2 : 3;
+            if (!Array.isArray(examEntry.questions)) throw new Error('Un examen final del banco real no contiene preguntas.');
+            examEntry.questions.forEach(question => questions.push(normalizeRealQuestionEntry(question, {
+                modulo: moduleName,
+                tipo: 'examen_final_modulo',
+                leccion_num: 0,
+                leccion_nombre: String(examEntry.title || 'Examen final del ' + moduleName),
+                examen_modulo_num: moduleNumber
+            })));
+        });
+        const ids = new Set();
+        questions.forEach(question => {
+            if (!question.id || ids.has(question.id)) throw new Error('El banco real contiene identificadores duplicados.');
+            ids.add(question.id);
+        });
+        const expected = Number(rawBank.total_registered_question_count || questions.length);
+        if (!questions.length || questions.length !== expected) {
+            throw new Error('La cantidad de preguntas reales no coincide con el total registrado en el JSON.');
+        }
+        return questions;
+    }
+
+    async function loadRealQuestionBank() {
+        if (cachedRealQuestionBank) return cachedRealQuestionBank;
+        const response = await fetch('./data/ESBAS-2026-Banco-Preguntas-Reales.json', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('No se pudo cargar el banco de preguntas reales (' + response.status + ').');
+        const rawBank = await response.json();
+        cachedRealQuestionBank = normalizeRealQuestionBank(rawBank);
+        return cachedRealQuestionBank;
+    }
+
+    window.selectSimulationBank = async function(type, button) {
+        const nextType = type === 'real' ? 'real' : 'ai';
+        const buttons = [
+            document.getElementById('btn-bank-ai'),
+            document.getElementById('btn-bank-real')
+        ].filter(Boolean);
+        buttons.forEach(item => {
+            item.disabled = true;
+            item.classList.add('is-loading');
+        });
+        if (button) button.setAttribute('aria-busy', 'true');
+        if (nextType === 'real' && !cachedRealQuestionBank) {
+            setAppLoading(true, 'Cargando preguntas reales', 'Preparando las preguntas recopiladas de tus evaluaciones…', '📚');
+        }
+        try {
+            if (nextType === 'real') {
+                await loadRealQuestionBank();
+            } else if (!appData.questions.length) {
+                const questions = await loadBundledQuestionBank();
+                appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
+                window.updateIndexesAndCounters();
+            }
+            currentSimulationBankType = nextType;
+            buttons.forEach(item => {
+                const active = item.id === (nextType === 'real' ? 'btn-bank-real' : 'btn-bank-ai');
+                item.classList.toggle('is-active', active);
+                item.setAttribute('aria-pressed', String(active));
+            });
+            const activeBank = getActiveSimulationQuestionBank();
+            const note = document.getElementById('sim-bank-mode-note');
+            if (note) {
+                note.textContent = nextType === 'real'
+                    ? 'Modalidad de preguntas reales: se utilizan solo las ' + activeBank.length + ' preguntas registradas en este banco. Está incompleto y se ampliará cuando incorpores nuevas preguntas; no se mezcla con el banco de IA.'
+                    : 'Modalidad de preguntas con IA: se utiliza únicamente el banco generado con inteligencia artificial. Las preguntas reales están en un banco separado.';
+            }
+            const aiCount = document.getElementById('bank-ai-count');
+            if (aiCount && appData.questions.length) aiCount.textContent = appData.questions.length + ' preguntas';
+            const realCount = document.getElementById('bank-real-count');
+            if (realCount && cachedRealQuestionBank) realCount.textContent = cachedRealQuestionBank.length + ' preguntas registradas';
+            window.refreshSimulationModuleDropdown('all');
+        } catch (error) {
+            console.error('No se pudo cambiar de banco de preguntas:', error);
+            window.showToast(error.message || 'No se pudo cargar el banco seleccionado.', 'error');
+        } finally {
+            hideAppLoading();
+            buttons.forEach(item => {
+                item.disabled = false;
+                item.classList.remove('is-loading');
+            });
+            if (button) button.removeAttribute('aria-busy');
+        }
+    };
+
     function validateOfficialBank(questions) {
         if (!Array.isArray(questions) || questions.length !== 400) throw new Error('El archivo debe contener exactamente 400 preguntas.');
         const ids = new Set();
@@ -3490,7 +3743,7 @@
                 document.getElementById('main-container').style.display = 'block';
                 document.body.classList.remove('role-admin');
                 await loadQuestionsFromFirestoreForStudy();
-                window.updateSimLessonDropdown('all');
+                window.refreshSimulationModuleDropdown('all');
                 showPublicStudyView();
                 showWelcomeBanner('estudiante');
                 return;
@@ -3518,10 +3771,11 @@
             if (currentUserRole === 'admin') {
                 await fetchQuestions();
                 await fetchUsers();
+                window.refreshSimulationModuleDropdown('all');
                 window.switchView('sim');
             } else {
                 await loadQuestionsFromFirestoreForStudy();
-                window.updateSimLessonDropdown('all');
+                window.refreshSimulationModuleDropdown('all');
                 showPublicStudyView();
             }
             showWelcomeBanner(currentUserRole);
@@ -3552,7 +3806,7 @@
             const questions = await loadBundledQuestionBank();
             appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
             window.updateIndexesAndCounters();
-            window.updateSimLessonDropdown('all');
+            window.refreshSimulationModuleDropdown('all');
             window.switchView('sim');
             showWelcomeBanner('estudiante');
         } catch (error) {
@@ -4165,40 +4419,54 @@
         document.getElementById('modal-form').classList.remove('active');
         if (lastModalTrigger && document.contains(lastModalTrigger)) lastModalTrigger.focus();
     };
+    window.refreshSimulationModuleDropdown = function(preferredModule = 'all') {
+        const moduleSelect = document.getElementById('sim-module');
+        if (!moduleSelect) return;
+        const bank = getActiveSimulationQuestionBank();
+        const availableModules = Object.keys(moduleLessonsMap).filter(moduleName =>
+            bank.some(question => question.modulo === moduleName)
+        );
+        moduleSelect.innerHTML = '<option value="all">Todos los módulos (' + bank.length + ' preguntas disponibles)</option>';
+        availableModules.forEach(moduleName => {
+            const count = bank.filter(question => question.modulo === moduleName).length;
+            moduleSelect.innerHTML += '<option value="' + moduleName + '">' + moduleName + ' (' + count + ' preguntas)</option>';
+        });
+        moduleSelect.value = availableModules.includes(preferredModule) ? preferredModule : 'all';
+        window.refreshCustomSelect('sim-module');
+        window.updateSimLessonDropdown(moduleSelect.value);
+    };
+
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
+        const bank = getActiveSimulationQuestionBank();
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
-        if (moduleName === 'all') {
+        if (moduleName === 'all' || !bank.some(question => question.modulo === moduleName)) {
             lessonSelect.disabled = true;
             window.refreshCustomSelect('sim-lesson');
             return;
         }
         lessonSelect.disabled = false;
-        const range = moduleLessonsMap[moduleName];
-        if (!range) {
-            window.refreshCustomSelect('sim-lesson');
-            return;
-        }
-        for (let i = range.start; i <= range.end; i++) {
-            const lessonQuestions = appData.questions.filter(q =>
-                q.modulo === moduleName &&
-                q.tipo !== 'examen_final_modulo' &&
-                Number(q.leccion_num) === i
-            );
-            const count = lessonQuestions.length;
-            const rawTitle = lessonQuestions.find(q => q.leccion_nombre)?.leccion_nombre || '';
-            // Limpiar texto editorial que quedó concatenado al nombre de la lección 29 en el JSON.
-            const lessonTitle = String(rawTitle)
-                .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
-                .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
-                .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
-                .trim() || ('Lección ' + String(i).padStart(2, '0'));
-            const optionLabel = 'L' + String(i).padStart(2, '0') + ' - ' + lessonTitle;
-            lessonSelect.innerHTML += '<option value="' + i + '">' +
-                optionLabel + '</option>';
-        }
-        const finalCount = appData.questions.filter(q =>
-            q.modulo === moduleName && q.tipo === 'examen_final_modulo'
+        const lessonMap = new Map();
+        bank.filter(question => question.modulo === moduleName && question.tipo !== 'examen_final_modulo')
+            .forEach(question => {
+                const number = Number(question.leccion_num);
+                if (Number.isInteger(number) && number > 0 && !lessonMap.has(number)) {
+                    const rawTitle = question.leccion_nombre || '';
+                    const lessonTitle = String(rawTitle)
+                        .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
+                        .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
+                        .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
+                        .trim() || ('Lección ' + String(number).padStart(2, '0'));
+                    lessonMap.set(number, lessonTitle);
+                }
+            });
+        Array.from(lessonMap.keys()).sort((a, b) => a - b).forEach(number => {
+            const lessonTitle = lessonMap.get(number);
+            const optionLabel = 'L' + String(number).padStart(2, '0') + ' - ' + lessonTitle;
+            lessonSelect.innerHTML += '<option value="' + number + '">' + optionLabel + '</option>';
+        });
+        const finalCount = bank.filter(question =>
+            question.modulo === moduleName && question.tipo === 'examen_final_modulo'
         ).length;
         if (finalCount) {
             lessonSelect.innerHTML += '<option value="final">Examen final del ' +
@@ -4217,7 +4485,7 @@
     }
 
     function getLocalSimulationQuestions(moduleFilter, lessonFilter) {
-        const selected = appData.questions.filter(question => {
+        const selected = getActiveSimulationQuestionBank().filter(question => {
             const sameModule = moduleFilter === 'all' || question.modulo === moduleFilter;
             const sameLesson = lessonFilter === 'all'
                 || (lessonFilter === 'final'
@@ -4229,7 +4497,7 @@
     }
 
     function buildLocalSimulationGrade() {
-        const sourceById = new Map(appData.questions.map(question => [String(question.id), question]));
+        const sourceById = new Map(getActiveSimulationQuestionBank().map(question => [String(question.id), question]));
         const total = currentSimulationQuestions.length;
         let correctCount = 0;
         let errorCount = 0;
@@ -4572,14 +4840,16 @@
         setAppLoading(true, 'Generando simulacro', 'Preparando las preguntas seleccionadas…', '📝');
 
         try {
-            if (currentUser.isPublicVisitor) {
-                if (!appData.questions.length) {
+            if (currentSimulationBankType === 'real' || currentUser.isPublicVisitor) {
+                if (currentSimulationBankType === 'real') {
+                    await loadRealQuestionBank();
+                } else if (!appData.questions.length) {
                     const bundled = await loadBundledQuestionBank();
                     appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
                     window.updateIndexesAndCounters();
                 }
                 const localQuestions = getLocalSimulationQuestions(modFilter, lessonFilter);
-                if (!localQuestions.length) throw new Error('No hay preguntas disponibles para el módulo y la lección seleccionados.');
+                if (!localQuestions.length) throw new Error('No hay preguntas disponibles para el módulo y la lección seleccionados en este banco.');
                 currentSimulationQuestions = localQuestions;
                 currentSimulationSessionId = null;
                 currentSimulationMode = 'local';
@@ -4624,19 +4894,21 @@
             document.getElementById('sim-active').style.display = 'block';
             document.getElementById('sim-results').style.display = 'none';
             if (modeNote) {
-                modeNote.style.display = currentSimulationMode === 'local' ? 'block' : 'none';
+                modeNote.style.display = (currentSimulationMode === 'local' || currentSimulationBankType === 'real') ? 'block' : 'none';
                 const timeText = timeLimitMinutes
                     ? ' Tiempo límite: ' + timeLimitMinutes + ' minutos.'
                     : ' Esta práctica combinada no tiene un límite de tiempo asignado.';
-                modeNote.textContent = currentUser.isPublicVisitor
-                    ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText
-                    : (currentSimulationMode === 'local'
-                        ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
-                        : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText);
+                modeNote.textContent = currentSimulationBankType === 'real'
+                    ? 'Preguntas reales: se utilizaron únicamente preguntas de tu banco real. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
+                    : (currentUser.isPublicVisitor
+                        ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText
+                        : (currentSimulationMode === 'local'
+                            ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
+                            : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText));
             }
             window.renderSimulationQuestions();
             window.showSimQuestion(0);
-            if (currentSimulationMode === 'local' && !currentUser.isPublicVisitor) {
+            if (currentSimulationMode === 'local' && !currentUser.isPublicVisitor && currentSimulationBankType !== 'real') {
                 window.showToast('El simulacro inició en modo local. El resultado no se guardará en Firebase.', 'error');
             }
         } catch (error) {
@@ -4649,21 +4921,23 @@
     };
 
     function getSimulationQuestionSource(simQuestion) {
+        const hasAnswerKey = question => ['a', 'b', 'c', 'd'].includes(String(question?.respuesta || '').toLowerCase());
+        if (currentSimulationBankType === 'real') {
+            const realBank = Array.isArray(cachedRealQuestionBank) ? cachedRealQuestionBank : [];
+            return realBank.find(question =>
+                String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+            ) || simQuestion;
+        }
         const bundled = Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
         const current = Array.isArray(appData.questions) ? appData.questions : [];
-        const hasAnswerKey = question => ['a', 'b', 'c', 'd'].includes(String(question?.respuesta || '').toLowerCase());
-
-        // Preferir siempre la clave del banco integrado si Firestore devuelve una copia incompleta.
         const bundledById = bundled.find(question =>
             String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
         );
         if (bundledById) return bundledById;
-
         const currentById = current.find(question =>
             String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
         );
         if (currentById) return currentById;
-
         const normalize = value => String(value || '')
             .normalize('NFKD')
             .replace(/[\u0300-\u036f]/g, '')
