@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V30 (Sistema visual unificado rojo, blanco y grafito inspirado en el CGBVP) -->
+    <!-- VERSIÓN: V31 (Banco integral 400 preguntas, repaso por módulo/lección y sincronización Firebase) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1945,7 +1945,7 @@
         <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
     </div>
     <div class="nav-links">
-        <button onclick="switchView('repo')" id="btn-repo" class="admin-only">Repositorio</button>
+        <button onclick="switchView('repo')" id="btn-repo">Repasar</button>
         <button onclick="switchView('sim')" id="btn-sim" class="active">Simulación</button>
         <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
         <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: var(--primary-orange); color: var(--primary-orange);">Usuarios</button>
@@ -1961,7 +1961,7 @@
         </div>
     </div>
 
-    <div id="view-repo" class="view-section admin-only">
+    <div id="view-repo" class="view-section">
         <div class="card" style="padding: 1.5rem;">
             <div class="filter-header">
                 <h2 style="color: var(--text-dark); font-size: 1.2rem; display: flex; align-items: center; gap: 1rem;">
@@ -1969,6 +1969,7 @@
                 </h2>
                 <button class="btn admin-only" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal; margin-right:4px;">+</span> Agregar Pregunta</button>
             </div>
+            <p style="color:var(--text-muted);font-size:.88rem;line-height:1.5;margin:.35rem 0 1rem;">Selecciona un módulo, una lección o el examen final integrador. Abre cada tarjeta para consultar la respuesta correcta y el sustento del banco.</p>
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
@@ -1994,13 +1995,13 @@
                     <label id="sim-module-label" for="sim-module-trigger">Módulo a Evaluar</label>
                     <div class="custom-select" data-custom-select="sim-module">
                         <button type="button" class="custom-select-trigger" id="sim-module-trigger" role="combobox" aria-haspopup="listbox" aria-controls="sim-module-options" aria-autocomplete="none" aria-expanded="false" aria-labelledby="sim-module-label">
-                            <span class="custom-select-value">Todos los Módulos (100 Preguntas)</span>
+                            <span class="custom-select-value">Todos los Módulos (400 preguntas disponibles)</span>
                             <span class="custom-select-chevron" aria-hidden="true">⌄</span>
                         </button>
                         <div class="custom-select-menu" id="sim-module-options" role="listbox" aria-labelledby="sim-module-label" hidden></div>
                     </div>
                     <select id="sim-module" class="native-select-source" tabindex="-1" aria-hidden="true" onchange="updateSimLessonDropdown(this.value)">
-                        <option value="all">Todos los Módulos (100 Preguntas)</option>
+                        <option value="all">Todos los Módulos (400 preguntas disponibles)</option>
                         <option value="Módulo I">Módulo I</option>
                         <option value="Módulo II">Módulo II</option>
                         <option value="Módulo III">Módulo III</option>
@@ -2069,7 +2070,10 @@
         <div class="card">
             <div class="filter-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1rem;">
                 <h2 style="color: var(--text-dark); font-size:1.2rem;">Gestión de Base de Datos</h2>
-                <button class="btn" onclick="openModal('new')">+ Nueva Pregunta</button>
+                <div style="display:flex;gap:.55rem;flex-wrap:wrap;">
+                    <button class="btn btn-outline" type="button" id="btn-import-bank" onclick="importOfficialBank()">Importar / actualizar banco oficial (400)</button>
+                    <button class="btn" type="button" onclick="openModal('new')">+ Nueva Pregunta</button>
+                </div>
             </div>
             <div class="table-container">
                 <table id="questionsTable">
@@ -2231,7 +2235,7 @@
     // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-functions.js";
     const firebaseConfig = {
         apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
@@ -2473,7 +2477,7 @@
     let activeLessonFilter = 'all';
     let formMemory = { lastModule: '', 'Módulo I': { num: '', name: '' }, 'Módulo II': { num: '', name: '' }, 'Módulo III': { num: '', name: '' } };
     let lastModalTrigger = null;
-    const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 33 } };
+    const moduleLessonsMap = { 'Módulo I': { start: 1, end: 9 }, 'Módulo II': { start: 10, end: 21 }, 'Módulo III': { start: 22, end: 34 } };
     function setButtonLoading(button, loading) {
         if (!button) return;
         if (loading) { button.dataset.originalText = button.querySelector('span')?.innerText || button.innerText; button.classList.add('is-loading'); button.disabled = true; }
@@ -2508,6 +2512,47 @@
     }
 
 
+
+    let cachedPublicQuestionBank = null;
+    async function loadPublicQuestionBank() {
+        if (cachedPublicQuestionBank) return cachedPublicQuestionBank;
+        if (typeof DecompressionStream === 'undefined') {
+            throw new Error('Este navegador no admite la carga comprimida del banco. Actualiza Chrome, Edge, Firefox o Safari.');
+        }
+        const files = [
+            './data/banco-modulo-I.json.gz.b64',
+            './data/banco-modulo-II.json.gz.b64',
+            './data/banco-modulo-III.json.gz.b64'
+        ];
+        const modules = await Promise.all(files.map(async (path) => {
+            const response = await fetch(path, { cache: 'no-store' });
+            if (!response.ok) throw new Error('No se pudo descargar ' + path + ' (' + response.status + ').');
+            const encoded = (await response.text()).replace(/\s+/g, '');
+            const bytes = Uint8Array.from(atob(encoded), char => char.charCodeAt(0));
+            const compressedStream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+            return await new Response(compressedStream).json();
+        }));
+        const questions = modules.flat();
+        if (questions.length !== 400) {
+            throw new Error('El banco descargado contiene ' + questions.length + ' preguntas; se esperaban 400.');
+        }
+        const ids = new Set(questions.map(question => question.id));
+        if (ids.size !== 400) throw new Error('El banco contiene identificadores duplicados.');
+        cachedPublicQuestionBank = questions;
+        return cachedPublicQuestionBank;
+    }
+
+    async function loadPublicBankIntoStudyView() {
+        try {
+            const questions = await loadPublicQuestionBank();
+            appData.questions = questions.map(question => ({ ...question, _source: 'static' }));
+            window.updateIndexesAndCounters();
+        } catch (error) {
+            console.error(error);
+            window.showToast(error.message || 'No se pudo cargar el banco de repaso.', 'error');
+        }
+    }
+
     window.showToast = function(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -2525,8 +2570,9 @@
                 document.getElementById('main-nav').style.display = 'flex';
                 document.getElementById('main-container').style.display = 'block';
                 document.body.classList.remove('role-admin');
-                switchView('sim');
+                await loadPublicBankIntoStudyView();
                 updateSimLessonDropdown('all');
+                switchView('repo');
                 showWelcomeBanner('estudiante');
                 return;
             }
@@ -2555,8 +2601,9 @@
                 await fetchUsers();
                 switchView('repo');
             } else {
-                switchView('sim');
+                await loadPublicBankIntoStudyView();
                 updateSimLessonDropdown('all');
+                switchView('repo');
             }
             showWelcomeBanner(currentUserRole);
         } finally {
@@ -2763,19 +2810,62 @@
     async function fetchQuestions() {
         if (!requireAdmin()) return;
         window.setCloudStatus('syncing');
+        let staticQuestions = [];
+        try {
+            staticQuestions = (await loadPublicQuestionBank()).map(question => ({ ...question, _source: 'static' }));
+        } catch (error) {
+            console.error('No se pudo cargar el banco público:', error);
+        }
         try {
             const querySnapshot = await getDocs(collection(db, "questions"));
-            appData.questions = [];
-            querySnapshot.forEach((doc) => { appData.questions.push({ id: doc.id, ...doc.data() }); });
+            const merged = new Map(staticQuestions.map(question => [question.id, question]));
+            querySnapshot.forEach((docSnap) => {
+                merged.set(docSnap.id, { id: docSnap.id, ...docSnap.data(), _source: 'firebase' });
+            });
+            appData.questions = Array.from(merged.values());
             window.updateIndexesAndCounters();
             window.renderRepo();
             window.renderTable();
             window.setCloudStatus('success');
         } catch (error) {
+            console.error(error);
+            appData.questions = staticQuestions;
+            window.updateIndexesAndCounters();
+            window.renderRepo();
+            window.renderTable();
             window.setCloudStatus('error');
-            window.showToast("No se pudo descargar el banco de preguntas.", "error");
+            window.showToast(staticQuestions.length
+                ? 'Firestore no respondió. Se muestra el banco local de 400 preguntas; la importación a la nube queda pendiente.'
+                : 'No se pudo descargar el banco desde Firebase ni desde el archivo público.', 'error');
         }
     }
+
+    window.importOfficialBank = async function() {
+        if (!requireAdmin()) return;
+        if (!confirm('Se importarán o actualizarán las 400 preguntas del Banco Integral ESBAS 2026-1 en Firestore. Los registros ajenos a este banco no se eliminarán. ¿Continuar?')) return;
+        const button = document.getElementById('btn-import-bank');
+        setButtonLoading(button, true);
+        setAppLoading(true, 'Importando banco oficial', 'Guardando 400 preguntas en Firestore en una operación por lotes…', '☁️');
+        window.setCloudStatus('syncing');
+        try {
+            const questions = await loadPublicQuestionBank();
+            const batch = writeBatch(db);
+            questions.forEach(question => {
+                const { id, _source, ...data } = question;
+                batch.set(doc(db, 'questions', id), data, { merge: true });
+            });
+            await batch.commit();
+            await fetchQuestions();
+            window.showToast('Banco ESBAS 2026-1 sincronizado: 400 preguntas, 34 lecciones y 3 exámenes finales.');
+        } catch (error) {
+            console.error(error);
+            window.setCloudStatus('error');
+            window.showToast(error.message || 'No se pudo importar el banco a Firestore. Revisa los permisos de la colección questions.', 'error');
+        } finally {
+            hideAppLoading();
+            setButtonLoading(button, false);
+        }
+    };
     window.saveQuestion = async function(e) {
         if(e) e.preventDefault();
         if (!requireAdmin()) return;
@@ -2855,7 +2945,7 @@
         }
     };
     window.switchView = function(viewName) {
-        if (['repo', 'config', 'users'].includes(viewName) && !requireAdmin()) return;
+        if (['config', 'users'].includes(viewName) && !requireAdmin()) return;
         if (viewName === 'sim' && !currentUser) return;
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
@@ -2869,17 +2959,21 @@
         if(viewName === 'users') window.renderUsers();
     };
     window.updateIndexesAndCounters = function() {
-        appData.questions.sort((a,b) => {
-            if(a.modulo !== b.modulo) return (a.modulo || '').localeCompare(b.modulo || '');
-            if(parseInt(a.leccion_num) !== parseInt(b.leccion_num)) return parseInt(a.leccion_num || 0) - parseInt(b.leccion_num || 0);
-            return parseInt(a.pregunta_num || 0) - parseInt(b.pregunta_num || 0);
+        const moduleOrder = ['Módulo I', 'Módulo II', 'Módulo III'];
+        const lessonOrder = question => question.tipo === 'examen_final_modulo' ? 999 : Number(question.leccion_num || 0);
+        appData.questions.sort((a, b) => {
+            const moduleDiff = moduleOrder.indexOf(a.modulo) - moduleOrder.indexOf(b.modulo);
+            if (moduleDiff !== 0) return moduleDiff;
+            if (lessonOrder(a) !== lessonOrder(b)) return lessonOrder(a) - lessonOrder(b);
+            return Number(a.pregunta_global || a.pregunta_num || 0) - Number(b.pregunta_global || b.pregunta_num || 0);
         });
-        document.getElementById('global-count-badge').innerText = `${appData.questions.length} Preguntas`;
+        document.getElementById('global-count-badge').innerText = appData.questions.length + ' Preguntas';
         const modContainer = document.getElementById('moduleFilters');
-        modContainer.innerHTML = `<button class="filter-btn ${activeModuleFilter==='all'?'active':''}" onclick="setModuleFilter('all')">Todos <span class="badge-count">${appData.questions.length}</span></button>`;
+        modContainer.innerHTML = '<button class="filter-btn ' + (activeModuleFilter === 'all' ? 'active' : '') + '" onclick="setModuleFilter(\'all\')">Todos <span class="badge-count">' + appData.questions.length + '</span></button>';
         ['Módulo I', 'Módulo II', 'Módulo III'].forEach(mod => {
             const count = appData.questions.filter(q => q.modulo === mod).length;
-            modContainer.innerHTML += `<button class="filter-btn ${activeModuleFilter===mod?'active':''}" onclick="setModuleFilter('${mod}')">${mod} <span class="badge-count">${count}</span></button>`;
+            const active = activeModuleFilter === mod ? 'active' : '';
+            modContainer.innerHTML += '<button class="filter-btn ' + active + '" onclick="setModuleFilter(\'' + mod + '\')">' + mod + ' <span class="badge-count">' + count + '</span></button>';
         });
     };
     window.setModuleFilter = function(moduleName) {
@@ -2887,18 +2981,21 @@
         activeLessonFilter = 'all';
         window.updateIndexesAndCounters();
         const lessonContainer = document.getElementById('lessonFiltersContainer');
-        if(moduleName === 'all') {
+        if (moduleName === 'all') {
             lessonContainer.classList.remove('active');
         } else {
             const range = moduleLessonsMap[moduleName];
-            const modCount = appData.questions.filter(q => q.modulo === moduleName).length;
-            let html = `<button class="lesson-btn active" onclick="setLessonFilter('all', this)">Todas <span class="badge-count">${modCount}</span></button>`;
-            if(range) {
-                for(let i = range.start; i <= range.end; i++) {
-                    const count = appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length;
-                    html += `<button class="lesson-btn" onclick="setLessonFilter('${i}', this)">L-${i} <span class="badge-count">${count}</span></button>`;
+            const modQuestions = appData.questions.filter(q => q.modulo === moduleName);
+            const modCount = modQuestions.length;
+            let html = '<button class="lesson-btn active" onclick="setLessonFilter(\'all\', this)">Todas <span class="badge-count">' + modCount + '</span></button>';
+            if (range) {
+                for (let i = range.start; i <= range.end; i++) {
+                    const count = modQuestions.filter(q => q.tipo !== 'examen_final_modulo' && Number(q.leccion_num) === i).length;
+                    html += '<button class="lesson-btn" onclick="setLessonFilter(\'' + i + '\', this)">L-' + String(i).padStart(2, '0') + ' <span class="badge-count">' + count + '</span></button>';
                 }
             }
+            const finalCount = modQuestions.filter(q => q.tipo === 'examen_final_modulo').length;
+            if (finalCount) html += '<button class="lesson-btn" onclick="setLessonFilter(\'final\', this)">Examen final <span class="badge-count">' + finalCount + '</span></button>';
             lessonContainer.innerHTML = html;
             lessonContainer.classList.add('active');
         }
@@ -2906,8 +3003,8 @@
     };
     window.setLessonFilter = function(lessonNumberStr, btnElement) {
         activeLessonFilter = lessonNumberStr;
-        document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
+        document.querySelectorAll('.lesson-btn').forEach(button => button.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
         window.renderRepo();
     };
     window.toggleQuestionCard = function(button) {
@@ -2924,49 +3021,55 @@
     };
 
     window.renderRepo = function() {
-        if (!isAdmin()) return;
         const container = document.getElementById('repo-container');
-        const searchTxt = (document.getElementById('searchInput').value || '').toLowerCase();
+        if (!container) return;
+        const searchTxt = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
         container.innerHTML = '';
-
-        // Búsqueda profunda: Incluye opciones A, B, C, D
         const filtered = appData.questions.filter(q => {
-            const numRaw = String(q.leccion_num).replace(/\D/g, '');
+            const isFinal = q.tipo === 'examen_final_modulo';
+            const numRaw = String(q.leccion_num ?? '').replace(/\D/g, '');
             const matchesModule = activeModuleFilter === 'all' || q.modulo === activeModuleFilter;
-            const matchesLesson = activeLessonFilter === 'all' || numRaw === activeLessonFilter;
-            const optsText = q.opciones ? `${q.opciones.a} ${q.opciones.b} ${q.opciones.c} ${q.opciones.d}` : '';
-            const fullStr = `Lección ${numRaw} ${q.leccion_nombre || ''} ${q.pregunta || ''} ${optsText}`.toLowerCase();
+            const matchesLesson = activeLessonFilter === 'all'
+                || (activeLessonFilter === 'final' ? isFinal : (!isFinal && numRaw === activeLessonFilter));
+            const optsText = q.opciones ? [q.opciones.a, q.opciones.b, q.opciones.c, q.opciones.d].join(' ') : '';
+            const fullStr = [q.modulo, q.leccion_nombre, q.pregunta, optsText, q.sustento].join(' ').toLowerCase();
             return matchesModule && matchesLesson && fullStr.includes(searchTxt);
         });
         if (filtered.length === 0) {
-            container.innerHTML = `<div class="empty-state"><text>📂</text><h3>Sin resultados</h3></div>`;
+            container.innerHTML = '<div class="empty-state"><div style="font-size:2rem;">📂</div><h3>Sin resultados</h3><p>Prueba con otro módulo, lección o término de búsqueda.</p></div>';
             return;
         }
         filtered.forEach((q, i) => {
-            const numRaw = String(q.leccion_num).replace(/\D/g, '');
-            const lessonBadge = escapeHTML(q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`);
+            const isFinal = q.tipo === 'examen_final_modulo';
+            const numRaw = String(q.leccion_num ?? '').replace(/\D/g, '');
+            const lessonBadge = escapeHTML(isFinal
+                ? (q.leccion_nombre || ('Examen final del ' + q.modulo))
+                : (q.leccion_nombre ? 'L' + String(numRaw).padStart(2, '0') + ' - ' + q.leccion_nombre : 'L' + numRaw));
             const correctText = escapeHTML(q.opciones ? q.opciones[q.respuesta] : 'N/A');
-            const pNum = escapeHTML(q.pregunta_num || "?");
-            const delay = i > 15 ? 0 : i * 0.05;
-            const editBtn = `<button type="button" class="btn-card-edit admin-only" data-question-id="${escapeHTML(q.id)}" onclick="openModal('edit', this.dataset.questionId)">Editar</button>`;
-            container.innerHTML += `
-                <div class="flashcard-wrapper" style="animation-delay: ${delay}s">
-                    <div class="flashcard">
-                        <div class="flashcard-front">
-                            <span class="q-number-badge">Pregunta #${pNum}</span>
-                            ${editBtn}
-                            <div class="meta-tags"><span class="tag">${escapeHTML(q.modulo || 'Sin módulo')}</span><span class="tag tag-lesson">${lessonBadge}</span></div>
-                            <div style="font-size: 1.05rem; font-weight: 500; padding-right: 4rem; line-height: 1.5; color: var(--text-dark);">${escapeHTML(q.pregunta || 'Sin enunciado')}</div>
-                            <button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Ver respuesta</button>
-                        </div>
-                        <div class="flashcard-back">
-                            <div style="color: var(--success); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.8rem; letter-spacing: 0.5px;">Respuesta Correcta</div>
-                            <div style="font-size: 1.15rem; font-weight: 500; color: var(--text-dark); line-height: 1.4;">${escapeHTML((q.respuesta || 'N/A').toUpperCase())}) ${correctText}</div>
-                            <button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Volver a la pregunta</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            const pNum = escapeHTML(q.pregunta_global || q.pregunta_num || '?');
+            const delay = i > 15 ? 0 : i * 0.025;
+            const editBtn = isAdmin() && !isFinal
+                ? '<button type="button" class="btn-card-edit admin-only" data-question-id="' + escapeHTML(q.id) + '" onclick="openModal(\'edit\', this.dataset.questionId)">Editar</button>'
+                : '';
+            const rationale = q.sustento
+                ? '<div style="font-size:.86rem;line-height:1.55;color:var(--text-muted);margin-top:1rem;text-align:left;"><strong>Sustento del banco:</strong> ' + escapeHTML(q.sustento) + '</div>'
+                : '';
+            container.innerHTML += '<div class="flashcard-wrapper" style="animation-delay:' + delay + 's">' +
+                '<div class="flashcard">' +
+                    '<div class="flashcard-front">' +
+                        '<span class="q-number-badge">Pregunta #' + pNum + '</span>' + editBtn +
+                        '<div class="meta-tags"><span class="tag">' + escapeHTML(q.modulo || 'Sin módulo') + '</span><span class="tag tag-lesson">' + lessonBadge + '</span></div>' +
+                        '<div style="font-size:1.05rem;font-weight:500;padding-right:4rem;line-height:1.5;color:var(--text-dark);">' + escapeHTML(q.pregunta || 'Sin enunciado') + '</div>' +
+                        '<button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Ver respuesta</button>' +
+                    '</div>' +
+                    '<div class="flashcard-back">' +
+                        '<div style="color:var(--success);font-weight:600;font-size:.85rem;text-transform:uppercase;margin-bottom:.8rem;letter-spacing:.5px;">Respuesta correcta</div>' +
+                        '<div style="font-size:1.15rem;font-weight:500;color:var(--text-dark);line-height:1.4;">' + escapeHTML((q.respuesta || 'N/A').toUpperCase()) + ') ' + correctText + '</div>' +
+                        rationale +
+                        '<button type="button" class="flip-hint" data-flip-card aria-pressed="false" onclick="toggleQuestionCard(this)">Volver a la pregunta</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
         });
     };
     window.renderTable = function() {
@@ -2974,19 +3077,25 @@
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
         appData.questions.forEach(q => {
-            const numRaw = String(q.leccion_num).replace(/\D/g, '');
-            const lessonBadge = escapeHTML(q.leccion_nombre ? `L${numRaw} - ${q.leccion_nombre}` : `L${numRaw}`);
-            tbody.innerHTML += `
-                <tr>
-                    <td style="font-weight:600; color:var(--text-dark);">#${escapeHTML(q.pregunta_num || '?')}</td>
-                    <td><span class="tag">${escapeHTML(q.modulo || 'N/A')}</span></td>
-                    <td>${lessonBadge}</td>
-                    <td>${escapeHTML((q.pregunta || '').substring(0, 50))}...</td>
-                    <td>
-                        ${isAdmin() ? `<button type="button" class="action-btn btn-edit" data-question-id="${escapeHTML(q.id)}" onclick="openModal('edit', this.dataset.questionId)">Editar</button><button type="button" class="action-btn btn-delete" data-question-id="${escapeHTML(q.id)}" onclick="deleteQuestion(this.dataset.questionId)">Borrar</button>` : '<span style="color:var(--text-muted);">Solo lectura</span>'}
-                    </td>
-                </tr>
-            `;
+            const isFinal = q.tipo === 'examen_final_modulo';
+            const numRaw = String(q.leccion_num ?? '').replace(/\D/g, '');
+            const lessonBadge = escapeHTML(isFinal
+                ? (q.leccion_nombre || ('Examen final del ' + q.modulo))
+                : (q.leccion_nombre ? 'L' + String(numRaw).padStart(2, '0') + ' - ' + q.leccion_nombre : 'L' + numRaw));
+            const questionNumber = escapeHTML(q.pregunta_global || q.pregunta_num || '?');
+            const actions = isFinal
+                ? '<span style="color:var(--text-muted);font-size:.78rem;">Examen integrador</span>'
+                : '<button type="button" class="action-btn btn-edit" data-question-id="' + escapeHTML(q.id) + '" onclick="openModal(\'edit\', this.dataset.questionId)">Editar</button>' +
+                    (q._source === 'firebase'
+                        ? '<button type="button" class="action-btn btn-delete" data-question-id="' + escapeHTML(q.id) + '" onclick="deleteQuestion(this.dataset.questionId)">Borrar</button>'
+                        : '<span style="color:var(--text-muted);font-size:.75rem;">Importa para habilitar borrado</span>');
+            tbody.innerHTML += '<tr>' +
+                '<td style="font-weight:600;color:var(--text-dark);">#' + questionNumber + '</td>' +
+                '<td><span class="tag">' + escapeHTML(q.modulo || 'N/A') + '</span></td>' +
+                '<td>' + lessonBadge + '</td>' +
+                '<td>' + escapeHTML((q.pregunta || '').substring(0, 50)) + '...</td>' +
+                '<td>' + actions + '</td>' +
+                '</tr>';
         });
     };
     window.handleModuleMemory = function(selectedModule) {
@@ -3102,11 +3211,9 @@
         lessonSelect.disabled = false;
         const range = moduleLessonsMap[moduleName];
         if(!range) return;
-        for(let i = range.start; i <= range.end; i++) {
-            const count = isAdmin() ? appData.questions.filter(q => q.modulo === moduleName && parseInt(q.leccion_num) === i).length : null;
-            if (!isAdmin() || count > 0) {
-                lessonSelect.innerHTML += `<option value="${i}">${isAdmin() && count ? `Lección ${i} (${count} pregs)` : `Lección ${i}`}</option>`;
-            }
+        for (let i = range.start; i <= range.end; i++) {
+            const count = appData.questions.filter(q => q.modulo === moduleName && q.tipo !== 'examen_final_modulo' && Number(q.leccion_num) === i).length;
+            lessonSelect.innerHTML += '<option value="' + i + '">Lección ' + String(i).padStart(2, '0') + (count ? ' (' + count + ' preguntas)' : '') + '</option>';
         }
         window.refreshCustomSelect('sim-lesson');
     };
