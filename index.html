@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V41 (Cronómetro por lección y examen final de módulo) -->
+    <!-- VERSIÓN: V42 (Nombres descriptivos de lecciones en el selector) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3960,15 +3960,22 @@
             return;
         }
         for (let i = range.start; i <= range.end; i++) {
-            const count = appData.questions.filter(q =>
+            const lessonQuestions = appData.questions.filter(q =>
                 q.modulo === moduleName &&
                 q.tipo !== 'examen_final_modulo' &&
                 Number(q.leccion_num) === i
-            ).length;
-            lessonSelect.innerHTML += '<option value="' + i + '">Lección ' +
-                String(i).padStart(2, '0') +
-                (count ? ' (' + count + ' preguntas · 15 min)' : ' · 15 min') +
-                '</option>';
+            );
+            const count = lessonQuestions.length;
+            const rawTitle = lessonQuestions.find(q => q.leccion_nombre)?.leccion_nombre || '';
+            // Limpiar texto editorial que quedó concatenado al nombre de la lección 29 en el JSON.
+            const lessonTitle = String(rawTitle)
+                .replace(/\\s*10 Preguntas Inéditas[\\s\\S]*$/i, '')
+                .replace(/\\s*\\|\\s*Referencia:[\\s\\S]*$/i, '')
+                .replace(/\\s+Pregunta\\s+1\\s*\\(#.*$/i, '')
+                .trim() || ('Lección ' + String(i).padStart(2, '0'));
+            const optionLabel = 'L' + String(i).padStart(2, '0') + ' - ' + lessonTitle;
+            lessonSelect.innerHTML += '<option value="' + i + '">' +
+                optionLabel + '</option>';
         }
         const finalCount = appData.questions.filter(q =>
             q.modulo === moduleName && q.tipo === 'examen_final_modulo'
