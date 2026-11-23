@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V33 (Carga robusta, navegación de repaso y recuperación ante permisos Firebase) -->
+    <!-- VERSIÓN: V34 (Banco integrado de 400 preguntas con carga automática y sincronización Firebase) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2255,16 +2255,16 @@
             <section class="bank-import-panel" id="bank-drop-zone" aria-label="Carga del banco integral ESBAS">
                 <div class="bank-import-copy">
                     <span class="bank-import-kicker">BANCO INTEGRAL 2026-1</span>
-                    <strong>400 preguntas listas para practicar</strong>
-                    <span>34 lecciones, tres módulos y tres exámenes finales.</span>
+                    <strong>Banco integrado: 400 preguntas</strong>
+                    <span>Se carga automáticamente. También puedes reemplazarlo con otro JSON.</span>
                 </div>
                 <div class="bank-import-actions">
-                    <label class="btn btn-outline bank-file-label" for="bank-json-file"><span aria-hidden="true">📂</span> Elegir archivo JSON</label>
+                    <label class="btn btn-outline bank-file-label" for="bank-json-file"><span aria-hidden="true">📂</span> Reemplazar JSON (opcional)</label>
                     <input type="file" id="bank-json-file" accept=".json,application/json" aria-label="Seleccionar archivo JSON del banco">
                     <button type="button" class="btn" onclick="loadQuestionBankFile()"><span aria-hidden="true">✓</span> Cargar banco</button>
                     <button type="button" class="btn btn-cloud admin-only" onclick="importOfficialBank()"><span aria-hidden="true">☁</span> Guardar en Firebase</button>
                 </div>
-                <span id="bank-json-name" class="bank-file-status" role="status">Selecciona el JSON que descargaste para cargarlo en el repaso.</span>
+                <span id="bank-json-name" class="bank-file-status" role="status">El banco se cargará automáticamente desde esta página.</span>
             </section>
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
@@ -2878,56 +2878,80 @@
         return true;
     }
 
+    async function loadBundledQuestionBank() {
+        if (cachedPublicQuestionBank) return cachedPublicQuestionBank;
+        const response = await fetch('./data/ESBAS-2026-Banco-400-Preguntas.json', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('No se pudo cargar el banco integrado (' + response.status + ').');
+        const questions = await response.json();
+        validateOfficialBank(questions);
+        cachedPublicQuestionBank = questions.map(question => ({ ...question }));
+        return cachedPublicQuestionBank;
+    }
+
     window.loadQuestionBankFile = async function() {
-        const fileInput=document.getElementById('bank-json-file');
-        const file=fileInput?.files?.[0];
-        if(!file) {
-            window.showToast('Selecciona primero el archivo ESBAS-2026-Banco-400-Preguntas.json.','error');
-            return false;
-        }
+        const fileInput = document.getElementById('bank-json-file');
+        const file = fileInput?.files?.[0];
         try {
-            const questions=JSON.parse(await file.text());
+            const questions = file ? JSON.parse(await file.text()) : await loadBundledQuestionBank();
             validateOfficialBank(questions);
-            cachedPublicQuestionBank=questions.map(question=>({...question}));
-            appData.questions=cachedPublicQuestionBank.map(question=>({...question,_source:'json'}));
+            cachedPublicQuestionBank = questions.map(question => ({ ...question }));
+            appData.questions = cachedPublicQuestionBank.map(question => ({ ...question, _source: file ? 'json' : 'bundle' }));
             window.updateIndexesAndCounters();
             window.renderRepo();
-            window.showToast('Banco cargado para repaso: 400 preguntas, 34 lecciones y 3 exámenes finales.');
+            const status = document.getElementById('bank-json-name');
+            if (status) status.textContent = file
+                ? 'Banco cargado desde ' + file.name + ': 400 preguntas disponibles.'
+                : 'Banco integrado cargado automáticamente: 400 preguntas disponibles.';
+            window.showToast('Banco cargado: 400 preguntas, 34 lecciones y 3 exámenes finales.');
             return true;
-        } catch(error) {
+        } catch (error) {
             console.error(error);
-            window.showToast(error.message||'No se pudo leer el archivo JSON.','error');
+            window.showToast(error.message || 'No se pudo leer el banco de preguntas.', 'error');
             return false;
         }
     };
 
     async function loadQuestionsFromFirestoreForStudy() {
         const status = document.getElementById('bank-json-name');
+        let bundled = [];
+        try {
+            bundled = await loadBundledQuestionBank();
+        } catch (bundleError) {
+            console.error('No se pudo cargar el banco integrado:', bundleError);
+        }
+
         try {
             const snapshot = await getDocs(collection(db, 'questions'));
-            appData.questions = [];
-            snapshot.forEach(docSnap => appData.questions.push({
+            const merged = new Map(bundled.map(question => [question.id, { ...question, _source: 'bundle' }]));
+            snapshot.forEach(docSnap => merged.set(docSnap.id, {
                 id: docSnap.id,
                 ...docSnap.data(),
                 _source: 'firebase'
             }));
-            if (appData.questions.length) {
-                if (status) status.textContent = 'Banco conectado a Firebase: ' + appData.questions.length + ' preguntas disponibles.';
-                window.updateIndexesAndCounters();
-                return true;
-            }
-            if (status) status.textContent = 'Firebase respondió, pero la colección questions está vacía. Selecciona el JSON para cargar el banco.';
+            appData.questions = Array.from(merged.values());
             window.updateIndexesAndCounters();
             window.renderRepo();
-            window.showToast('Firebase respondió, pero todavía no hay preguntas registradas. Carga el JSON del banco.', 'error');
-            return false;
+            if (status) status.textContent = snapshot.size
+                ? 'Banco listo: ' + appData.questions.length + ' preguntas. Firebase respondió y se combinaron sus registros con el banco integrado.'
+                : 'Banco integrado cargado automáticamente: 400 preguntas. Firebase está vacío; un administrador puede sincronizarlo.';
+            return appData.questions.length > 0;
         } catch (error) {
             console.error('Error leyendo questions en Firestore:', error);
+            if (bundled.length) {
+                appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
+                window.updateIndexesAndCounters();
+                window.renderRepo();
+                if (status) status.textContent = 'Banco integrado cargado automáticamente: 400 preguntas. Firebase no permitió leer questions; el repaso funciona sin esa lectura.';
+                return true;
+            }
             appData.questions = [];
             window.updateIndexesAndCounters();
             window.renderRepo();
-            if (status) status.textContent = 'Firestore no permitió leer questions. Elige el JSON del banco para continuar; la conexión a Firebase sigue pendiente.';
-            window.showToast('No se pudo leer el banco desde Firebase. La sección de repaso está disponible para cargar el JSON.', 'error');
+            if (status) status.textContent = 'No se pudo cargar el banco integrado ni leer Firebase. Revisa la publicación del archivo JSON.';
+            window.showToast('No se pudo cargar el banco de preguntas.', 'error');
             return false;
         }
     }
@@ -3216,58 +3240,74 @@
     async function fetchQuestions() {
         if (!requireAdmin()) return;
         window.setCloudStatus('syncing');
+        let bundled = [];
         try {
-            const querySnapshot=await getDocs(collection(db,'questions'));
-            const merged=new Map((cachedPublicQuestionBank||[]).map(question=>[question.id,question]));
-            querySnapshot.forEach(docSnap=>merged.set(docSnap.id,{id:docSnap.id,...docSnap.data(),_source:'firebase'}));
-            appData.questions=Array.from(merged.values());
+            bundled = await loadBundledQuestionBank();
+        } catch (error) {
+            console.error('No se pudo cargar el banco integrado:', error);
+        }
+        try {
+            const querySnapshot = await getDocs(collection(db, 'questions'));
+            const merged = new Map(bundled.map(question => [question.id, { ...question, _source: 'bundle' }]));
+            querySnapshot.forEach(docSnap => merged.set(docSnap.id, {
+                id: docSnap.id,
+                ...docSnap.data(),
+                _source: 'firebase'
+            }));
+            appData.questions = Array.from(merged.values());
             window.updateIndexesAndCounters();
             window.renderRepo();
             window.renderTable();
             window.setCloudStatus('success');
-        } catch(error) {
+        } catch (error) {
             console.error(error);
-            if(cachedPublicQuestionBank) {
-                appData.questions=cachedPublicQuestionBank.map(question=>({...question,_source:'json'}));
-                window.updateIndexesAndCounters();
-                window.renderRepo();
-                window.renderTable();
-            }
+            appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
+            window.updateIndexesAndCounters();
+            window.renderRepo();
+            window.renderTable();
             window.setCloudStatus('error');
-            window.showToast('No se pudo consultar Firestore. Revisa las reglas de la colección questions.','error');
+            window.showToast(bundled.length
+                ? 'Se cargó el banco integrado. Firestore rechazó la lectura; la sincronización queda pendiente.'
+                : 'No se pudo consultar Firestore ni cargar el banco integrado.', 'error');
         }
     }
 
     window.importOfficialBank = async function() {
-        if(!requireAdmin()) return;
-        if(!cachedPublicQuestionBank) {
-            const loaded=await window.loadQuestionBankFile();
-            if(!loaded) return;
+        if (!requireAdmin()) return;
+        let questions;
+        try {
+            questions = cachedPublicQuestionBank || await loadBundledQuestionBank();
+        } catch (error) {
+            console.error(error);
+            window.showToast(error.message || 'No se pudo cargar el banco integrado para importar.', 'error');
+            return;
         }
-        if(!confirm('Se importarán o actualizarán las 400 preguntas del Banco Integral ESBAS 2026-1 en Firestore. Los registros ajenos a este banco no se eliminarán. ¿Continuar?')) return;
-        const pageButton=document.querySelector('#view-repo button[onclick="importOfficialBank()"]');
-        const button=pageButton||document.getElementById('btn-import-bank');
-        setButtonLoading(button,true);
-        setAppLoading(true,'Importando banco oficial','Guardando 400 preguntas en Firestore por lotes…','☁️');
+        if (!confirm('Se importarán o actualizarán las 400 preguntas integradas del Banco ESBAS 2026-1 en Firestore. Los registros ajenos al banco no se eliminarán. ¿Continuar?')) return;
+        const button = document.querySelector('#view-repo button[onclick="importOfficialBank()"]') || document.getElementById('btn-import-bank');
+        setButtonLoading(button, true);
+        setAppLoading(true, 'Guardando banco en Firebase', 'Enviando 400 preguntas a Firestore por lotes…', '☁️');
         window.setCloudStatus('syncing');
         try {
-            const batch=writeBatch(db);
-            cachedPublicQuestionBank.forEach(question=>{
-                const {id,_source,...data}=question;
-                batch.set(doc(db,'questions',id),data,{merge:true});
+            const batch = writeBatch(db);
+            questions.forEach(question => {
+                const { id, _source, ...data } = question;
+                batch.set(doc(db, 'questions', id), data, { merge: true });
             });
             await batch.commit();
             await fetchQuestions();
-            window.showToast('Banco oficial sincronizado en Firebase: 400 preguntas.');
-        } catch(error) {
+            window.showToast('Firebase confirmó la importación de las 400 preguntas.');
+            const status = document.getElementById('bank-json-name');
+            if (status) status.textContent = 'Banco sincronizado con Firebase: 400 preguntas guardadas.';
+        } catch (error) {
             console.error(error);
             window.setCloudStatus('error');
-            window.showToast(error.message||'No se pudo importar el banco a Firestore. Revisa las reglas de escritura.','error');
+            window.showToast(error.message || 'Firebase no confirmó la importación. Revisa las reglas de escritura.', 'error');
         } finally {
             hideAppLoading();
-            setButtonLoading(button,false);
+            setButtonLoading(button, false);
         }
     };
+
     window.saveQuestion = async function(e) {
         if(e) e.preventDefault();
         if (!requireAdmin()) return;
