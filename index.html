@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V62 (Navegación fija y accesible entre preguntas) -->
+    <!-- VERSIÓN: V63 (Botón siguiente más cerca y dock compacto al inicio) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3359,7 +3359,7 @@
             position: fixed;
             z-index: 250;
             right: max(20px, calc((100vw - 1160px) / 2 + 20px));
-            bottom: max(18px, env(safe-area-inset-bottom));
+            bottom: max(clamp(88px, 11vh, 124px), env(safe-area-inset-bottom));
             width: auto;
             min-width: 330px;
             margin: 0;
@@ -3379,6 +3379,14 @@
             align-items: center;
             gap: 9px !important;
             flex: 0 0 auto;
+        }
+        /* En la primera pregunta no dejamos un hueco reservado para Anterior. */
+        #sim-active .sim-nav-footer.is-first-question {
+            width: max-content;
+            min-width: 0;
+        }
+        #sim-active .sim-nav-footer.is-first-question #btn-sim-prev {
+            display: none;
         }
         #sim-active #btn-sim-prev {
             min-width: 118px;
@@ -6305,6 +6313,8 @@
             renderImmediateFeedback(currentQuestion, userAnswers[currentQuestion.id]);
         }
         window.updateSimulationProgress();
+        const navigationFooter = document.querySelector('#sim-active .sim-nav-footer');
+        if (navigationFooter) navigationFooter.classList.toggle('is-first-question', index === 0);
         document.getElementById('btn-sim-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
         if (index === currentSimulationQuestions.length - 1) {
             document.getElementById('btn-sim-next').style.display = 'none';
