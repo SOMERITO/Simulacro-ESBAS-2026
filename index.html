@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V60 (Animación de llama sincronizada con el arranque) -->
+    <!-- VERSIÓN: V61 (Progreso real y continuo hasta que la página está lista) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -427,27 +427,41 @@
             font-size:.82rem;
             line-height:1.5;
         }
+        .fire-progress-meta {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:.8rem;
+            margin:1.18rem 0 .48rem;
+            color:#8791a0;
+            font-size:.62rem;
+            font-weight:800;
+            letter-spacing:.09em;
+        }
+        .fire-progress-value {
+            color:#27364b;
+            font-size:.7rem;
+            font-variant-numeric:tabular-nums;
+            letter-spacing:.02em;
+        }
         .fire-progress-track {
-            height:5px;
-            margin:1.35rem 0 .85rem;
+            height:6px;
             overflow:hidden;
+            border:1px solid rgba(30,45,66,.045);
             border-radius:999px;
-            background:#f0e8e5;
+            background:#edf0f4;
+            box-shadow:inset 0 1px 2px rgba(30,45,66,.045);
         }
         .fire-progress-fill {
             display:block;
-            width:100%;
+            width:0;
             height:100%;
             border-radius:inherit;
-            background:linear-gradient(90deg,#b51f2c 0%,#ed6a37 52%,#ffb24d 100%);
-            box-shadow:0 0 12px rgba(231,94,44,.24);
-            transform:scaleX(0);
-            transform-origin:left center;
+            background:linear-gradient(90deg,#a91f2b 0%,#e65a32 54%,#ffb34e 100%);
+            box-shadow:0 0 13px rgba(231,94,44,.27);
+            transition:width .22s cubic-bezier(.2,.75,.25,1);
+            will-change:width;
         }
-        .app-loader.is-growing .fire-progress-fill {
-            animation:fireProgressGrow 1.25s cubic-bezier(.18,.72,.2,1) .05s forwards;
-        }
-        @keyframes fireProgressGrow { to { transform:scaleX(1); } }
         .app-loader.is-ready .fire-progress-fill {
             background:linear-gradient(90deg,#218453,#4cad75);
             box-shadow:0 0 12px rgba(33,132,83,.18);
@@ -472,9 +486,9 @@
             .app-loader.is-growing .fire-inner,
             .app-loader.is-growing .fire-glow,
             .app-loader.is-growing .fire-spark,
-            .app-loader.is-growing .fire-progress-fill,
             .app-loader.is-growing .fire-stage::before { animation:none !important; }
-            .fire-outer,.fire-mid,.fire-inner,.fire-glow,.fire-progress-fill { opacity:1; transform:none; }
+            .fire-outer,.fire-mid,.fire-inner,.fire-glow { opacity:1; transform:none; }
+            .fire-progress-fill { transition:none !important; }
         }
         .app-loader.active .app-loader-card { pointer-events:none; }
         .field-password-wrap { position:relative; }
@@ -3374,10 +3388,72 @@
         </div>
         <div class="app-loader-title" id="loader-title">Encendiendo el simulador</div>
         <div class="app-loader-subtitle" id="loader-subtitle">Preparando el banco de preguntas para tu práctica…</div>
-        <div class="fire-progress-track" aria-hidden="true"><span class="fire-progress-fill"></span></div>
+        <div class="fire-progress-meta">
+            <span id="loader-progress-label">INICIANDO EL SIMULADOR</span>
+            <span class="fire-progress-value" id="loader-progress-value">0%</span>
+        </div>
+        <div class="fire-progress-track" id="loader-progress-track" role="progressbar" aria-label="Carga del simulador" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span class="fire-progress-fill" id="loader-progress-fill"></span>
+        </div>
         <div class="app-loader-footnote">PREPARACIÓN · ENTRENAMIENTO · EVALUACIÓN</div>
     </div>
 </div>
+<script>
+(() => {
+    const overlay = document.getElementById('app-loader');
+    const fill = document.getElementById('loader-progress-fill');
+    const track = document.getElementById('loader-progress-track');
+    const valueLabel = document.getElementById('loader-progress-value');
+    const statusLabel = document.getElementById('loader-progress-label');
+    const title = document.getElementById('loader-title');
+    const subtitle = document.getElementById('loader-subtitle');
+    let current = 0;
+    let completed = false;
+
+    function paint(value, status, detail) {
+        if (!overlay || completed || !overlay.classList.contains('active')) return;
+        const next = Math.max(current, Math.min(99, Math.round(Number(value) || 0)));
+        current = next;
+        if (fill) fill.style.width = current + '%';
+        if (track) track.setAttribute('aria-valuenow', String(current));
+        if (valueLabel) valueLabel.textContent = current + '%';
+        if (status && statusLabel) statusLabel.textContent = status;
+        if (detail && subtitle) subtitle.textContent = detail;
+    }
+
+    function reset() {
+        current = 0;
+        completed = false;
+        if (fill) fill.style.width = '0%';
+        if (track) track.setAttribute('aria-valuenow', '0');
+        if (valueLabel) valueLabel.textContent = '0%';
+        if (statusLabel) statusLabel.textContent = 'INICIANDO EL SIMULADOR';
+    }
+
+    function finish() {
+        if (!overlay || !overlay.classList.contains('active')) return;
+        current = 100;
+        completed = true;
+        if (fill) fill.style.width = '100%';
+        if (track) track.setAttribute('aria-valuenow', '100');
+        if (valueLabel) valueLabel.textContent = '100%';
+        if (statusLabel) statusLabel.textContent = 'CARGA COMPLETADA';
+    }
+
+    window.__ESBASBootProgress = { update: paint, reset, complete: finish };
+
+    document.addEventListener('readystatechange', () => {
+        if (document.readyState === 'interactive') {
+            paint(9, 'ESTRUCTURA LISTA', 'Leyendo la página y preparando sus componentes…');
+        } else if (document.readyState === 'complete') {
+            paint(18, 'RECURSOS INICIALES LISTOS', 'Preparando la conexión y los datos del simulador…');
+        }
+    });
+    window.addEventListener('load', () => {
+        paint(21, 'RECURSOS INICIALES LISTOS', 'Iniciando los servicios del simulador…');
+    }, { once: true });
+})();
+</script>
 <nav id="main-nav">
     <div class="nav-brand">
         <div class="brand-mark" aria-hidden="true"><img class="brand-mark-icon" src="data:image/png;base64,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" alt=""></div>
@@ -3812,6 +3888,7 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { initializeFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-functions.js";
+    window.__ESBASBootProgress?.update(25, 'MÓDULOS CARGADOS', 'Preparando Firebase y los servicios del simulador…');
     const firebaseConfig = {
         apiKey: "AIzaSyC4eWmz68IlI0qEaW6zndkjFN_bwzlLjpY",
         authDomain: "esbas-2026.firebaseapp.com",
@@ -3829,6 +3906,7 @@
     const callAdminUpdateUserAccess = httpsCallable(functions, 'adminUpdateUserAccess');
     const callStartSimulation = httpsCallable(functions, 'startSimulation');
     const callGradeSimulation = httpsCallable(functions, 'gradeSimulation');
+    window.__ESBASBootProgress?.update(32, 'SERVICIOS PREPARADOS', 'Conectando con la cuenta y los datos del simulador…');
     // SANITIZACIÓN CONTRA XSS
     function escapeHTML(str) {
         if (str === null || str === undefined) return '';
@@ -4097,9 +4175,7 @@
         else { button.classList.remove('is-loading'); button.disabled = false; }
     }
     let appLoaderRunId = 0;
-    let appLoaderShownAt = performance.now();
     let appLoaderHideTimer = null;
-    let appLoaderInitialGrowthStarted = false;
 
     function setAppLoading(show, title = 'Procesando', subtitle = 'Espera un momento, por favor.', icon = '🚒') {
         const loader = document.getElementById('app-loader');
@@ -4118,21 +4194,11 @@
             !loader.classList.contains('is-ready');
         if (!alreadyVisible) {
             appLoaderRunId++;
-            appLoaderShownAt = performance.now();
-            appLoaderInitialGrowthStarted = false;
             loader.classList.remove('is-exiting', 'is-ready', 'is-initial', 'is-growing');
             loader.classList.add('active');
             void loader.offsetWidth;
             loader.classList.add('is-growing');
-        } else if (loader.classList.contains('is-initial') && !appLoaderInitialGrowthStarted) {
-            // Reinicia la llama cuando el arranque real de la app comienza,
-            // no mientras el navegador todavía descarga los módulos de Firebase.
-            appLoaderRunId++;
-            appLoaderShownAt = performance.now();
-            appLoaderInitialGrowthStarted = true;
-            loader.classList.remove('is-growing');
-            void loader.offsetWidth;
-            loader.classList.add('is-growing');
+            window.__ESBASBootProgress?.reset();
         }
         loader.setAttribute('aria-busy', 'true');
         document.getElementById('loader-title').textContent = title;
@@ -4145,35 +4211,26 @@
         if (appLoaderHideTimer) clearTimeout(appLoaderHideTimer);
 
         const runId = appLoaderRunId;
-        const initialLoad = loader.classList.contains('is-initial');
         const reducedMotion = window.matchMedia &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const minimumVisibleTime = reducedMotion
-            ? (initialLoad ? 260 : 150)
-            : (initialLoad ? 1800 : 680);
-        const elapsed = performance.now() - appLoaderShownAt;
-        const waitForFire = Math.max(0, minimumVisibleTime - elapsed);
+
+        // El 100% se alcanza una sola vez, cuando las tareas de preparación ya terminaron.
+        window.__ESBASBootProgress?.complete();
+        loader.classList.add('is-ready');
+        loader.setAttribute('aria-busy', 'false');
+        document.getElementById('loader-title').textContent = '¡Listo para practicar!';
+        document.getElementById('loader-subtitle').textContent = 'El simulador ya está preparado.';
 
         appLoaderHideTimer = setTimeout(() => {
             if (runId !== appLoaderRunId) return;
-
-            loader.classList.add('is-ready');
-            loader.setAttribute('aria-busy', 'false');
-            document.getElementById('loader-title').textContent = '¡Listo para practicar!';
-            document.getElementById('loader-subtitle').textContent = 'El simulador ya está preparado.';
-
+            loader.classList.add('is-exiting');
             appLoaderHideTimer = setTimeout(() => {
                 if (runId !== appLoaderRunId) return;
-                loader.classList.add('is-exiting');
-                appLoaderHideTimer = setTimeout(() => {
-                    if (runId !== appLoaderRunId) return;
-                    loader.classList.remove('active', 'is-exiting', 'is-ready', 'is-growing', 'is-initial');
-                    loader.setAttribute('aria-busy', 'false');
-                    appLoaderInitialGrowthStarted = false;
-                    appLoaderHideTimer = null;
-                }, reducedMotion ? 30 : 390);
-            }, reducedMotion ? 80 : 360);
-        }, waitForFire);
+                loader.classList.remove('active', 'is-exiting', 'is-ready', 'is-growing', 'is-initial');
+                loader.setAttribute('aria-busy', 'false');
+                appLoaderHideTimer = null;
+            }, reducedMotion ? 30 : 340);
+        }, reducedMotion ? 30 : 240);
     }
     function showWelcomeBanner(role) {
         const banner = document.getElementById('welcome-banner');
@@ -4388,14 +4445,55 @@
     }
 
     async function loadBundledQuestionBank() {
-        if (cachedPublicQuestionBank) return cachedPublicQuestionBank;
+        if (cachedPublicQuestionBank) {
+            window.__ESBASBootProgress?.update(86, 'BANCO DISPONIBLE', 'Organizando las preguntas para abrir el simulador…');
+            return cachedPublicQuestionBank;
+        }
+
+        window.__ESBASBootProgress?.update(38, 'DESCARGANDO EL BANCO', 'Cargando las preguntas oficiales del simulacro…');
         const response = await fetch('./data/ESBAS-2026-Banco-400-Preguntas.json', {
             cache: 'no-store',
             headers: { 'Accept': 'application/json' }
         });
         if (!response.ok) throw new Error('No se pudo cargar el banco integrado (' + response.status + ').');
-        const questions = await response.json();
+
+        let questions;
+        const reader = response.body?.getReader?.();
+        if (reader) {
+            const chunks = [];
+            let receivedBytes = 0;
+            const totalBytes = Number(response.headers.get('content-length')) || 0;
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedBytes += value.byteLength;
+
+                if (totalBytes > 0) {
+                    const downloadProgress = 38 + Math.min(44, (receivedBytes / totalBytes) * 44);
+                    window.__ESBASBootProgress?.update(
+                        downloadProgress,
+                        'DESCARGANDO EL BANCO',
+                        'Recibidos ' + Math.round(receivedBytes / 1024) + ' KB de preguntas…'
+                    );
+                }
+            }
+
+            const payload = new Uint8Array(receivedBytes);
+            let offset = 0;
+            chunks.forEach(chunk => {
+                payload.set(chunk, offset);
+                offset += chunk.byteLength;
+            });
+            questions = JSON.parse(new TextDecoder('utf-8').decode(payload));
+        } else {
+            questions = await response.json();
+        }
+
+        window.__ESBASBootProgress?.update(85, 'BANCO DESCARGADO', 'Verificando la estructura y el contenido de las preguntas…');
         validateOfficialBank(questions);
+        window.__ESBASBootProgress?.update(92, 'BANCO VALIDADO', 'Preparando las preguntas y los filtros del simulador…');
         cachedPublicQuestionBank = questions.map(question => ({ ...question }));
         return cachedPublicQuestionBank;
     }
@@ -4425,6 +4523,7 @@
 
     async function loadQuestionsFromFirestoreForStudy() {
         const status = document.getElementById('bank-json-name');
+        window.__ESBASBootProgress?.update(38, 'CARGANDO EL BANCO', 'Preparando preguntas y consultando los datos guardados…');
         let bundled = [];
         try {
             bundled = await loadBundledQuestionBank();
@@ -4446,6 +4545,7 @@
             if (status) status.textContent = snapshot.size
                 ? 'Banco listo: ' + appData.questions.length + ' preguntas. Firebase respondió y se combinaron sus registros con el banco integrado.'
                 : 'Banco integrado cargado automáticamente: 400 preguntas. Firebase está vacío; un administrador puede sincronizarlo.';
+            window.__ESBASBootProgress?.update(98, 'DATOS PREPARADOS', 'La interfaz está lista para abrirse…');
             return appData.questions.length > 0;
         } catch (error) {
             console.error('Error leyendo questions en Firestore:', error);
@@ -4521,6 +4621,7 @@
                 return;
             }
             const data = userDoc.data();
+            window.__ESBASBootProgress?.update(52, 'ACCESO VERIFICADO', 'Cargando los datos y el banco que corresponden a tu cuenta…');
             if (data.disabled === true) {
                 await signOut(auth);
                 window.showToast("Tu cuenta está deshabilitada.", "error");
@@ -4566,9 +4667,11 @@
         }
         window.setCloudStatus('success', '🌐 Acceso público');
         setAppLoading(true, 'Encendiendo el simulador', 'La llama está creciendo mientras preparamos tus preguntas…', '🚒');
+        window.__ESBASBootProgress?.update(37, 'PREPARANDO EL SIMULADOR', 'Cargando el banco de preguntas y los componentes de práctica…');
         try {
             const questions = await loadBundledQuestionBank();
             appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
+            window.__ESBASBootProgress?.update(96, 'PREPARANDO LA INTERFAZ', 'Organizando los módulos, lecciones y controles…');
             window.updateIndexesAndCounters();
             window.refreshSimulationModuleDropdown('all');
             window.switchView('sim');
@@ -4582,6 +4685,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
+        window.__ESBASBootProgress?.update(35, 'CONECTANDO CON FIREBASE', 'Verificando el acceso y preparando los datos…');
         // El simulador es público: sin sesión o con una sesión anónima, no se pide validar ningún acceso.
         if (!user || user.isAnonymous) {
             await initializePublicVisitor();
@@ -4611,6 +4715,7 @@
     async function fetchUsers() {
         if (!requireAdmin()) return;
         try {
+            window.__ESBASBootProgress?.update(98, 'PREPARANDO ACCESOS', 'Terminando de cargar los datos de usuario…');
             const querySnapshot = await getDocs(collection(db, "users"));
             appData.users = [];
             querySnapshot.forEach((docSnap) => { appData.users.push({ uid: docSnap.id, ...docSnap.data() }); });
@@ -4780,6 +4885,7 @@
             console.error('No se pudo cargar el banco integrado:', error);
         }
         try {
+            window.__ESBASBootProgress?.update(91, 'SINCRONIZANDO DATOS', 'Comprobando las preguntas guardadas en Firebase…');
             const querySnapshot = await getDocs(collection(db, 'questions'));
             const merged = new Map(bundled.map(question => [question.id, { ...question, _source: 'bundle' }]));
             querySnapshot.forEach(docSnap => merged.set(docSnap.id, {
@@ -4791,6 +4897,7 @@
             window.updateIndexesAndCounters();
             window.renderRepo();
             window.renderTable();
+            window.__ESBASBootProgress?.update(97, 'DATOS SINCRONIZADOS', 'Preparando la pantalla principal…');
             window.setCloudStatus('success');
         } catch (error) {
             console.error(error);
