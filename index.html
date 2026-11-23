@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V61 (Progreso real y continuo hasta que la página está lista) -->
+    <!-- VERSIÓN: V62 (Navegación fija y accesible entre preguntas) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3351,6 +3351,96 @@
             .review-filter-btn:hover,.review-filter-btn:active { transform:none !important; }
         }
 
+        /* V62 — Navegación siempre visible durante el examen */
+        #sim-active {
+            padding-bottom: 112px;
+        }
+        #sim-active .sim-nav-footer {
+            position: fixed;
+            z-index: 250;
+            right: max(20px, calc((100vw - 1160px) / 2 + 20px));
+            bottom: max(18px, env(safe-area-inset-bottom));
+            width: auto;
+            min-width: 330px;
+            margin: 0;
+            padding: 9px;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 9px;
+            border: 1px solid rgba(211,220,231,.92);
+            border-radius: 18px;
+            background: rgba(255,255,255,.94);
+            box-shadow: 0 12px 36px rgba(22,36,56,.16), 0 2px 8px rgba(22,36,56,.06);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+        }
+        #sim-active .sim-nav-footer > div {
+            display: flex;
+            align-items: center;
+            gap: 9px !important;
+            flex: 0 0 auto;
+        }
+        #sim-active #btn-sim-prev {
+            min-width: 118px;
+            min-height: 52px;
+            padding: .8rem 1rem;
+            border-radius: 12px;
+            font-size: .86rem;
+            font-weight: 750;
+            background: #f7f9fc;
+        }
+        #sim-active #btn-sim-next,
+        #sim-active #btn-sim-finish {
+            min-width: 172px;
+            min-height: 54px;
+            padding: .85rem 1.15rem;
+            border-radius: 13px;
+            font-size: .92rem;
+            font-weight: 820;
+            box-shadow: 0 6px 15px rgba(148,31,39,.2), inset 0 1px 0 rgba(255,255,255,.17);
+        }
+        #sim-active #btn-sim-next:hover:not(:disabled) {
+            box-shadow: 0 8px 20px rgba(148,31,39,.25), inset 0 1px 0 rgba(255,255,255,.17);
+        }
+        #sim-active #btn-sim-finish {
+            background: linear-gradient(180deg,#219261 0%,#167348 100%) !important;
+            border-color: #167348 !important;
+            box-shadow: 0 6px 15px rgba(22,115,72,.2);
+        }
+        @media(max-width:620px) {
+            #sim-active { padding-bottom: 104px; }
+            #sim-active .sim-nav-footer {
+                right: 10px;
+                bottom: max(10px, env(safe-area-inset-bottom));
+                left: 10px;
+                width: auto;
+                min-width: 0;
+                justify-content: space-between;
+                padding: 8px;
+                gap: 7px;
+                border-radius: 15px;
+            }
+            #sim-active .sim-nav-footer > div {
+                flex: 1 1 auto;
+                min-width: 0;
+                gap: 7px !important;
+            }
+            #sim-active #btn-sim-prev {
+                min-width: 0;
+                width: 36%;
+                min-height: 49px;
+                padding: .7rem .55rem;
+                font-size: .79rem;
+            }
+            #sim-active #btn-sim-next,
+            #sim-active #btn-sim-finish {
+                min-width: 0;
+                width: 100%;
+                min-height: 51px;
+                padding: .75rem .65rem;
+                font-size: .86rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3621,11 +3711,11 @@
                 <button class="btn btn-outline sim-cancel-button" onclick="cancelSimulation()">Cancelar examen</button>
             </div>
             <div id="sim-questions-container"></div>
-            <div class="sim-nav-footer">
-                <button class="btn btn-outline" id="btn-sim-prev" onclick="navigateSim(-1)">← Anterior</button>
+            <div class="sim-nav-footer" role="navigation" aria-label="Navegación entre preguntas">
+                <button class="btn btn-outline" id="btn-sim-prev" type="button" aria-label="Ir a la pregunta anterior" onclick="navigateSim(-1)">← Anterior</button>
                 <div style="display:flex; gap:0.5rem;">
-                    <button class="btn" id="btn-sim-next" onclick="navigateSim(1)">Siguiente ➝</button>
-                    <button class="btn" id="btn-sim-finish" style="background:var(--success); display:none;" onclick="finishSimulation()">Entregar Examen ✔</button>
+                    <button class="btn" id="btn-sim-next" type="button" aria-label="Avanzar a la siguiente pregunta" onclick="navigateSim(1)">Siguiente ➝</button>
+                    <button class="btn" id="btn-sim-finish" type="button" style="background:var(--success); display:none;" onclick="finishSimulation()">Entregar Examen ✔</button>
                 </div>
             </div>
         </div>
@@ -6229,6 +6319,8 @@
         if(nextIndex >= 0 && nextIndex < currentSimulationQuestions.length) {
             currentSimIndex = nextIndex;
             window.showSimQuestion(currentSimIndex);
+            // La nueva pregunta vuelve a quedar a la vista; los controles permanecen fijos.
+            window.scrollTo(0, 0);
         }
     };
     window.selectAnswer = function(questionId, selectedKey) {
