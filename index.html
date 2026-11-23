@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V31 (Banco integral 400 preguntas, repaso por módulo/lección y sincronización Firebase) -->
+    <!-- VERSIÓN: V32 (Banco ESBAS 400, carga JSON validada y diseño visual refinado) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -1923,7 +1923,285 @@
             .sim-answered-count { font-size: .68rem; }
         }
 
-    </style>
+    
+        /* V32 — Acabado visual de controles y carga del banco */
+        :root {
+            --button-radius: 13px;
+            --button-shadow: 0 7px 18px rgba(156, 28, 39, .18);
+            --button-shadow-hover: 0 11px 24px rgba(156, 28, 39, .24);
+            --navy-ink: #182538;
+        }
+        .btn {
+            min-height: 44px;
+            padding: .78rem 1.18rem;
+            border-radius: var(--button-radius);
+            border: 1px solid transparent;
+            font-weight: 700;
+            letter-spacing: .005em;
+            background: linear-gradient(135deg, #db3a32 0%, #b82430 100%);
+            box-shadow: var(--button-shadow);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .btn::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 48%;
+            background: linear-gradient(180deg, rgba(255,255,255,.16), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #e3453c 0%, #a91e2a 100%);
+            box-shadow: var(--button-shadow-hover);
+            transform: translateY(-2px);
+        }
+        .btn:focus-visible, .filter-btn:focus-visible, .lesson-btn:focus-visible,
+        .nav-links button:focus-visible, .action-btn:focus-visible, .custom-select-trigger:focus-visible {
+            outline: 3px solid rgba(217,48,37,.25);
+            outline-offset: 3px;
+        }
+        .btn-outline {
+            color: #253348;
+            background: linear-gradient(180deg, #fff 0%, #f7f8fa 100%);
+            border: 1px solid #dce1e8;
+            box-shadow: 0 3px 9px rgba(24,37,56,.06);
+        }
+        .btn-outline::before { display: none; }
+        .btn-outline:hover {
+            color: #b3261e;
+            background: #fff;
+            border-color: rgba(217,48,37,.38);
+            box-shadow: 0 7px 17px rgba(24,37,56,.10);
+        }
+        .btn-cloud {
+            background: linear-gradient(135deg, #24364e 0%, #142237 100%);
+            box-shadow: 0 7px 18px rgba(20,34,55,.18);
+        }
+        .btn-cloud:hover { background: linear-gradient(135deg, #314763 0%, #1b2e48 100%); }
+        .nav-links { display:flex; align-items:center; gap:.35rem; }
+        .nav-links button {
+            min-height: 40px;
+            padding: .58rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            color: rgba(255,255,255,.84);
+            font-weight: 650;
+            letter-spacing: .005em;
+        }
+        .nav-links button:hover {
+            color: #fff;
+            background: rgba(255,255,255,.14);
+        }
+        .nav-links button.active {
+            color: #a51f2c;
+            background: #fff;
+            border-color: rgba(255,255,255,.75);
+            box-shadow: 0 4px 14px rgba(20,25,35,.15);
+        }
+        .filter-group { justify-content:flex-start; gap:.6rem; }
+        .filter-btn {
+            min-height: 42px;
+            padding: .58rem .95rem;
+            border: 1px solid #e0e4ea;
+            border-radius: 12px;
+            background: linear-gradient(180deg,#fff,#f9fafb);
+            color: #4d5969;
+            font-weight: 650;
+            box-shadow: 0 2px 7px rgba(24,37,56,.045);
+        }
+        .filter-btn:hover {
+            color: #b3261e;
+            background: #fff;
+            border-color: rgba(217,48,37,.32);
+        }
+        .filter-btn.active {
+            color: #fff;
+            background: linear-gradient(135deg,#273950,#172538);
+            border-color: #172538;
+            box-shadow: 0 6px 15px rgba(23,37,56,.18);
+        }
+        .lesson-filters {
+            justify-content:flex-start;
+            gap:.48rem;
+            padding-top:1rem;
+        }
+        .lesson-btn {
+            min-height: 36px;
+            padding: .48rem .75rem;
+            color: #596577;
+            background: #fff;
+            border: 1px solid #e2e6eb;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(24,37,56,.035);
+        }
+        .lesson-btn:hover {
+            color: #a91e2a;
+            border-color: rgba(217,48,37,.32);
+            background: #fffafa;
+        }
+        .lesson-btn.active {
+            color: #a91e2a;
+            background: #fff0f0;
+            border-color: #e6b6bb;
+            box-shadow: inset 0 0 0 1px rgba(217,48,37,.06);
+        }
+        .lesson-btn.active .badge-count {
+            color: #fff;
+            background: #b3261e;
+        }
+        .badge-count { padding: .16rem .48rem; }
+        .btn-card-edit {
+            padding: .42rem .75rem;
+            border: 1px solid #e0e4ea;
+            border-radius: 10px;
+            color: #4a5666;
+            background: rgba(255,255,255,.96);
+            box-shadow: 0 3px 9px rgba(24,37,56,.08);
+            font-weight: 650;
+        }
+        .btn-card-edit:hover {
+            color: #fff;
+            background: #24364e;
+            border-color: #24364e;
+        }
+        .action-btn {
+            min-height: 32px;
+            padding: .42rem .7rem;
+            margin: .12rem .18rem .12rem 0;
+            border-radius: 9px;
+            font-weight: 650;
+        }
+        .btn-edit {
+            color: #34445a;
+            background: #f2f5f8;
+            border: 1px solid #dce3eb;
+        }
+        .btn-edit:hover { color:#142237; background:#e9eef4; }
+        .btn-delete {
+            color: #b3261e;
+            background: #fff0f0;
+            border: 1px solid #f2cece;
+        }
+        .btn-delete:hover { background:#ffe3e3; }
+        .custom-select-trigger {
+            border: 1px solid #dfe4eb;
+            border-radius: 13px;
+            background: linear-gradient(180deg,#fff,#f8f9fb);
+            box-shadow: 0 3px 9px rgba(24,37,56,.05);
+        }
+        .custom-select.open .custom-select-trigger,
+        .custom-select-trigger:hover {
+            border-color: rgba(217,48,37,.38);
+            box-shadow: 0 0 0 3px rgba(217,48,37,.07);
+        }
+        .bank-import-panel {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:1rem;
+            flex-wrap:wrap;
+            margin:1rem 0 1.15rem;
+            padding:1.1rem;
+            border:1px solid #e1e6ed;
+            border-radius:16px;
+            background:linear-gradient(135deg,#fff 0%,#f7f9fc 100%);
+            box-shadow:0 4px 14px rgba(24,37,56,.045);
+            transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .bank-import-panel.is-dragging {
+            border:1px dashed #c72d38;
+            background:#fff5f5;
+            box-shadow:0 0 0 4px rgba(217,48,37,.08);
+        }
+        .bank-import-copy {
+            display:flex;
+            flex-direction:column;
+            gap:.2rem;
+            min-width:200px;
+        }
+        .bank-import-kicker {
+            color:#b3261e;
+            font-size:.65rem;
+            font-weight:800;
+            letter-spacing:.11em;
+        }
+        .bank-import-copy strong {
+            color:#202e40;
+            font-size:.96rem;
+            font-weight:750;
+        }
+        .bank-import-copy > span:last-child {
+            color:#778292;
+            font-size:.76rem;
+        }
+        .bank-import-actions {
+            display:flex;
+            align-items:center;
+            justify-content:flex-end;
+            flex-wrap:wrap;
+            gap:.5rem;
+        }
+        .bank-import-actions input[type="file"] {
+            position:absolute;
+            width:1px;
+            height:1px;
+            padding:0;
+            margin:-1px;
+            overflow:hidden;
+            clip:rect(0,0,0,0);
+            white-space:nowrap;
+            border:0;
+        }
+        .bank-file-label { cursor:pointer; }
+        .bank-file-status {
+            flex:1 1 100%;
+            color:#778292;
+            font-size:.74rem;
+            padding-top:.15rem;
+        }
+        #searchInput {
+            min-height:48px;
+            padding:.85rem 1rem;
+            border:1px solid #dfe4eb;
+            border-radius:13px;
+            background:#fff;
+            box-shadow:0 3px 9px rgba(24,37,56,.045);
+        }
+        #searchInput:focus {
+            border-color:rgba(217,48,37,.52);
+            box-shadow:0 0 0 4px rgba(217,48,37,.08);
+        }
+        .modal-close {
+            width:38px;
+            height:38px;
+            border:1px solid #e1e5eb;
+            border-radius:12px;
+            background:#f7f8fa;
+            color:#667386;
+        }
+        .modal-close:hover {
+            color:#a91e2a;
+            border-color:#efc7ca;
+            background:#fff1f1;
+        }
+        @media (max-width: 700px) {
+            .bank-import-panel { align-items:stretch; padding:.9rem; }
+            .bank-import-copy { min-width:0; }
+            .bank-import-actions { justify-content:stretch; }
+            .bank-import-actions > .btn,
+            .bank-import-actions > .bank-file-label { flex:1 1 auto; }
+            .nav-links { gap:.2rem; }
+            .nav-links button { padding:.55rem .72rem; }
+            .filter-btn { min-height:40px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn, .filter-btn, .lesson-btn, .action-btn, .bank-import-panel { transition:none !important; }
+        }
+
+</style>
 </head>
 <body>
 <div id="toast-container"></div>
@@ -1970,13 +2248,20 @@
                 <button class="btn admin-only" onclick="openModal('new')"><span style="font-size: 1.2rem; font-weight: normal; margin-right:4px;">+</span> Agregar Pregunta</button>
             </div>
             <p style="color:var(--text-muted);font-size:.88rem;line-height:1.5;margin:.35rem 0 1rem;">Selecciona un módulo, una lección o el examen final integrador. Abre cada tarjeta para consultar la respuesta correcta y el sustento del banco.</p>
-            <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.9rem 0 1rem;">
-                <label class="btn btn-outline" for="bank-json-file">Seleccionar banco JSON</label>
-                <input type="file" id="bank-json-file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;" aria-label="Seleccionar archivo JSON del banco">
-                <button type="button" class="btn" onclick="loadQuestionBankFile()">Cargar para repasar</button>
-                <button type="button" class="btn btn-outline admin-only" onclick="importOfficialBank()">Guardar banco en Firebase</button>
-                <span id="bank-json-name" style="font-size:.8rem;color:var(--text-muted);">No se ha seleccionado ningún archivo</span>
-            </div>
+            <section class="bank-import-panel" id="bank-drop-zone" aria-label="Carga del banco integral ESBAS">
+                <div class="bank-import-copy">
+                    <span class="bank-import-kicker">BANCO INTEGRAL 2026-1</span>
+                    <strong>400 preguntas listas para practicar</strong>
+                    <span>34 lecciones, tres módulos y tres exámenes finales.</span>
+                </div>
+                <div class="bank-import-actions">
+                    <label class="btn btn-outline bank-file-label" for="bank-json-file"><span aria-hidden="true">📂</span> Elegir archivo JSON</label>
+                    <input type="file" id="bank-json-file" accept=".json,application/json" aria-label="Seleccionar archivo JSON del banco">
+                    <button type="button" class="btn" onclick="loadQuestionBankFile()"><span aria-hidden="true">✓</span> Cargar banco</button>
+                    <button type="button" class="btn btn-cloud admin-only" onclick="importOfficialBank()"><span aria-hidden="true">☁</span> Guardar en Firebase</button>
+                </div>
+                <span id="bank-json-name" class="bank-file-status" role="status">Selecciona el JSON que descargaste para cargarlo en el repaso.</span>
+            </section>
             <div class="filter-group" id="moduleFilters"></div>
             <div class="lesson-filters" id="lessonFiltersContainer"></div>
             <div style="margin-top: 1.5rem;">
@@ -2397,10 +2682,36 @@
             });
         }
         const bankFileInput=document.getElementById('bank-json-file');
-        if(bankFileInput) bankFileInput.addEventListener('change',()=>{
-            const label=document.getElementById('bank-json-name');
-            if(label) label.textContent=bankFileInput.files?.[0]?.name||'No se ha seleccionado ningún archivo';
-        });
+        if(bankFileInput) {
+            const showSelectedBank=()=>{
+                const label=document.getElementById('bank-json-name');
+                if(label) label.textContent=bankFileInput.files?.[0]?.name||'Selecciona el JSON que descargaste para cargarlo en el repaso.';
+            };
+            bankFileInput.addEventListener('change',showSelectedBank);
+            const dropZone=document.getElementById('bank-drop-zone');
+            if(dropZone) {
+                ['dragenter','dragover'].forEach(eventName=>dropZone.addEventListener(eventName,event=>{
+                    event.preventDefault();
+                    dropZone.classList.add('is-dragging');
+                }));
+                ['dragleave','drop'].forEach(eventName=>dropZone.addEventListener(eventName,event=>{
+                    event.preventDefault();
+                    dropZone.classList.remove('is-dragging');
+                }));
+                dropZone.addEventListener('drop',event=>{
+                    const file=event.dataTransfer?.files?.[0];
+                    if(!file) return;
+                    if(!file.name.toLowerCase().endsWith('.json')) {
+                        window.showToast('Selecciona un archivo .json válido.','error');
+                        return;
+                    }
+                    const transfer=new DataTransfer();
+                    transfer.items.add(file);
+                    bankFileInput.files=transfer.files;
+                    showSelectedBank();
+                });
+            }
+        }
         const questionForm = document.getElementById('questionForm');
         if(questionForm) questionForm.addEventListener('submit', (e) => window.saveQuestion(e));
 
