@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V56 (Filtros interactivos del desglose de resultados) -->
+    <!-- VERSIÓN: V57 (Alternativas aleatorias al repetir exámenes) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -5032,7 +5032,10 @@
         let errorCount = 0;
         let blankCount = 0;
         const review = currentSimulationQuestions.map((question, index) => {
-            const source = sourceById.get(String(question.id)) || question;
+            const bankSource = sourceById.get(String(question.id)) || question;
+            const source = question._optionsShuffledForAttempt
+                ? { ...bankSource, opciones: question.opciones, respuesta: question.respuesta }
+                : bankSource;
             const options = source.opciones || question.opciones || {};
             const correctKey = String(source.respuesta || question.respuesta || '').toLowerCase();
             const userKey = String(userAnswers[question.id] || '').toLowerCase();
@@ -5572,22 +5575,26 @@
 
     function getSimulationQuestionSource(simQuestion) {
         const hasAnswerKey = question => ['a', 'b', 'c', 'd'].includes(String(question?.respuesta || '').toLowerCase());
+        const applyAttemptOrder = source => simQuestion?._optionsShuffledForAttempt
+            ? { ...source, opciones: simQuestion.opciones, respuesta: simQuestion.respuesta }
+            : source;
         if (currentSimulationBankType === 'real') {
             const realBank = Array.isArray(cachedRealQuestionBank) ? cachedRealQuestionBank : [];
-            return realBank.find(question =>
+            const source = realBank.find(question =>
                 String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
             ) || simQuestion;
+            return applyAttemptOrder(source);
         }
         const bundled = Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
         const current = Array.isArray(appData.questions) ? appData.questions : [];
         const bundledById = bundled.find(question =>
             String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
         );
-        if (bundledById) return bundledById;
+        if (bundledById) return applyAttemptOrder(bundledById);
         const currentById = current.find(question =>
             String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
         );
-        if (currentById) return currentById;
+        if (currentById) return applyAttemptOrder(currentById);
         const normalize = value => String(value || '')
             .normalize('NFKD')
             .replace(/[\u0300-\u036f]/g, '')
@@ -5595,11 +5602,12 @@
             .trim()
             .toLowerCase();
         const questionText = normalize(simQuestion.pregunta);
-        return [...bundled, ...current].find(question =>
+        const fallback = [...bundled, ...current].find(question =>
             hasAnswerKey(question) &&
             normalize(question.modulo) === normalize(simQuestion.modulo) &&
             normalize(question.pregunta) === questionText
         ) || simQuestion;
+        return applyAttemptOrder(fallback);
     }
 
     function renderImmediateFeedback(simQuestion, selectedKey) {
@@ -5906,17 +5914,59 @@
         updateSimLessonDropdown(document.getElementById('sim-module').value);
     };
 
+    function shuffleSimulationQuestionAlternatives(question) {
+        const keys = ['a', 'b', 'c', 'd'];
+        const originalOptions = question?.opciones || {};
+        const originalCorrectKey = String(question?.respuesta || '').toLowerCase();
+        if (!keys.every(key => typeof originalOptions[key] === 'string' && originalOptions[key].length) ||
+            !keys.includes(originalCorrectKey)) {
+            return {
+                ...question,
+                opciones: originalOptions ? { ...originalOptions } : originalOptions
+            };
+        }
+
+        const entries = keys.map(key => ({
+            originalKey: key,
+            text: originalOptions[key],
+            isCorrect: key === originalCorrectKey
+        }));
+
+        // Fisher–Yates: mezcla las cuatro alternativas sin cambiar su contenido.
+        for (let index = entries.length - 1; index > 0; index--) {
+            const randomIndex = Math.floor(Math.random() * (index + 1));
+            [entries[index], entries[randomIndex]] = [entries[randomIndex], entries[index]];
+        }
+
+        // Evita que una repetición conserve exactamente el orden que tenía antes.
+        if (entries.every((entry, index) => entry.originalKey === keys[index])) {
+            [entries[0], entries[1]] = [entries[1], entries[0]];
+        }
+
+        const shuffledOptions = {};
+        let shuffledCorrectKey = '';
+        entries.forEach((entry, index) => {
+            const newKey = keys[index];
+            shuffledOptions[newKey] = entry.text;
+            if (entry.isCorrect) shuffledCorrectKey = newKey;
+        });
+
+        return {
+            ...question,
+            opciones: shuffledOptions,
+            respuesta: shuffledCorrectKey,
+            _optionsShuffledForAttempt: true
+        };
+    }
+
     window.repeatLastSimulation = function() {
         if (!Array.isArray(currentSimulationQuestions) || !currentSimulationQuestions.length) {
             window.showToast('No se encontró el examen anterior para repetir.', 'error');
             return;
         }
 
-        // Se conserva el mismo conjunto y el mismo orden de preguntas del intento recién terminado.
-        currentSimulationQuestions = currentSimulationQuestions.map(question => ({
-            ...question,
-            opciones: question.opciones ? { ...question.opciones } : question.opciones
-        }));
+        // Se conserva el mismo conjunto de preguntas y se mezclan las alternativas para este nuevo intento.
+        currentSimulationQuestions = currentSimulationQuestions.map(shuffleSimulationQuestionAlternatives);
         currentSimulationSessionId = null;
         currentSimulationMode = 'local';
         userAnswers = {};
@@ -5953,7 +6003,7 @@
         window.renderSimulationQuestions();
         window.showSimQuestion(0);
         window.scrollTo(0, 0);
-        window.showToast('Examen reiniciado. Tienes una nueva oportunidad con las mismas preguntas.', 'success');
+        window.showToast('Examen reiniciado. Se mezclaron las alternativas y se conservó la clave correcta.', 'success');
     };
 
     window.finishSimulation = async function(options = {}) {
