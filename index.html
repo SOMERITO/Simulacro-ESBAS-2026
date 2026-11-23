@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V39 (Acceso público y retroalimentación inmediata completa) -->
+    <!-- VERSIÓN: V40 (Simulación como pantalla principal y primera opción) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2418,8 +2418,8 @@
         <div id="cloud-indicator" class="cloud-status success admin-only">☁️ Sincronizado</div>
     </div>
     <div class="nav-links">
-        <button onclick="switchView('repo')" id="btn-repo">Repasar</button>
         <button onclick="switchView('sim')" id="btn-sim" class="active">Simulación</button>
+        <button onclick="switchView('repo')" id="btn-repo">Repasar</button>
         <button onclick="switchView('config')" id="btn-config" class="admin-only">Base de Datos</button>
         <button onclick="switchView('users')" id="btn-users" class="admin-only" style="border-color: var(--primary-orange); color: var(--primary-orange);">Usuarios</button>
     </div>
@@ -3176,28 +3176,17 @@
     function showPublicStudyView() {
         const nav = document.getElementById('main-nav');
         const container = document.getElementById('main-container');
-        const navLinks = document.querySelector('.nav-links');
-        const repoView = document.getElementById('view-repo');
         const repoButton = document.getElementById('btn-repo');
-        const simView = document.getElementById('view-sim');
         const simButton = document.getElementById('btn-sim');
 
         if (nav) nav.style.display = 'flex';
-        if (navLinks) navLinks.style.display = 'flex';
         if (container) container.style.display = 'block';
         if (repoButton) {
             repoButton.classList.remove('admin-only');
             repoButton.style.display = 'inline-flex';
-            repoButton.classList.add('active');
         }
         if (simButton) simButton.classList.remove('active');
-        if (repoView) {
-            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
-            repoView.classList.add('active');
-            repoView.style.removeProperty('display');
-        }
-        if (simView) simView.classList.remove('active');
-        window.renderRepo?.();
+        window.switchView('sim');
     }
 
     async function loadAuthenticatedUser(user) {
@@ -3238,7 +3227,7 @@
             if (currentUserRole === 'admin') {
                 await fetchQuestions();
                 await fetchUsers();
-                switchView('repo');
+                window.switchView('sim');
             } else {
                 await loadQuestionsFromFirestoreForStudy();
                 window.updateSimLessonDropdown('all');
