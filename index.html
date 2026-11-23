@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V48 (Lección identificada en el encabezado de las imágenes) -->
+    <!-- VERSIÓN: V49 (Repetir el mismo examen desde resultados) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2778,6 +2778,37 @@
             .sim-confirm-actions button:hover,.sim-confirm-actions button:active { transform:none !important; }
         }
 
+
+        /* V49 — Acciones al terminar un examen */
+        .sim-results-actions {
+            display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+            gap:.7rem; margin-top:.25rem;
+        }
+        .sim-results-actions .btn { min-height:46px; padding:.72rem 1.2rem; }
+        .sim-results-actions .btn-repeat {
+            color:#fff;
+            background:linear-gradient(135deg,#c5323d 0%,#9f1f2b 100%);
+            box-shadow:0 6px 16px rgba(165,30,42,.2);
+            font-weight:800;
+        }
+        .sim-results-actions .btn-repeat:hover {
+            background:linear-gradient(135deg,#d13d48 0%,#a91f2c 100%);
+            box-shadow:0 9px 22px rgba(165,30,42,.27);
+            transform:translateY(-2px);
+        }
+        .sim-results-actions .btn-repeat .repeat-icon {
+            display:inline-grid; place-items:center; width:22px; height:22px;
+            border-radius:7px; background:rgba(255,255,255,.16); font-size:1rem; line-height:1;
+        }
+        .sim-results-actions .btn-configure {
+            color:#405066; border:1px solid #dce3ec; background:#fff; font-weight:750;
+        }
+        .sim-results-actions .btn-configure:hover { border-color:#c4cedb; background:#f7f9fc; }
+        @media(max-width:520px) {
+            .sim-results-actions { flex-direction:column; }
+            .sim-results-actions .btn { width:100%; }
+        }
+
     </style>
 </head>
 <body>
@@ -2966,7 +2997,13 @@
                     <div class="metric-card"><div class="metric-value m-error" id="res-error">0</div><div class="metric-label">Errores</div></div>
                     <div class="metric-card"><div class="metric-value m-blank" id="res-blank">0</div><div class="metric-label">Sin responder</div></div>
                 </div>
-                <button class="btn" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block'; currentSimulationSessionId = null; currentSimulationMode = 'firebase'; currentSimulationQuestions = []; userAnswers = {}; updateSimLessonDropdown(document.getElementById('sim-module').value);">Volver a Configurar Examen</button>
+                <div class="sim-results-actions">
+                    <button class="btn btn-repeat" id="btn-repeat-simulation" type="button" onclick="repeatLastSimulation()" aria-label="Volver a hacer el mismo examen con las mismas preguntas">
+                        <span class="repeat-icon" aria-hidden="true">↻</span>
+                        Volver a hacer este examen
+                    </button>
+                    <button class="btn btn-configure" id="btn-configure-simulation" type="button" onclick="document.getElementById('sim-results').style.display='none'; document.getElementById('sim-setup').style.display='block'; currentSimulationSessionId = null; currentSimulationMode = 'firebase'; currentSimulationQuestions = []; userAnswers = {}; updateSimLessonDropdown(document.getElementById('sim-module').value);">Volver a configurar</button>
+                </div>
             </div>
             <div class="review-export-panel">
                 <div class="review-export-copy">
@@ -5426,6 +5463,55 @@
         currentSimulationQuestions = [];
         userAnswers = {};
         updateSimLessonDropdown(document.getElementById('sim-module').value);
+    };
+
+    window.repeatLastSimulation = function() {
+        if (!Array.isArray(currentSimulationQuestions) || !currentSimulationQuestions.length) {
+            window.showToast('No se encontró el examen anterior para repetir.', 'error');
+            return;
+        }
+
+        // Se conserva el mismo conjunto y el mismo orden de preguntas del intento recién terminado.
+        currentSimulationQuestions = currentSimulationQuestions.map(question => ({
+            ...question,
+            opciones: question.opciones ? { ...question.opciones } : question.opciones
+        }));
+        currentSimulationSessionId = null;
+        currentSimulationMode = 'local';
+        userAnswers = {};
+        currentSimIndex = 0;
+        simulationFinishing = false;
+        simulationTimeExpired = false;
+
+        stopSimulationTimer();
+        const timeLimitMinutes = getSimulationTimeLimitMinutes(currentSimulationContext.lesson);
+        startSimulationTimer(timeLimitMinutes);
+
+        const setup = document.getElementById('sim-setup');
+        const active = document.getElementById('sim-active');
+        const results = document.getElementById('sim-results');
+        const modeNote = document.getElementById('sim-mode-note');
+        if (setup) setup.style.display = 'none';
+        if (results) results.style.display = 'none';
+        if (active) active.style.display = 'block';
+
+        if (modeNote) {
+            modeNote.style.display = 'block';
+            const timeText = timeLimitMinutes
+                ? ' Tiempo límite: ' + timeLimitMinutes + ' minutos.'
+                : ' Esta práctica combinada no tiene límite de tiempo.';
+            modeNote.textContent = currentSimulationBankType === 'real'
+                ? 'Repetición de preguntas reales: se conservó el mismo conjunto de preguntas. La corrección se realizará en este dispositivo y este nuevo intento no se guardará en Firebase.' + timeText
+                : (currentUser?.isPublicVisitor
+                    ? 'Repetición del mismo examen en acceso público. Se conservaron las mismas preguntas y el resultado no se guardará en Firebase.' + timeText
+                    : 'Repetición del mismo examen: se conservaron las mismas preguntas y el mismo orden. Este nuevo intento se corregirá en este dispositivo y no se guardará en Firebase.' + timeText);
+        }
+
+        window.updateSimulationProgress();
+        window.renderSimulationQuestions();
+        window.showSimQuestion(0);
+        window.scrollTo(0, 0);
+        window.showToast('Examen reiniciado. Tienes una nueva oportunidad con las mismas preguntas.', 'success');
     };
 
     window.finishSimulation = async function(options = {}) {
