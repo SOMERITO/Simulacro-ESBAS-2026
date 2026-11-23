@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V59 (Carga inicial con animación de llama creciente) -->
+    <!-- VERSIÓN: V60 (Animación de llama sincronizada con el arranque) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -4099,6 +4099,7 @@
     let appLoaderRunId = 0;
     let appLoaderShownAt = performance.now();
     let appLoaderHideTimer = null;
+    let appLoaderInitialGrowthStarted = false;
 
     function setAppLoading(show, title = 'Procesando', subtitle = 'Espera un momento, por favor.', icon = '🚒') {
         const loader = document.getElementById('app-loader');
@@ -4118,8 +4119,18 @@
         if (!alreadyVisible) {
             appLoaderRunId++;
             appLoaderShownAt = performance.now();
+            appLoaderInitialGrowthStarted = false;
             loader.classList.remove('is-exiting', 'is-ready', 'is-initial', 'is-growing');
             loader.classList.add('active');
+            void loader.offsetWidth;
+            loader.classList.add('is-growing');
+        } else if (loader.classList.contains('is-initial') && !appLoaderInitialGrowthStarted) {
+            // Reinicia la llama cuando el arranque real de la app comienza,
+            // no mientras el navegador todavía descarga los módulos de Firebase.
+            appLoaderRunId++;
+            appLoaderShownAt = performance.now();
+            appLoaderInitialGrowthStarted = true;
+            loader.classList.remove('is-growing');
             void loader.offsetWidth;
             loader.classList.add('is-growing');
         }
@@ -4139,7 +4150,7 @@
             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const minimumVisibleTime = reducedMotion
             ? (initialLoad ? 260 : 150)
-            : (initialLoad ? 1450 : 680);
+            : (initialLoad ? 1800 : 680);
         const elapsed = performance.now() - appLoaderShownAt;
         const waitForFire = Math.max(0, minimumVisibleTime - elapsed);
 
@@ -4158,6 +4169,7 @@
                     if (runId !== appLoaderRunId) return;
                     loader.classList.remove('active', 'is-exiting', 'is-ready', 'is-growing', 'is-initial');
                     loader.setAttribute('aria-busy', 'false');
+                    appLoaderInitialGrowthStarted = false;
                     appLoaderHideTimer = null;
                 }, reducedMotion ? 30 : 390);
             }, reducedMotion ? 80 : 360);
