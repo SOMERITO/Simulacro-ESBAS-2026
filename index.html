@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V46 (Identificación de lección en imágenes de resultados) -->
+    <!-- VERSIÓN: V47 (Confirmaciones profesionales del simulador) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2718,6 +2718,66 @@
             .bank-mode-card:hover,.bank-mode-card:active { transform:none !important; }
         }
 
+
+        /* V47 — Confirmación propia del simulador */
+        .sim-confirm-overlay {
+            z-index: 5000; padding: 1.1rem; background: rgba(13,22,35,.56);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .sim-confirm-dialog {
+            width: min(100%,460px); padding: 1.55rem 1.6rem 1.35rem;
+            border: 1px solid rgba(255,255,255,.85); border-radius: 20px;
+            background: linear-gradient(145deg,#fff 0%,#fbfcfe 100%);
+            box-shadow: 0 28px 90px rgba(10,20,35,.28),0 4px 16px rgba(10,20,35,.08);
+            animation: simConfirmEnter .3s cubic-bezier(.2,.8,.2,1) both;
+        }
+        @keyframes simConfirmEnter { from {opacity:0;transform:translateY(12px) scale(.975)} to {opacity:1;transform:translateY(0) scale(1)} }
+        .sim-confirm-heading { display:flex; align-items:center; gap:.9rem; margin-bottom:1rem; }
+        .sim-confirm-icon {
+            display:grid; place-items:center; flex:0 0 47px; width:47px; height:47px; border-radius:15px;
+            color:#a51e2a; background:#fff0f1; font-size:1.35rem; font-weight:900;
+            box-shadow:inset 0 0 0 1px rgba(181,42,52,.08);
+        }
+        .sim-confirm-dialog.is-warning .sim-confirm-icon { color:#936414; background:#fff6e6; box-shadow:inset 0 0 0 1px rgba(188,139,45,.12); }
+        .sim-confirm-kicker { margin-bottom:.2rem; color:#a52a35; font-size:.62rem; font-weight:850; letter-spacing:.13em; }
+        .sim-confirm-dialog.is-warning .sim-confirm-kicker { color:#936414; }
+        .sim-confirm-title { margin:0; color:#1d2b3d; font-size:1.18rem; font-weight:850; letter-spacing:-.025em; line-height:1.25; }
+        .sim-confirm-message { margin:0; color:#59677a; font-size:.87rem; line-height:1.65; }
+        .sim-confirm-detail {
+            display:flex; align-items:flex-start; gap:.6rem; margin-top:1rem; padding:.8rem .9rem;
+            border:1px solid #f0d9dc; border-radius:12px; color:#8e2932; background:#fff7f7;
+            font-size:.77rem; line-height:1.5; font-weight:650;
+        }
+        .sim-confirm-dialog.is-warning .sim-confirm-detail { border-color:#efdfbd; color:#805a1e; background:#fffaf0; }
+        .sim-confirm-detail-icon { flex:0 0 auto; font-size:.95rem; }
+        .sim-confirm-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:.6rem; margin-top:1.35rem; }
+        .sim-confirm-actions button {
+            display:inline-flex; align-items:center; justify-content:center; gap:.45rem;
+            min-height:43px; padding:.65rem 1rem; border:1px solid transparent; border-radius:11px;
+            font-size:.78rem; font-weight:800; cursor:pointer;
+            transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;
+        }
+        .sim-confirm-actions button:hover { transform:translateY(-1px); }
+        .sim-confirm-actions button:active { transform:scale(.985); }
+        .sim-confirm-actions button:focus-visible { outline:3px solid rgba(177,43,53,.2); outline-offset:3px; }
+        .sim-confirm-secondary { color:#405066; border-color:#dce3ec !important; background:#fff; }
+        .sim-confirm-secondary:hover { border-color:#c4cedb !important; background:#f8fafc; }
+        .sim-confirm-primary { color:#fff; background:linear-gradient(135deg,#bd303b,#9e1e2a); box-shadow:0 5px 13px rgba(165,30,42,.18); }
+        .sim-confirm-primary:hover { box-shadow:0 8px 18px rgba(165,30,42,.25); }
+        .sim-confirm-dialog.is-warning .sim-confirm-primary { background:linear-gradient(135deg,#b98731,#93651b); box-shadow:0 5px 13px rgba(147,101,27,.18); }
+        .sim-confirm-dialog.is-warning .sim-confirm-primary:hover { box-shadow:0 8px 18px rgba(147,101,27,.24); }
+        @media (max-width:520px) {
+            .sim-confirm-dialog { padding:1.25rem 1.1rem 1.05rem; border-radius:17px; }
+            .sim-confirm-title { font-size:1.08rem; }
+            .sim-confirm-actions { flex-direction:column-reverse; }
+            .sim-confirm-actions button { width:100%; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            .sim-confirm-dialog { animation:none !important; }
+            .sim-confirm-actions button { transition:none !important; }
+            .sim-confirm-actions button:hover,.sim-confirm-actions button:active { transform:none !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -3106,6 +3166,27 @@
         </form>
     </div>
 </div>
+<div id="sim-confirm-modal" class="modal-overlay sim-confirm-overlay" role="presentation" aria-hidden="true">
+    <div id="sim-confirm-dialog" class="sim-confirm-dialog is-danger" role="alertdialog" aria-modal="true" aria-labelledby="sim-confirm-title" aria-describedby="sim-confirm-message">
+        <div class="sim-confirm-heading">
+            <div class="sim-confirm-icon" id="sim-confirm-icon" aria-hidden="true">!</div>
+            <div>
+                <div class="sim-confirm-kicker" id="sim-confirm-kicker">CONFIRMACIÓN</div>
+                <h2 class="sim-confirm-title" id="sim-confirm-title">¿Deseas continuar?</h2>
+            </div>
+        </div>
+        <p class="sim-confirm-message" id="sim-confirm-message"></p>
+        <div class="sim-confirm-detail" id="sim-confirm-detail" hidden>
+            <span class="sim-confirm-detail-icon" aria-hidden="true">ⓘ</span>
+            <span id="sim-confirm-detail-text"></span>
+        </div>
+        <div class="sim-confirm-actions">
+            <button class="sim-confirm-secondary" id="sim-confirm-cancel" type="button">Volver</button>
+            <button class="sim-confirm-primary" id="sim-confirm-accept" type="button">Confirmar</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
     // FIX DE RED Y MULTI-AUTH APP PARA CREACIÓN SEGURA DE USUARIOS
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -3327,6 +3408,7 @@
                 event.preventDefault();
                 if (activeModal.id === 'user-modal') window.closeUserModal();
                 else if (activeModal.id === 'modal-form') window.closeModal();
+                else if (activeModal.id === 'sim-confirm-modal') window.resolveSimulationConfirm(false);
                 return;
             }
 
@@ -3352,6 +3434,7 @@
                 if (event.target !== overlay) return;
                 if (overlay.id === 'user-modal') window.closeUserModal();
                 else if (overlay.id === 'modal-form') window.closeModal();
+                else if (overlay.id === 'sim-confirm-modal') window.resolveSimulationConfirm(false);
             });
         });
 
@@ -5254,20 +5337,89 @@
         renderImmediateFeedback(question, answerKey);
         window.updateSimulationProgress();
     };
-    window.cancelSimulation = function() {
-        if(confirm("¿Seguro que deseas cancelar el examen?")) {
-            stopSimulationTimer();
-            simulationTimeExpired = false;
-            simulationFinishing = false;
-            document.getElementById('sim-active').style.display = 'none';
-            document.getElementById('sim-setup').style.display = 'block';
-            currentSimulationSessionId = null;
-            currentSimulationMode = 'firebase';
-            currentSimulationQuestions = [];
-            userAnswers = {};
-            updateSimLessonDropdown(document.getElementById('sim-module').value);
+    let simulationConfirmResolver = null;
+    let simulationConfirmPreviousFocus = null;
+
+    window.resolveSimulationConfirm = function(confirmed) {
+        if (typeof simulationConfirmResolver !== 'function') return;
+        const resolve = simulationConfirmResolver;
+        simulationConfirmResolver = null;
+        const overlay = document.getElementById('sim-confirm-modal');
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+        resolve(!!confirmed);
+        const previousFocus = simulationConfirmPreviousFocus;
+        simulationConfirmPreviousFocus = null;
+        if (previousFocus && document.contains(previousFocus)) {
+            requestAnimationFrame(() => previousFocus.focus());
         }
     };
+
+    window.showSimulationConfirm = function(config = {}) {
+        if (simulationConfirmResolver) window.resolveSimulationConfirm(false);
+        const overlay = document.getElementById('sim-confirm-modal');
+        const panel = document.getElementById('sim-confirm-dialog');
+        const accept = document.getElementById('sim-confirm-accept');
+        const cancel = document.getElementById('sim-confirm-cancel');
+        const detail = document.getElementById('sim-confirm-detail');
+        if (!overlay || !panel || !accept || !cancel) return Promise.resolve(false);
+
+        const variant = config.variant === 'warning' ? 'warning' : 'danger';
+        panel.classList.toggle('is-warning', variant === 'warning');
+        panel.classList.toggle('is-danger', variant === 'danger');
+        document.getElementById('sim-confirm-icon').textContent = config.icon || (variant === 'warning' ? '!' : '×');
+        document.getElementById('sim-confirm-kicker').textContent = config.kicker || 'CONFIRMACIÓN';
+        document.getElementById('sim-confirm-title').textContent = config.title || '¿Deseas continuar?';
+        document.getElementById('sim-confirm-message').textContent = config.message || '';
+        document.getElementById('sim-confirm-detail-text').textContent = config.detail || '';
+        detail.hidden = !config.detail;
+        cancel.textContent = config.cancelText || 'Volver';
+        accept.textContent = config.confirmText || 'Confirmar';
+
+        simulationConfirmPreviousFocus = document.activeElement;
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.add('active');
+
+        return new Promise(resolve => {
+            simulationConfirmResolver = resolve;
+            cancel.onclick = () => window.resolveSimulationConfirm(false);
+            accept.onclick = () => window.resolveSimulationConfirm(true);
+            requestAnimationFrame(() => cancel.focus());
+        });
+    };
+
+    window.cancelSimulation = async function() {
+        const total = currentSimulationQuestions.length;
+        const answered = Object.keys(userAnswers).filter(id =>
+            currentSimulationQuestions.some(question => String(question.id) === String(id))
+        ).length;
+        const confirmed = await window.showSimulationConfirm({
+            variant: 'danger',
+            kicker: 'SALIR DEL SIMULACRO',
+            title: '¿Cancelar este examen?',
+            message: 'Al cancelar, cerrarás este intento y volverás a la configuración del simulacro.',
+            detail: 'Se descartará tu avance: ' + answered + ' de ' + total +
+                ' preguntas respondidas. No podrás recuperar las respuestas de este intento.',
+            cancelText: 'Continuar examen',
+            confirmText: 'Sí, cancelar examen',
+            icon: '!'
+        });
+        if (!confirmed) return;
+
+        stopSimulationTimer();
+        simulationTimeExpired = false;
+        simulationFinishing = false;
+        document.getElementById('sim-active').style.display = 'none';
+        document.getElementById('sim-setup').style.display = 'block';
+        currentSimulationSessionId = null;
+        currentSimulationMode = 'firebase';
+        currentSimulationQuestions = [];
+        userAnswers = {};
+        updateSimLessonDropdown(document.getElementById('sim-module').value);
+    };
+
     window.finishSimulation = async function(options = {}) {
         if (simulationFinishing) return;
         const timeExpired = options === true || options?.timeExpired === true || simulationTimeExpired;
@@ -5278,7 +5430,21 @@
         }
         const validIds = new Set(currentSimulationQuestions.map(question => String(question.id)));
         const answered = Object.keys(userAnswers).filter(id => validIds.has(String(id))).length;
-        if (answered < total && !timeExpired && !confirm('Faltan ' + (total - answered) + ' preguntas. ¿Deseas entregar el examen?')) return;
+        if (answered < total && !timeExpired) {
+            const unanswered = total - answered;
+            const confirmed = await window.showSimulationConfirm({
+                variant: 'warning',
+                kicker: 'ENTREGA DEL EXAMEN',
+                title: 'Todavía tienes preguntas pendientes',
+                message: 'Puedes volver al examen para revisar las preguntas que faltan o entregar ahora tu intento.',
+                detail: 'Has respondido ' + answered + ' de ' + total + ' preguntas. Las ' + unanswered +
+                    ' preguntas pendientes se contabilizarán como «Sin responder».',
+                cancelText: 'Seguir respondiendo',
+                confirmText: 'Entregar examen',
+                icon: '!'
+            });
+            if (!confirmed) return;
+        }
 
         simulationFinishing = true;
         if (simulationTimerInterval) {
