@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V32 (Banco ESBAS 400, carga JSON validada y diseño visual refinado) -->
+    <!-- VERSIÓN: V33 (Carga robusta, navegación de repaso y recuperación ante permisos Firebase) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2158,9 +2158,13 @@
         .bank-file-label { cursor:pointer; }
         .bank-file-status {
             flex:1 1 100%;
-            color:#778292;
-            font-size:.74rem;
-            padding-top:.15rem;
+            color:#5d6878;
+            font-size:.78rem;
+            line-height:1.45;
+            padding:.55rem .7rem;
+            border-radius:9px;
+            background:#f0f3f7;
+            border:1px solid #e2e7ee;
         }
         #searchInput {
             min-height:48px;
@@ -2268,7 +2272,13 @@
                 <input type="search" id="searchInput" aria-label="Buscar preguntas por enunciado o alternativa" placeholder="Buscar enunciados y alternativas..." oninput="renderRepo()">
             </div>
         </div>
-        <div id="repo-container"></div>
+        <div id="repo-container">
+            <div class="empty-state">
+                <div style="font-size:2rem;">📘</div>
+                <h3>Preparando el banco de preguntas</h3>
+                <p>Conectando con Firebase o esperando que selecciones el archivo JSON.</p>
+            </div>
+        </div>
     </div>
     <div id="view-sim" class="view-section active">
 
@@ -2892,15 +2902,33 @@
     };
 
     async function loadQuestionsFromFirestoreForStudy() {
+        const status = document.getElementById('bank-json-name');
         try {
-            const snapshot=await getDocs(collection(db,'questions'));
-            appData.questions=[];
-            snapshot.forEach(docSnap=>appData.questions.push({id:docSnap.id,...docSnap.data(),_source:'firebase'}));
-            if(!appData.questions.length) window.showToast('Firebase todavía no tiene preguntas. Selecciona el JSON del banco para comenzar.','error');
-            else window.updateIndexesAndCounters();
-        } catch(error) {
-            console.error('No se pudo leer el banco de Firestore:',error);
-            window.showToast('No se pudo leer el banco desde Firebase. Puedes cargar el archivo JSON para repasar en este dispositivo.','error');
+            const snapshot = await getDocs(collection(db, 'questions'));
+            appData.questions = [];
+            snapshot.forEach(docSnap => appData.questions.push({
+                id: docSnap.id,
+                ...docSnap.data(),
+                _source: 'firebase'
+            }));
+            if (appData.questions.length) {
+                if (status) status.textContent = 'Banco conectado a Firebase: ' + appData.questions.length + ' preguntas disponibles.';
+                window.updateIndexesAndCounters();
+                return true;
+            }
+            if (status) status.textContent = 'Firebase respondió, pero la colección questions está vacía. Selecciona el JSON para cargar el banco.';
+            window.updateIndexesAndCounters();
+            window.renderRepo();
+            window.showToast('Firebase respondió, pero todavía no hay preguntas registradas. Carga el JSON del banco.', 'error');
+            return false;
+        } catch (error) {
+            console.error('Error leyendo questions en Firestore:', error);
+            appData.questions = [];
+            window.updateIndexesAndCounters();
+            window.renderRepo();
+            if (status) status.textContent = 'Firestore no permitió leer questions. Elige el JSON del banco para continuar; la conexión a Firebase sigue pendiente.';
+            window.showToast('No se pudo leer el banco desde Firebase. La sección de repaso está disponible para cargar el JSON.', 'error');
+            return false;
         }
     }
 
@@ -2912,6 +2940,33 @@
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 4000);
     };
+    function showPublicStudyView() {
+        const nav = document.getElementById('main-nav');
+        const container = document.getElementById('main-container');
+        const navLinks = document.querySelector('.nav-links');
+        const repoView = document.getElementById('view-repo');
+        const repoButton = document.getElementById('btn-repo');
+        const simView = document.getElementById('view-sim');
+        const simButton = document.getElementById('btn-sim');
+
+        if (nav) nav.style.display = 'flex';
+        if (navLinks) navLinks.style.display = 'flex';
+        if (container) container.style.display = 'block';
+        if (repoButton) {
+            repoButton.classList.remove('admin-only');
+            repoButton.style.display = 'inline-flex';
+            repoButton.classList.add('active');
+        }
+        if (simButton) simButton.classList.remove('active');
+        if (repoView) {
+            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+            repoView.classList.add('active');
+            repoView.style.display = 'block';
+        }
+        if (simView) simView.classList.remove('active');
+        window.renderRepo?.();
+    }
+
     async function loadAuthenticatedUser(user) {
         setAppLoading(true, 'Preparando tu acceso', 'Validando permisos y preparando tu espacio ESBAS.', '🔐');
         try {
@@ -2922,8 +2977,8 @@
                 document.getElementById('main-container').style.display = 'block';
                 document.body.classList.remove('role-admin');
                 await loadQuestionsFromFirestoreForStudy();
-                updateSimLessonDropdown('all');
-                switchView('repo');
+                window.updateSimLessonDropdown('all');
+                showPublicStudyView();
                 showWelcomeBanner('estudiante');
                 return;
             }
@@ -2953,8 +3008,8 @@
                 switchView('repo');
             } else {
                 await loadQuestionsFromFirestoreForStudy();
-                updateSimLessonDropdown('all');
-                switchView('repo');
+                window.updateSimLessonDropdown('all');
+                showPublicStudyView();
             }
             showWelcomeBanner(currentUserRole);
         } finally {
@@ -3301,7 +3356,11 @@
         if (!view || !btn) return;
         view.classList.add('active');
         btn.classList.add('active');
-        if(viewName === 'repo') window.renderRepo();
+        if(viewName === 'repo') {
+            const repoView = document.getElementById('view-repo');
+            if (repoView) repoView.style.display = 'block';
+            window.renderRepo();
+        }
         if(viewName === 'config') window.renderTable();
         if(viewName === 'users') window.renderUsers();
     };
