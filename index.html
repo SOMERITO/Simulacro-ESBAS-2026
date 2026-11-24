@@ -2883,7 +2883,7 @@
         .bank-mode-heading { display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.7rem; }
         .bank-mode-heading strong { color:#3b4b60; font-size:.76rem; font-weight:850; letter-spacing:.065em; }
         .bank-mode-heading span { color:#8a95a5; font-size:.68rem; font-weight:650; }
-        .bank-mode-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; }
+        .bank-mode-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.75rem; align-items:stretch; }
         .bank-mode-card {
             position:relative; display:flex; align-items:flex-start; gap:.85rem; width:100%; min-width:0;
             padding:1rem 1.05rem; border:1px solid #e1e7ef; border-radius:15px; background:#fff;
@@ -3706,7 +3706,6 @@
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
-                </div>
                     <button class="bank-mode-card bank-mode-intermediate-ai" type="button" id="btn-bank-intermediate-ai" aria-pressed="false" onclick="selectSimulationBank('intermediate-ai', this)">
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
@@ -3718,6 +3717,7 @@
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
+                </div>
                 <p class="bank-mode-note" id="sim-bank-mode-note" role="status" aria-live="polite">Estás utilizando el banco de práctica con IA. Los cuatro bancos se mantienen separados.</p>
             </section>
             <div class="sim-fields">
