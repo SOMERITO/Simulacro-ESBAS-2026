@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V65 (Tres bancos independientes de preguntas) -->
+    <!-- VERSIÓN: V66 (Cuatro bancos independientes de preguntas) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2883,7 +2883,7 @@
         .bank-mode-heading { display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.7rem; }
         .bank-mode-heading strong { color:#3b4b60; font-size:.76rem; font-weight:850; letter-spacing:.065em; }
         .bank-mode-heading span { color:#8a95a5; font-size:.68rem; font-weight:650; }
-        .bank-mode-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.85rem; }
+        .bank-mode-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; }
         .bank-mode-card {
             position:relative; display:flex; align-items:flex-start; gap:.85rem; width:100%; min-width:0;
             padding:1rem 1.05rem; border:1px solid #e1e7ef; border-radius:15px; background:#fff;
@@ -2908,6 +2908,8 @@
         .bank-mode-real .bank-mode-symbol { color:#a51e2a; background:#fff0f1; }
         .bank-mode-basic-ai .bank-mode-symbol { color:#137b72; background:#e8f7f4; }
         .bank-mode-basic-ai .bank-mode-count { color:#137b72; background:#e8f7f4; }
+        .bank-mode-intermediate-ai .bank-mode-symbol { color:#a65c16; background:#fff3e5; }
+        .bank-mode-intermediate-ai .bank-mode-count { color:#a65c16; background:#fff3e5; }
         .bank-mode-card:hover .bank-mode-symbol { transform:rotate(-6deg) scale(1.06); }
         .bank-mode-card-copy { display:flex; flex:1 1 auto; min-width:0; flex-direction:column; gap:.27rem; }
         .bank-mode-title { color:#253449; font-size:.9rem; font-weight:830; letter-spacing:-.015em; }
@@ -2933,13 +2935,11 @@
         @keyframes bankModePulse { from { transform:scale(.94); opacity:.65; } to { transform:scale(1.06); opacity:1; } }
         .bank-mode-note { display:flex; align-items:flex-start; gap:.5rem; margin-top:.72rem; color:#718096; font-size:.72rem; line-height:1.5; }
         .bank-mode-note::before { content:"ⓘ"; color:#a52a35; font-weight:900; }
-        @media (max-width:900px) {
+        @media (max-width:1050px) {
             .bank-mode-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-            .bank-mode-card:last-child { grid-column:1 / -1; }
         }
         @media (max-width:680px) {
             .bank-mode-grid { grid-template-columns:1fr; gap:.65rem; }
-            .bank-mode-card:last-child { grid-column:auto; }
             .bank-mode-card { padding:.85rem .9rem; }
             .bank-mode-description { font-size:.74rem; }
         }
@@ -3707,7 +3707,18 @@
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                 </div>
-                <p class="bank-mode-note" id="sim-bank-mode-note" role="status" aria-live="polite">Estás utilizando el banco de práctica con IA. Los tres bancos se mantienen separados.</p>
+                    <button class="bank-mode-card bank-mode-intermediate-ai" type="button" id="btn-bank-intermediate-ai" aria-pressed="false" onclick="selectSimulationBank('intermediate-ai', this)">
+                        <span class="bank-mode-symbol" aria-hidden="true">✧</span>
+                        <span class="bank-mode-card-copy">
+                            <span class="bank-mode-title">Preguntas Intermedias con IA</span>
+                            <span class="bank-mode-description">Banco de 68 preguntas de nivel intermedio para practicar los tres módulos ESBAS 2026.</span>
+                            <span class="bank-mode-meta">
+                                <span class="bank-mode-count" id="bank-intermediate-ai-count">68 preguntas</span>
+                            </span>
+                        </span>
+                        <span class="bank-mode-check" aria-hidden="true">✓</span>
+                    </button>
+                <p class="bank-mode-note" id="sim-bank-mode-note" role="status" aria-live="polite">Estás utilizando el banco de práctica con IA. Los cuatro bancos se mantienen separados.</p>
             </section>
             <div class="sim-fields">
                 <div class="form-group">
@@ -4405,7 +4416,8 @@
     let cachedPublicQuestionBank = null;
     let cachedRealQuestionBank = null;
     let cachedBasicAIQuestionBank = null;
-    let currentSimulationBankType = 'ai'; // ai | real | basic-ai
+    let cachedIntermediateAIQuestionBank = null;
+    let currentSimulationBankType = 'ai'; // ai | real | basic-ai | intermediate-ai
     let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'ai' };
 
     function getActiveSimulationQuestionBank() {
@@ -4414,6 +4426,9 @@
         }
         if (currentSimulationBankType === 'basic-ai') {
             return Array.isArray(cachedBasicAIQuestionBank) ? cachedBasicAIQuestionBank : [];
+        }
+        if (currentSimulationBankType === 'intermediate-ai') {
+            return Array.isArray(cachedIntermediateAIQuestionBank) ? cachedIntermediateAIQuestionBank : [];
         }
         if (Array.isArray(appData.questions) && appData.questions.length) return appData.questions;
         return Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
@@ -4577,12 +4592,80 @@
         return cachedBasicAIQuestionBank;
     }
 
+    function normalizeIntermediateAIQuestionBank(rawBank) {
+        if (!rawBank || !Array.isArray(rawBank.preguntas) ||
+            Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
+            rawBank.preguntas.length !== 68) {
+            throw new Error('El banco de Preguntas Intermedias con IA debe contener las 68 preguntas declaradas.');
+        }
+        const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
+        const ids = new Set();
+        const lessonQuestionCounts = new Map();
+        return rawBank.preguntas.map(question => {
+            const sourceId = String(question?.id ?? '').trim();
+            const moduleToken = String(question?.modulo || '').trim().toUpperCase();
+            const moduleName = moduleNames[moduleToken];
+            const lessonNumber = Number(question?.leccion);
+            const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
+            const expectedModule = lessonNumber <= 9 ? 'I' : (lessonNumber <= 21 ? 'II' : 'III');
+            if (!sourceId || ids.has(sourceId)) throw new Error('El banco intermedio contiene identificadores vacíos o duplicados.');
+            ids.add(sourceId);
+            if (!moduleName || !Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34 ||
+                moduleToken !== expectedModule) {
+                throw new Error('El banco intermedio contiene un módulo o número de lección no válido.');
+            }
+            if (!question.pregunta || !question.alternativas ||
+                !['A','B','C','D'].every(key => typeof question.alternativas[key] === 'string' && question.alternativas[key].length)) {
+                throw new Error('El banco intermedio contiene una pregunta sin sus cuatro alternativas.');
+            }
+            if (!['a','b','c','d'].includes(answer)) throw new Error('El banco intermedio contiene una clave de respuesta no válida.');
+            const lessonKey = moduleToken + '-' + lessonNumber;
+            const questionNumber = (lessonQuestionCounts.get(lessonKey) || 0) + 1;
+            lessonQuestionCounts.set(lessonKey, questionNumber);
+            return {
+                id: 'intermediate-ai-' + sourceId,
+                modulo: moduleName,
+                tipo: 'leccion',
+                leccion_num: lessonNumber,
+                leccion_nombre: 'Preguntas intermedias · Lección ' + lessonNumber,
+                examen_modulo_num: null,
+                pregunta_num: questionNumber,
+                pregunta_global: Number(sourceId),
+                pregunta: String(question.pregunta),
+                opciones: {
+                    a: String(question.alternativas.A),
+                    b: String(question.alternativas.B),
+                    c: String(question.alternativas.C),
+                    d: String(question.alternativas.D)
+                },
+                respuesta: answer,
+                sustento: '',
+                _source: 'intermediate-ai-bank'
+            };
+        });
+    }
+
+    async function loadIntermediateAIQuestionBank() {
+        if (cachedIntermediateAIQuestionBank) return cachedIntermediateAIQuestionBank;
+        const response = await fetch('./data/ESBAS-2026-Preguntas-Intermedias-con-IA.json', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('No se pudo cargar el banco de Preguntas Intermedias con IA (' + response.status + ').');
+        const rawBank = await response.json();
+        cachedIntermediateAIQuestionBank = normalizeIntermediateAIQuestionBank(rawBank);
+        return cachedIntermediateAIQuestionBank;
+    }
+
     window.selectSimulationBank = async function(type, button) {
-        const nextType = type === 'real' ? 'real' : (type === 'basic-ai' ? 'basic-ai' : 'ai');
+        const nextType = type === 'real' ? 'real'
+            : (type === 'basic-ai' ? 'basic-ai'
+            : (type === 'intermediate-ai' ? 'intermediate-ai' : 'ai'));
         const buttons = [
             document.getElementById('btn-bank-ai'),
             document.getElementById('btn-bank-real'),
-            document.getElementById('btn-bank-basic-ai')
+            document.getElementById('btn-bank-basic-ai'),
+            document.getElementById('btn-bank-intermediate-ai')
         ].filter(Boolean);
         buttons.forEach(item => {
             item.disabled = true;
@@ -4593,12 +4676,16 @@
             setAppLoading(true, 'Cargando preguntas reales', 'Preparando las preguntas recopiladas de tus evaluaciones…', '📚');
         } else if (nextType === 'basic-ai' && !cachedBasicAIQuestionBank) {
             setAppLoading(true, 'Cargando preguntas básicas con IA', 'Preparando las 100 preguntas básicas de los tres módulos…', '✧');
+        } else if (nextType === 'intermediate-ai' && !cachedIntermediateAIQuestionBank) {
+            setAppLoading(true, 'Cargando preguntas intermedias con IA', 'Preparando las 68 preguntas de nivel intermedio…', '✧');
         }
         try {
             if (nextType === 'real') {
                 await loadRealQuestionBank();
             } else if (nextType === 'basic-ai') {
                 await loadBasicAIQuestionBank();
+            } else if (nextType === 'intermediate-ai') {
+                await loadIntermediateAIQuestionBank();
             } else if (!appData.questions.length) {
                 const questions = await loadBundledQuestionBank();
                 appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
@@ -4607,7 +4694,8 @@
             currentSimulationBankType = nextType;
             const activeButtonId = nextType === 'real'
                 ? 'btn-bank-real'
-                : (nextType === 'basic-ai' ? 'btn-bank-basic-ai' : 'btn-bank-ai');
+                : (nextType === 'basic-ai' ? 'btn-bank-basic-ai'
+                : (nextType === 'intermediate-ai' ? 'btn-bank-intermediate-ai' : 'btn-bank-ai'));
             buttons.forEach(item => {
                 const active = item.id === activeButtonId;
                 item.classList.toggle('is-active', active);
@@ -4619,8 +4707,10 @@
                 note.textContent = nextType === 'real'
                     ? 'Modalidad de preguntas reales: se utilizan solo las ' + activeBank.length + ' preguntas registradas en este banco; no se mezclan con las otras modalidades.'
                     : (nextType === 'basic-ai'
-                        ? 'Modalidad de Preguntas Básicas con IA: se utilizan únicamente las ' + activeBank.length + ' preguntas del banco básico de los tres módulos; permanece separado de Preguntas con IA y Preguntas Reales.'
-                        : 'Modalidad de preguntas con IA: se utiliza únicamente el banco principal generado con inteligencia artificial. Preguntas Reales y Preguntas Básicas con IA permanecen separados.');
+                        ? 'Modalidad de Preguntas Básicas con IA: se utilizan únicamente las ' + activeBank.length + ' preguntas del banco básico; permanece separado de los demás bancos.'
+                        : (nextType === 'intermediate-ai'
+                            ? 'Modalidad de Preguntas Intermedias con IA: se utilizan únicamente las ' + activeBank.length + ' preguntas del banco intermedio; permanece separado de los demás bancos.'
+                            : 'Modalidad de preguntas con IA: se utiliza únicamente el banco principal. Preguntas Reales, Preguntas Básicas con IA y Preguntas Intermedias con IA permanecen separados.'));
             }
             const aiCount = document.getElementById('bank-ai-count');
             if (aiCount && appData.questions.length) aiCount.textContent = appData.questions.length + ' preguntas';
@@ -4628,6 +4718,8 @@
             if (realCount && cachedRealQuestionBank) realCount.textContent = cachedRealQuestionBank.length + ' preguntas registradas';
             const basicCount = document.getElementById('bank-basic-ai-count');
             if (basicCount && cachedBasicAIQuestionBank) basicCount.textContent = cachedBasicAIQuestionBank.length + ' preguntas';
+            const intermediateCount = document.getElementById('bank-intermediate-ai-count');
+            if (intermediateCount && cachedIntermediateAIQuestionBank) intermediateCount.textContent = cachedIntermediateAIQuestionBank.length + ' preguntas';
             window.refreshSimulationModuleDropdown('all');
         } catch (error) {
             console.error('No se pudo cambiar de banco de preguntas:', error);
@@ -4641,7 +4733,6 @@
             if (button) button.removeAttribute('aria-busy');
         }
     };
-
     function validateOfficialBank(questions) {
         if (!Array.isArray(questions) || questions.length !== 400) throw new Error('El archivo debe contener exactamente 400 preguntas.');
         const ids = new Set();
@@ -6136,6 +6227,8 @@
                     await loadRealQuestionBank();
                 } else if (currentSimulationBankType === 'basic-ai') {
                     await loadBasicAIQuestionBank();
+                } else if (currentSimulationBankType === 'intermediate-ai') {
+                    await loadIntermediateAIQuestionBank();
                 } else if (!appData.questions.length) {
                     const bundled = await loadBundledQuestionBank();
                     appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
@@ -6195,11 +6288,13 @@
                     ? 'Preguntas reales: se utilizaron únicamente preguntas de tu banco real. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
                     : (currentSimulationBankType === 'basic-ai'
                         ? 'Preguntas Básicas con IA: se utilizaron únicamente preguntas de tu banco básico. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
-                        : (currentUser.isPublicVisitor
+                        : (currentSimulationBankType === 'intermediate-ai'
+                            ? 'Preguntas Intermedias con IA: se utilizaron únicamente preguntas de tu banco intermedio. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
+                            : (currentUser.isPublicVisitor
                             ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText
                             : (currentSimulationMode === 'local'
                                 ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
-                                : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText)));
+                                : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText))));
             }
             window.updateSimulationSessionHeading();
             window.renderSimulationQuestions();
@@ -6231,6 +6326,13 @@
         if (currentSimulationBankType === 'basic-ai') {
             const basicBank = Array.isArray(cachedBasicAIQuestionBank) ? cachedBasicAIQuestionBank : [];
             const source = basicBank.find(question =>
+                String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+            ) || simQuestion;
+            return applyAttemptOrder(source);
+        }
+        if (currentSimulationBankType === 'intermediate-ai') {
+            const intermediateBank = Array.isArray(cachedIntermediateAIQuestionBank) ? cachedIntermediateAIQuestionBank : [];
+            const source = intermediateBank.find(question =>
                 String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
             ) || simQuestion;
             return applyAttemptOrder(source);
@@ -6649,9 +6751,11 @@
                 ? 'Repetición de preguntas reales: se conservó el mismo conjunto de preguntas. La corrección se realizará en este dispositivo y este nuevo intento no se guardará en Firebase.' + timeText
                 : (currentSimulationBankType === 'basic-ai'
                     ? 'Repetición de Preguntas Básicas con IA: se conservó el mismo conjunto de preguntas. La corrección se realizará en este dispositivo y este nuevo intento no se guardará en Firebase.' + timeText
-                    : (currentUser?.isPublicVisitor
+                    : (currentSimulationBankType === 'intermediate-ai'
+                        ? 'Repetición de Preguntas Intermedias con IA: se conservó el mismo conjunto de preguntas. La corrección se realizará en este dispositivo y este nuevo intento no se guardará en Firebase.' + timeText
+                        : (currentUser?.isPublicVisitor
                         ? 'Repetición del mismo examen en acceso público. Se conservaron las mismas preguntas y el resultado no se guardará en Firebase.' + timeText
-                        : 'Repetición del mismo examen: se conservaron las mismas preguntas y el mismo orden. Este nuevo intento se corregirá en este dispositivo y no se guardará en Firebase.' + timeText));
+                        : 'Repetición del mismo examen: se conservaron las mismas preguntas y el mismo orden. Este nuevo intento se corregirá en este dispositivo y no se guardará en Firebase.' + timeText)));
         }
 
         window.updateSimulationSessionHeading();
