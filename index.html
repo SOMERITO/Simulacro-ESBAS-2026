@@ -3697,9 +3697,9 @@
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
                             <span class="bank-mode-title">Preguntas Básicas con IA</span>
-                            <span class="bank-mode-description">Banco ampliado de 180 preguntas básicas de los tres módulos y las 34 lecciones ESBAS 2026.</span>
+                            <span class="bank-mode-description">Banco completo de 500 preguntas: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
                             <span class="bank-mode-meta">
-                                <span class="bank-mode-count" id="bank-basic-ai-count">180 preguntas</span>
+                                <span class="bank-mode-count" id="bank-basic-ai-count">500 preguntas</span>
                             </span>
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
@@ -4527,42 +4527,79 @@
     }
 
     function normalizeBasicAIQuestionBank(rawBank) {
-        if (!rawBank || !Array.isArray(rawBank.preguntas) || rawBank.preguntas.length === 0 ||
-            Number(rawBank.total_preguntas) !== rawBank.preguntas.length) {
-            throw new Error('El total declarado del banco de Preguntas Básicas con IA debe coincidir con la cantidad de preguntas del archivo.');
+        if (!rawBank || !Array.isArray(rawBank.preguntas) ||
+            Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
+            rawBank.preguntas.length !== 500) {
+            throw new Error('El banco de Preguntas Básicas con IA debe contener las 500 preguntas declaradas.');
         }
+
         const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
+        const moduleNumbers = { I: 1, II: 2, III: 3 };
         const ids = new Set();
-        const lessonQuestionCounts = new Map();
-        return rawBank.preguntas.map(question => {
+        const groupQuestionCounts = new Map();
+        const normalizedQuestions = rawBank.preguntas.map(question => {
             const sourceId = String(question?.id ?? '').trim();
-            const moduleToken = String(question?.modulo || '').trim().replace(/^M[oó]dulo/i, '').trim().toUpperCase();
+            const moduleToken = String(question?.modulo || '').trim().replace(/^M[oó]dulo\s*/i, '').trim().toUpperCase();
             const moduleName = moduleNames[moduleToken];
-            const lessonNumber = Number(question?.leccion);
+            const sourceType = String(question?.tipo || 'por_leccion').trim();
             const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
-            if (!sourceId || ids.has(sourceId)) throw new Error('El banco básico contiene identificadores vacíos o duplicados.');
+            const isLesson = sourceType === 'por_leccion';
+            const isModuleFinal = sourceType === 'examen_final_modulo';
+            const isGeneralFinal = sourceType === 'examen_final_general';
+            const isSupportedType = isLesson || isModuleFinal || isGeneralFinal;
+            const lessonNumber = isLesson ? Number(question?.leccion) : 0;
+            const lessonReference = isLesson ? lessonNumber : Number(question?.leccion_referencia);
+            const expectedModule = lessonReference <= 9 ? 'I' : (lessonReference <= 21 ? 'II' : 'III');
+
+            if (!sourceId || ids.has(sourceId)) {
+                throw new Error('El banco básico contiene identificadores vacíos o duplicados.');
+            }
             ids.add(sourceId);
-            if (!moduleName || !Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34) {
-                throw new Error('El banco básico contiene un módulo o número de lección no válido.');
+
+            if (!moduleName || !isSupportedType) {
+                throw new Error('El banco básico contiene un módulo o tipo de pregunta no válido.');
+            }
+            if (!Number.isInteger(lessonReference) || lessonReference < 1 || lessonReference > 34 ||
+                moduleToken !== expectedModule) {
+                throw new Error('El banco básico contiene una referencia de lección o módulo no válida.');
+            }
+            if (isLesson && (!Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34)) {
+                throw new Error('El banco básico contiene un número de lección no válido.');
             }
             if (!question.pregunta || !question.alternativas ||
-                !['A','B','C','D'].every(key => typeof question.alternativas[key] === 'string' && question.alternativas[key].length)) {
+                !['A','B','C','D'].every(key =>
+                    typeof question.alternativas[key] === 'string' && question.alternativas[key].trim().length
+                )) {
                 throw new Error('El banco básico contiene una pregunta sin sus cuatro alternativas.');
             }
-            if (!['a','b','c','d'].includes(answer)) throw new Error('El banco básico contiene una clave de respuesta no válida.');
+            if (!['a','b','c','d'].includes(answer)) {
+                throw new Error('El banco básico contiene una clave de respuesta no válida.');
+            }
             if (typeof question.fundamento !== 'string' || !question.fundamento.trim()) {
                 throw new Error('El banco básico contiene una pregunta sin fundamento.');
             }
-            const lessonKey = moduleToken + '-' + lessonNumber;
-            const questionNumber = (lessonQuestionCounts.get(lessonKey) || 0) + 1;
-            lessonQuestionCounts.set(lessonKey, questionNumber);
+            if (isModuleFinal && String(question.examen || '') !== 'Examen final del ' + moduleName) {
+                throw new Error('El banco básico contiene un examen final de módulo sin identificar.');
+            }
+            if (isGeneralFinal && String(question.examen || '') !== 'Examen final general ESBAS') {
+                throw new Error('El banco básico contiene un examen final general sin identificar.');
+            }
+
+            const groupKey = isLesson
+                ? 'leccion-' + moduleToken + '-' + lessonNumber
+                : (isModuleFinal ? 'examen-modulo-' + moduleToken : 'examen-general');
+            const questionNumber = (groupQuestionCounts.get(groupKey) || 0) + 1;
+            groupQuestionCounts.set(groupKey, questionNumber);
+
             return {
                 id: 'basic-ai-' + sourceId,
                 modulo: moduleName,
-                tipo: 'leccion',
+                tipo: isLesson ? 'leccion' : sourceType,
                 leccion_num: lessonNumber,
-                leccion_nombre: 'Preguntas básicas · Lección ' + lessonNumber,
-                examen_modulo_num: null,
+                leccion_nombre: isLesson
+                    ? 'Preguntas básicas · Lección ' + String(lessonNumber).padStart(2, '0')
+                    : String(question.examen),
+                examen_modulo_num: isModuleFinal ? moduleNumbers[moduleToken] : null,
                 pregunta_num: questionNumber,
                 pregunta_global: Number(sourceId),
                 pregunta: String(question.pregunta),
@@ -4577,6 +4614,29 @@
                 _source: 'basic-ai-bank'
             };
         });
+
+        const lessonQuestions = normalizedQuestions.filter(question => question.tipo === 'leccion');
+        const moduleFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_modulo');
+        const generalFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_general');
+        const lessonCounts = new Map();
+        lessonQuestions.forEach(question => {
+            const key = question.modulo + '-' + question.leccion_num;
+            lessonCounts.set(key, (lessonCounts.get(key) || 0) + 1);
+        });
+        if (lessonQuestions.length !== 340 || lessonCounts.size !== 34 ||
+            Array.from(lessonCounts.values()).some(count => count !== 10)) {
+            throw new Error('El banco básico debe tener 10 preguntas en cada una de las 34 lecciones.');
+        }
+        if (moduleFinalQuestions.length !== 60 ||
+            ['Módulo I','Módulo II','Módulo III'].some(moduleName =>
+                moduleFinalQuestions.filter(question => question.modulo === moduleName).length !== 20
+            )) {
+            throw new Error('El banco básico debe tener 20 preguntas en cada examen final de módulo.');
+        }
+        if (generalFinalQuestions.length !== 100) {
+            throw new Error('El examen final general ESBAS debe contener exactamente 100 preguntas.');
+        }
+        return normalizedQuestions;
     }
 
     async function loadBasicAIQuestionBank() {
@@ -5607,13 +5667,22 @@
         const moduleSelect = document.getElementById('sim-module');
         if (!moduleSelect) return;
         const bank = getActiveSimulationQuestionBank();
+        const isBasicAI = currentSimulationBankType === 'basic-ai';
         const availableModules = Object.keys(moduleLessonsMap).filter(moduleName =>
             bank.some(question => question.modulo === moduleName)
         );
         moduleSelect.innerHTML = '<option value="all">Todos los módulos (' + bank.length + ' preguntas disponibles)</option>';
         availableModules.forEach(moduleName => {
-            const count = bank.filter(question => question.modulo === moduleName).length;
-            moduleSelect.innerHTML += '<option value="' + moduleName + '">' + moduleName + ' (' + count + ' preguntas)</option>';
+            const lessonCount = bank.filter(question =>
+                question.modulo === moduleName && (!isBasicAI || question.tipo === 'leccion')
+            ).length;
+            const finalCount = isBasicAI
+                ? bank.filter(question => question.modulo === moduleName && question.tipo === 'examen_final_modulo').length
+                : 0;
+            const label = isBasicAI
+                ? moduleName + ' (' + lessonCount + ' de práctica + ' + finalCount + ' de examen)'
+                : moduleName + ' (' + bank.filter(question => question.modulo === moduleName).length + ' preguntas)';
+            moduleSelect.innerHTML += '<option value="' + moduleName + '">' + label + '</option>';
         });
         moduleSelect.value = availableModules.includes(preferredModule) ? preferredModule : 'all';
         window.refreshCustomSelect('sim-module');
@@ -5623,6 +5692,31 @@
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         const bank = getActiveSimulationQuestionBank();
+        const isBasicAI = currentSimulationBankType === 'basic-ai';
+
+        if (isBasicAI && moduleName === 'all') {
+            const practiceCount = bank.filter(question => question.tipo === 'leccion').length;
+            lessonSelect.innerHTML = '<option value="all">Todas las lecciones (' + practiceCount + ' preguntas)</option>';
+            ['I','II','III'].forEach(moduleToken => {
+                const moduleLabel = 'Módulo ' + moduleToken;
+                const finalCount = bank.filter(question =>
+                    question.modulo === moduleLabel && question.tipo === 'examen_final_modulo'
+                ).length;
+                if (finalCount) {
+                    lessonSelect.innerHTML += '<option value="final-' + moduleToken + '">Examen final del ' +
+                        moduleLabel + ' (' + finalCount + ' preguntas · 30 min)</option>';
+                }
+            });
+            const generalFinalCount = bank.filter(question => question.tipo === 'examen_final_general').length;
+            if (generalFinalCount) {
+                lessonSelect.innerHTML += '<option value="final-general">Examen final general ESBAS (' +
+                    generalFinalCount + ' preguntas · sin límite de tiempo)</option>';
+            }
+            lessonSelect.disabled = false;
+            window.refreshCustomSelect('sim-lesson');
+            return;
+        }
+
         lessonSelect.innerHTML = '<option value="all">Todas las lecciones</option>';
         if (moduleName === 'all' || !bank.some(question => question.modulo === moduleName)) {
             lessonSelect.disabled = true;
@@ -5631,19 +5725,21 @@
         }
         lessonSelect.disabled = false;
         const lessonMap = new Map();
-        bank.filter(question => question.modulo === moduleName && question.tipo !== 'examen_final_modulo')
-            .forEach(question => {
-                const number = Number(question.leccion_num);
-                if (Number.isInteger(number) && number > 0 && !lessonMap.has(number)) {
-                    const rawTitle = question.leccion_nombre || '';
-                    const lessonTitle = String(rawTitle)
-                        .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
-                        .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
-                        .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
-                        .trim() || ('Lección ' + String(number).padStart(2, '0'));
-                    lessonMap.set(number, lessonTitle);
-                }
-            });
+        bank.filter(question =>
+            question.modulo === moduleName &&
+            (isBasicAI ? question.tipo === 'leccion' : question.tipo !== 'examen_final_modulo')
+        ).forEach(question => {
+            const number = Number(question.leccion_num);
+            if (Number.isInteger(number) && number > 0 && !lessonMap.has(number)) {
+                const rawTitle = question.leccion_nombre || '';
+                const lessonTitle = String(rawTitle)
+                    .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
+                    .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
+                    .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
+                    .trim() || ('Lección ' + String(number).padStart(2, '0'));
+                lessonMap.set(number, lessonTitle);
+            }
+        });
         Array.from(lessonMap.keys()).sort((a, b) => a - b).forEach(number => {
             const lessonTitle = lessonMap.get(number);
             const optionLabel = 'L' + String(number).padStart(2, '0') + ' - ' + lessonTitle;
@@ -5669,12 +5765,26 @@
     }
 
     function getLocalSimulationQuestions(moduleFilter, lessonFilter) {
+        const isBasicAI = currentSimulationBankType === 'basic-ai';
+        const selectedModuleFinal = /^final-(I|II|III)$/.exec(String(lessonFilter || ''));
+        const selectedModuleFinalName = selectedModuleFinal ? 'Módulo ' + selectedModuleFinal[1] : null;
         const selected = getActiveSimulationQuestionBank().filter(question => {
-            const sameModule = moduleFilter === 'all' || question.modulo === moduleFilter;
-            const sameLesson = lessonFilter === 'all'
-                || (lessonFilter === 'final'
-                    ? question.tipo === 'examen_final_modulo'
-                    : (question.tipo !== 'examen_final_modulo' && Number(question.leccion_num) === Number(lessonFilter)));
+            const isGlobalFinalSelection = lessonFilter === 'final-general' || !!selectedModuleFinal;
+            const sameModule = isGlobalFinalSelection || moduleFilter === 'all' || question.modulo === moduleFilter;
+            let sameLesson;
+            if (lessonFilter === 'final') {
+                sameLesson = question.tipo === 'examen_final_modulo';
+            } else if (lessonFilter === 'final-general') {
+                sameLesson = question.tipo === 'examen_final_general';
+            } else if (selectedModuleFinal) {
+                sameLesson = question.tipo === 'examen_final_modulo' && question.modulo === selectedModuleFinalName;
+            } else if (lessonFilter === 'all') {
+                sameLesson = isBasicAI ? question.tipo === 'leccion' : true;
+            } else {
+                sameLesson = question.tipo !== 'examen_final_modulo' &&
+                    question.tipo !== 'examen_final_general' &&
+                    Number(question.leccion_num) === Number(lessonFilter);
+            }
             return sameModule && sameLesson;
         });
         return shuffleQuestionList(selected);
@@ -5683,6 +5793,7 @@
     function formatSimulationLessonLabel(question) {
         if (!question || typeof question !== 'object') return 'Lección no identificada';
         const moduleName = String(question.modulo || '').trim();
+        if (question.tipo === 'examen_final_general') return 'Examen final general ESBAS';
         if (question.tipo === 'examen_final_modulo' || Number(question.leccion_num) === 0) {
             return 'Examen final' + (moduleName ? ' · ' + moduleName : '');
         }
@@ -5700,6 +5811,9 @@
         const selectedModule = String(currentSimulationContext?.module || 'all');
         const selectedLesson = String(currentSimulationContext?.lesson ?? 'all');
 
+        if (selectedLesson === 'final-general') return 'Examen final general ESBAS';
+        const moduleFinalMatch = /^final-(I|II|III)$/.exec(selectedLesson);
+        if (moduleFinalMatch) return 'Examen final · Módulo ' + moduleFinalMatch[1];
         if (selectedLesson === 'final') {
             const moduleName = selectedModule !== 'all'
                 ? selectedModule
@@ -6459,7 +6573,7 @@
     };
 
     function getSimulationTimeLimitMinutes(lessonFilter) {
-        if (lessonFilter === 'final') return 30;
+        if (lessonFilter === 'final' || /^final-(I|II|III)$/.test(String(lessonFilter))) return 30;
         if (/^\d+$/.test(String(lessonFilter))) return 15;
         return null;
     }
