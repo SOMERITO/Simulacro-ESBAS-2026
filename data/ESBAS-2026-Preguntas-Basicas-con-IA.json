@@ -1,7 +1,18 @@
 {
-  "titulo": "Banco de 100 preguntas básicas ESBAS 2026",
-  "descripcion": "Preguntas de nivel básico de los tres módulos del Manual ESBAS, incluyendo la Lección 34 sobre respuesta a incidentes con materiales peligrosos. Cada pregunta contiene cuatro alternativas y una respuesta correcta.",
-  "total_preguntas": 100,
+  "titulo": "Banco de 180 preguntas básicas ESBAS 2026",
+  "descripcion": "Banco ampliado de preguntas básicas de los tres módulos y las 34 lecciones del Manual ESBAS 2026-1, incluyendo la Lección 34 sobre respuesta a incidentes con MATPEL. Conserva las 100 preguntas originales revisadas y añade 80 preguntas nuevas. Cada pregunta contiene cuatro alternativas, una respuesta correcta y un fundamento breve.",
+  "nivel": "Básico",
+  "total_preguntas": 180,
+  "preguntas_conservadas_revisadas": 100,
+  "preguntas_nuevas": 80,
+  "alternativas_por_pregunta": 4,
+  "incluye_leccion_34": true,
+  "criterios": [
+    "Se mantienen las 100 preguntas originales, con una corrección de redacción en la pregunta 50 para ceñirla a la definición de entrada forzada del manual.",
+    "Se incorporan 80 preguntas nuevas sobre conceptos y contenidos básicos que tenían poca cobertura.",
+    "Se evita añadir preguntas avanzadas, cálculos complejos o contenidos externos al material ESBAS.",
+    "Cada respuesta incluye un fundamento breve para apoyar la comprensión."
+  ],
   "preguntas": [
     {
       "id": 1,
@@ -14,7 +25,8 @@
         "C": "Enseñar exclusivamente primeros auxilios.",
         "D": "Preparar al aspirante para conducir vehículos."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El curso busca que el aspirante demuestre conocimientos y habilidades para actuar de forma segura y efectiva."
     },
     {
       "id": 2,
@@ -27,7 +39,8 @@
         "C": "34",
         "D": "40"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El CFBB está organizado en tres módulos académicos que comprenden 34 lecciones teóricas."
     },
     {
       "id": 3,
@@ -40,7 +53,8 @@
         "C": "10",
         "D": "15"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El material establece diez prácticas de campo para el entrenamiento de los aspirantes."
     },
     {
       "id": 4,
@@ -53,7 +67,8 @@
         "C": "Vida, Patria y Solidaridad.",
         "D": "Unión, Valor y Servicio."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El lema institucional adoptado por el CGBVP es “Dios, Patria y Humanidad”."
     },
     {
       "id": 5,
@@ -66,7 +81,8 @@
         "C": "La organización de las emergencias.",
         "D": "El funcionamiento de los equipos."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La ética trata de la moral y de las obligaciones del ser humano, y orienta el ejercicio de la voluntad sin perjudicar al prójimo."
     },
     {
       "id": 6,
@@ -79,7 +95,8 @@
         "C": "Solidaridad.",
         "D": "Desinterés."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "La solidaridad aparece entre las virtudes que el material espera que el bombero promueva en sus actos de servicio."
     },
     {
       "id": 7,
@@ -92,7 +109,8 @@
         "C": "Roma.",
         "D": "Salvadora Lima."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La Chalaca fue la compañía que surgió de las reuniones realizadas en el Callao en diciembre de 1860."
     },
     {
       "id": 8,
@@ -105,7 +123,8 @@
         "C": "7 de diciembre de 1861.",
         "D": "15 de enero de 1862."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La primera reunión se realizó el 5 de diciembre de 1860 y acordó solicitar los permisos para crear una compañía."
     },
     {
       "id": 9,
@@ -118,7 +137,8 @@
         "C": "Guillermo Higginson.",
         "D": "José Miguel Corzo Moreno."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El manual identifica a Guillermo Higginson como el primer Comandante Activo de la Chalaca N.° 1."
     },
     {
       "id": 10,
@@ -131,7 +151,8 @@
         "C": "Centro General de Bomberos Voluntarios del Perú.",
         "D": "Comando General de Bomberos Voluntarios del Perú."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "CGBVP corresponde a Cuerpo General de Bomberos Voluntarios del Perú."
     },
     {
       "id": 11,
@@ -144,7 +165,8 @@
         "C": "De manera privada y comercial.",
         "D": "De manera temporal y remunerada."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El servicio público de bomberos se presta de manera voluntaria y ad honorem."
     },
     {
       "id": 12,
@@ -157,7 +179,8 @@
         "C": "Decreto Legislativo N.° 1061.",
         "D": "Decreto Legislativo N.° 1404."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El Decreto Legislativo N.° 1260 fortalece al CGBVP y regula la Intendencia Nacional de Bomberos del Perú."
     },
     {
       "id": 13,
@@ -170,7 +193,8 @@
         "C": "Administrar los materiales de las compañías.",
         "D": "Realizar inspecciones de edificios."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La CEEM recibe comunicaciones de emergencia y procesa la información para despachar unidades o recursos."
     },
     {
       "id": 14,
@@ -183,7 +207,8 @@
         "C": "3991111 y 116.",
         "D": "106 y 119."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El manual señala 3991111 o 116 como números de la Central de Comunicaciones."
     },
     {
       "id": 15,
@@ -196,7 +221,8 @@
         "C": "El medio utilizado para comunicarse.",
         "D": "La situación donde ocurre la comunicación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El emisor es la persona que envía la información dentro del proceso de comunicación."
     },
     {
       "id": 16,
@@ -209,7 +235,8 @@
         "C": "Una medida de protección.",
         "D": "La ausencia de riesgo."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Un peligro es una situación con características capaces de causar daño a personas, equipos, procesos o al ambiente."
     },
     {
       "id": 17,
@@ -222,7 +249,8 @@
         "C": "Una herramienta de trabajo.",
         "D": "Un procedimiento de comunicación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El riesgo expresa la probabilidad de que un peligro se materialice y produzca daños."
     },
     {
       "id": 18,
@@ -235,7 +263,8 @@
         "C": "Que solamente una persona realice todas las tareas.",
         "D": "Que se omitan los procedimientos de seguridad."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El trabajo en equipo requiere coordinación y colaboración entre sus integrantes para alcanzar un objetivo común."
     },
     {
       "id": 19,
@@ -248,7 +277,8 @@
         "C": "Con el mantenimiento de los equipos.",
         "D": "Con la organización de los vehículos."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El estrés agudo puede relacionarse con situaciones inmediatas de alto riesgo durante una intervención."
     },
     {
       "id": 20,
@@ -261,7 +291,8 @@
         "C": "Con una llamada radial.",
         "D": "Con el uso de una escalera."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El estrés crónico se asocia con una exposición continua y prolongada a situaciones estresantes o traumáticas."
     },
     {
       "id": 21,
@@ -274,7 +305,8 @@
         "C": "Sistema de Comunicación Institucional.",
         "D": "Sistema de Coordinación Interna."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "SCI significa Sistema de Comando de Incidentes."
     },
     {
       "id": 22,
@@ -287,7 +319,8 @@
         "C": "El personal administrativo.",
         "D": "Cualquier ciudadano presente."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El primer respondedor con capacidad operativa que llega a la escena asume inicialmente el mando."
     },
     {
       "id": 23,
@@ -300,7 +333,8 @@
         "C": "Para contabilizar el agua utilizada.",
         "D": "Para registrar el combustible de los vehículos."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La contabilidad del personal permite saber quién participa y dónde se encuentra durante las operaciones."
     },
     {
       "id": 24,
@@ -313,7 +347,8 @@
         "C": "Proteger exclusivamente los ojos.",
         "D": "Aumentar la presión de las mangueras."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El EPRA permite trabajar en ambientes donde el aire es irrespirable por deficiencia de oxígeno o presencia de contaminantes."
     },
     {
       "id": 25,
@@ -326,7 +361,8 @@
         "C": "21 %.",
         "D": "30 %."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El aire normal contiene aproximadamente 21 % de oxígeno, 78 % de nitrógeno y 1 % de otros gases."
     },
     {
       "id": 26,
@@ -339,7 +375,8 @@
         "C": "Que el equipo está apagado.",
         "D": "Que se puede continuar trabajando sin restricciones."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La alarma de aire bajo indica que se está consumiendo el suministro de reserva y que se requiere acción inmediata."
     },
     {
       "id": 27,
@@ -352,7 +389,8 @@
         "C": "Un fenómeno producido únicamente por el agua.",
         "D": "Una mezcla de humo y vapor."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El fuego implica una reacción química que produce calor entre un combustible y un oxidante."
     },
     {
       "id": 28,
@@ -365,7 +403,8 @@
         "C": "Combustión, pirólisis y oxidación.",
         "D": "Presión, temperatura y humedad."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El calor se transmite por conducción, convección o radiación."
     },
     {
       "id": 29,
@@ -378,7 +417,8 @@
         "C": "La eliminación del humo.",
         "D": "La transformación del agua en hielo."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La pirólisis es la descomposición de un material por efecto del calor."
     },
     {
       "id": 30,
@@ -391,7 +431,8 @@
         "C": "Aumentando el combustible.",
         "D": "Incrementando la temperatura."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "Para extinguir un incendio se limita o interrumpe uno o más elementos esenciales del proceso de combustión."
     },
     {
       "id": 31,
@@ -404,7 +445,8 @@
         "C": "Aumentar la cantidad de oxígeno.",
         "D": "Incrementar la temperatura del ambiente."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El enfriamiento reduce la temperatura del combustible hasta que deja de producir suficientes gases o vapores para arder."
     },
     {
       "id": 32,
@@ -417,7 +459,8 @@
         "C": "La pérdida de presión de una bomba.",
         "D": "La ventilación natural de un edificio."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El Backdraft puede producirse cuando entra aire fresco en un compartimiento con gases combustibles acumulados por combustión con poco oxígeno."
     },
     {
       "id": 33,
@@ -430,7 +473,8 @@
         "C": "Ventilar habitaciones.",
         "D": "Detectar gases."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El extintor portátil está diseñado para controlar fuegos en su etapa inicial."
     },
     {
       "id": 34,
@@ -443,7 +487,8 @@
         "C": "El manómetro del equipo.",
         "D": "La manguera del extintor."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El agente extintor es el compuesto ignífugo que constituye la carga del extintor."
     },
     {
       "id": 35,
@@ -456,7 +501,8 @@
         "C": "Conducción.",
         "D": "Radiación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La sofocación actúa eliminando o reduciendo el oxígeno disponible para la combustión."
     },
     {
       "id": 36,
@@ -469,7 +515,8 @@
         "C": "Una herramienta para romper puertas.",
         "D": "Un dispositivo para detectar humo."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El hidrante es un aparato hidráulico conectado a una red de abastecimiento de agua."
     },
     {
       "id": 37,
@@ -482,7 +529,8 @@
         "C": "Manual y automático.",
         "D": "Simple y doble."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El manual distingue hidrantes aéreos de cilindro seco y de cilindro húmedo."
     },
     {
       "id": 38,
@@ -495,7 +543,8 @@
         "C": "Hidrante portátil.",
         "D": "Monitor fijo."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El cilindro seco se emplea en lugares donde la congelación puede afectar el hidrante."
     },
     {
       "id": 39,
@@ -508,7 +557,8 @@
         "C": "La estructura de los edificios.",
         "D": "La formación de gases inflamables."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La hidráulica estudia las propiedades mecánicas de los líquidos."
     },
     {
       "id": 40,
@@ -521,7 +571,8 @@
         "C": "La altura de una manguera.",
         "D": "La fuerza del viento."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El caudal es la cantidad de líquido que circula por una tubería o sale por un orificio por unidad de tiempo."
     },
     {
       "id": 41,
@@ -534,7 +585,8 @@
         "C": "La velocidad del agua nunca cambia.",
         "D": "La presión siempre aumenta."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Bernoulli establece la conservación de la energía total del fluido bajo las condiciones descritas por el principio."
     },
     {
       "id": 42,
@@ -547,7 +599,8 @@
         "C": "O2.",
         "D": "NaCl."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La molécula de agua está formada por dos átomos de hidrógeno y uno de oxígeno: H2O."
     },
     {
       "id": 43,
@@ -560,7 +613,8 @@
         "C": "Aumentar la temperatura del combustible.",
         "D": "Eliminar todos los gases del incendio."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El alto calor específico permite que el agua absorba bastante calor antes de elevar considerablemente su temperatura."
     },
     {
       "id": 44,
@@ -573,7 +627,8 @@
         "C": "La temperatura a la que se congela el agua.",
         "D": "El calor producido por el combustible."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El calor latente de evaporación es la energía absorbida durante el cambio de estado líquido a vapor."
     },
     {
       "id": 45,
@@ -586,7 +641,8 @@
         "C": "Incrementar el oxígeno del ambiente.",
         "D": "Evitar que el agua absorba calor."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "En el ataque indirecto se aplica agua desde un punto exterior para inundar el recinto con vapor, sin alcanzar directamente el foco."
     },
     {
       "id": 46,
@@ -599,7 +655,8 @@
         "C": "Se utiliza exclusivamente desde el techo.",
         "D": "Se realiza sin utilizar agua."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El ataque directo aplica agua sobre las superficies combustibles que están ardiendo."
     },
     {
       "id": 47,
@@ -612,7 +669,8 @@
         "C": "Three Direct Water Fire.",
         "D": "Three Dimension Fire."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "3DWF corresponde a 3D Water Fog, la técnica de niebla de agua tridimensional."
     },
     {
       "id": 48,
@@ -625,7 +683,8 @@
         "C": "Evacuar a las personas de un edificio.",
         "D": "Instalar una línea de agua."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La entrada forzada consiste en ingresar por una barrera asegurada o bloqueada utilizando la fuerza."
     },
     {
       "id": 49,
@@ -638,20 +697,22 @@
         "C": "Romper todos los accesos disponibles.",
         "D": "Ingresar sin evaluar la situación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La entrada forzada debe realizarse con una ubicación y técnica adecuadas, procurando un acceso rápido y el menor daño posible."
     },
     {
       "id": 50,
       "modulo": "II",
       "leccion": 17,
-      "pregunta": "¿Debe utilizarse la entrada forzada cuando existen medios normales de acceso disponibles?",
+      "pregunta": "¿En qué situación se realiza una entrada forzada según su definición en el manual?",
       "alternativas": {
-        "A": "Sí, siempre.",
-        "B": "No, cuando existen medios normales de acceso no debe utilizarse.",
-        "C": "Sí, para ahorrar tiempo.",
-        "D": "Sí, únicamente en edificios pequeños."
+        "A": "Cuando una puerta está abierta y permite el ingreso normal.",
+        "B": "Cuando los accesos están asegurados o bloqueados y se necesita ingresar usando la fuerza.",
+        "C": "Cuando se desea ingresar por la ruta más larga.",
+        "D": "Cuando no existe ninguna emergencia."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La definición del manual sitúa la entrada forzada cuando los accesos están asegurados o bloqueados."
     },
     {
       "id": 51,
@@ -664,7 +725,8 @@
         "C": "En cerrar todas las ventanas.",
         "D": "En aumentar la presión de las mangueras."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La ventilación retira aire caliente, humo y gases de una estructura y los sustituye por aire fresco."
     },
     {
       "id": 52,
@@ -677,7 +739,8 @@
         "C": "Eléctrica y manual.",
         "D": "Positiva y negativa."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La ventilación natural aprovecha las corrientes de convección y puede ser vertical u horizontal."
     },
     {
       "id": 53,
@@ -690,7 +753,8 @@
         "C": "Convección natural.",
         "D": "Ventilación natural horizontal."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La ventilación forzada puede utilizar medios mecánicos, como presión positiva o succión, y métodos hidráulicos."
     },
     {
       "id": 54,
@@ -703,7 +767,8 @@
         "C": "Escalera hidráulica doméstica.",
         "D": "Escalera de ventilación."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La escalera plegable forma parte de los tipos de escaleras empleados por los bomberos."
     },
     {
       "id": 55,
@@ -716,7 +781,8 @@
         "C": "Mantener tres puntos de apoyo durante el ascenso o descenso.",
         "D": "Transportarla sin asegurarla."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "Mantener tres puntos de apoyo ayuda a conservar la estabilidad al subir o bajar una escalera."
     },
     {
       "id": 56,
@@ -729,7 +795,8 @@
         "C": "Escalera de agua.",
         "D": "Escalera de ventilación."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La escalera de extensión es uno de los tipos utilizados por el Cuerpo de Bomberos."
     },
     {
       "id": 57,
@@ -742,7 +809,8 @@
         "C": "Priorizar los objetos sobre las vidas.",
         "D": "Evitar las operaciones de salvamento."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La conservación de la propiedad procura causar el menor daño posible antes, durante y después de la intervención."
     },
     {
       "id": 58,
@@ -755,7 +823,8 @@
         "C": "Destruir los bienes que no fueron afectados.",
         "D": "Retrasar la extinción."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El salvamento reúne métodos y procedimientos que reducen los daños primarios y secundarios en el área afectada."
     },
     {
       "id": 59,
@@ -768,7 +837,8 @@
         "C": "Escaleras, mangueras y herramientas.",
         "D": "Viento, lluvia y humedad."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Los daños primarios provienen de los productos básicos de la combustión: llama, calor y humo."
     },
     {
       "id": 60,
@@ -781,7 +851,8 @@
         "C": "Dividir las habitaciones.",
         "D": "Proteger las puertas."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La cimentación transmite las cargas de la estructura al suelo de fundación."
     },
     {
       "id": 61,
@@ -794,7 +865,8 @@
         "C": "Cimentación.",
         "D": "Puerta."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La viga trabaja fundamentalmente a flexión."
     },
     {
       "id": 62,
@@ -807,7 +879,8 @@
         "C": "Puerta.",
         "D": "Acabado."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La columna resiste principalmente fuerzas que actúan a lo largo de su eje central."
     },
     {
       "id": 63,
@@ -820,7 +893,8 @@
         "C": "Más de 4 pisos.",
         "D": "Más de 10 pisos."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "El manual considera elevados los incendios que se desarrollan en edificios de más de cuatro pisos."
     },
     {
       "id": 64,
@@ -833,7 +907,8 @@
         "C": "La ausencia de personas.",
         "D": "La inexistencia de humo."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El acceso a los pisos superiores es una de las dificultades de intervención en edificios elevados."
     },
     {
       "id": 65,
@@ -846,7 +921,8 @@
         "C": "El acceso de los bomberos.",
         "D": "Todas las anteriores."
       },
-      "respuesta_correcta": "D"
+      "respuesta_correcta": "D",
+      "fundamento": "La estrategia en edificios elevados debe considerar evacuación, compartimentación y acceso de los bomberos."
     },
     {
       "id": 66,
@@ -859,7 +935,8 @@
         "C": "Siempre tienen ventilación natural abundante.",
         "D": "No contienen materiales combustibles."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "Los sótanos suelen tener pocas aberturas de puertas y ventanas."
     },
     {
       "id": 67,
@@ -872,7 +949,8 @@
         "C": "No se produce humo.",
         "D": "Sale siempre por las ventanas."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La ventilación limitada favorece la acumulación de humo y productos de combustión en los sótanos."
     },
     {
       "id": 68,
@@ -885,7 +963,8 @@
         "C": "La ausencia de obstáculos.",
         "D": "La falta de temperatura."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La acumulación de humo y la visibilidad reducida complican la localización de víctimas en sótanos."
     },
     {
       "id": 69,
@@ -898,7 +977,8 @@
         "C": "Solamente vehículos a diésel.",
         "D": "Únicamente vehículos pesados."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El material considera vehículos térmicos, híbridos y eléctricos."
     },
     {
       "id": 70,
@@ -911,7 +991,8 @@
         "C": "El uso de cinturones de seguridad.",
         "D": "La señalización de carreteras."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Las fallas mecánicas o eléctricas figuran entre las causas posibles de incendios en vehículos."
     },
     {
       "id": 71,
@@ -924,7 +1005,8 @@
         "C": "Solamente la marca del vehículo.",
         "D": "La limpieza del vehículo."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La advertencia y señalización de la vía protegen a los usuarios y al personal que interviene."
     },
     {
       "id": 72,
@@ -937,7 +1019,8 @@
         "C": "Compuestos de hierro y agua.",
         "D": "Compuestos de nitrógeno y oxígeno."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Los hidrocarburos son compuestos constituidos por carbono e hidrógeno."
     },
     {
       "id": 73,
@@ -950,7 +1033,8 @@
         "C": "Diésel DB-5.",
         "D": "Aceite mineral frío."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La gasolina es un ejemplo de líquido inflamable mencionado en el material."
     },
     {
       "id": 74,
@@ -963,7 +1047,8 @@
         "C": "BLEVE, Venturi y Pirólisis.",
         "D": "Conducción, Convección y Radiación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "Los fenómenos en tanques atmosféricos descritos son Boilover, Slopover y Frothover."
     },
     {
       "id": 75,
@@ -976,7 +1061,8 @@
         "C": "Tiene siempre la misma densidad que el aire.",
         "D": "No tiene densidad."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El GLP es más denso que el aire y puede acumularse en zonas bajas."
     },
     {
       "id": 76,
@@ -989,7 +1075,8 @@
         "C": "100 veces.",
         "D": "270 veces."
       },
-      "respuesta_correcta": "D"
+      "respuesta_correcta": "D",
+      "fundamento": "El material indica que un volumen de GLP líquido se expande aproximadamente 260 a 270 veces al pasar a gas."
     },
     {
       "id": 77,
@@ -997,11 +1084,13 @@
       "leccion": 26,
       "pregunta": "¿Qué significa BLEVE?",
       "alternativas": {
-        "A": "Expansión explosiva del vapor de un líquido en ebullición.",        "B": "Combustión lenta de gases.",
+        "A": "Expansión explosiva del vapor de un líquido en ebullición.",
+        "B": "Combustión lenta de gases.",
         "C": "Disminución de presión de una tubería.",
         "D": "Enfriamiento de un recipiente."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "BLEVE significa expansión explosiva del vapor de un líquido en ebullición."
     },
     {
       "id": 78,
@@ -1014,7 +1103,8 @@
         "C": "Un combustible líquido.",
         "D": "Una sustancia que aumenta la combustión."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La espuma contra incendios es una masa estable de pequeñas burbujas."
     },
     {
       "id": 79,
@@ -1027,7 +1117,8 @@
         "C": "Aumentar la temperatura del combustible.",
         "D": "Agregar oxígeno al incendio."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La espuma cubre el combustible, lo separa del aire y limita la liberación de vapores inflamables."
     },
     {
       "id": 80,
@@ -1040,7 +1131,8 @@
         "C": "Incendios exclusivamente eléctricos.",
         "D": "Incendios de madera y papel."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La espuma clase B se emplea en incendios de líquidos inflamables y combustibles."
     },
     {
       "id": 81,
@@ -1053,7 +1145,8 @@
         "C": "Retirar todos los objetos.",
         "D": "Determinar el costo de los equipos."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "La investigación científica busca determinar el origen y la causa del incendio."
     },
     {
       "id": 82,
@@ -1066,7 +1159,8 @@
         "C": "Retirar todas las evidencias.",
         "D": "Permitir el ingreso de cualquier persona."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La escena debe preservarse lo más intacta e inalterada posible para proteger los indicios."
     },
     {
       "id": 83,
@@ -1079,7 +1173,8 @@
         "C": "Modificada y parcial.",
         "D": "Confusa y desordenada."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Las observaciones del primer respondedor deben ser objetivas y veraces."
     },
     {
       "id": 84,
@@ -1092,7 +1187,8 @@
         "C": "Destruir las estructuras.",
         "D": "Realizar únicamente ventilación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El rescate comprende localizar, acceder, estabilizar y evacuar a las personas en peligro."
     },
     {
       "id": 85,
@@ -1105,7 +1201,8 @@
         "C": "Investigación del incendio.",
         "D": "Limpieza de la escena."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La búsqueda y rescate se presenta como la primera prioridad táctica fundamental en las operaciones contra incendios."
     },
     {
       "id": 86,
@@ -1118,7 +1215,8 @@
         "C": "La marca del vehículo.",
         "D": "El número de hidrantes de la zona."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El último punto conocido ayuda a ubicar la zona probable donde quedó el bombero."
     },
     {
       "id": 87,
@@ -1131,7 +1229,8 @@
         "C": "Simple y doble.",
         "D": "Mecánico y neumático."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "Por su funcionamiento, el manual distingue ascensores eléctricos e hidráulicos."
     },
     {
       "id": 88,
@@ -1144,7 +1243,8 @@
         "C": "Solamente las instrucciones de los usuarios.",
         "D": "Cualquier procedimiento sin evaluar el ascensor."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "Las instrucciones del fabricante contienen indicaciones específicas del equipo y deben seguirse durante la intervención."
     },
     {
       "id": 89,
@@ -1157,7 +1257,8 @@
         "C": "La correcta inspección del equipo.",
         "D": "El uso normal de las puertas."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El material advierte que la falta de mantenimiento o un mantenimiento inadecuado puede originar emergencias en ascensores."
     },
     {
       "id": 90,
@@ -1170,7 +1271,8 @@
         "C": "Cuerda de algodón.",
         "D": "Cuerda sin especificaciones."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El material identifica la cuerda estática como una opción para los sistemas de rescate con cuerdas."
     },
     {
       "id": 91,
@@ -1183,7 +1285,8 @@
         "C": "Anclaje y tensor.",
         "D": "Cinta y gancho."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La construcción kernmantle está formada por un núcleo y una funda exterior."
     },
     {
       "id": 92,
@@ -1196,7 +1299,8 @@
         "C": "Reduce siempre el esfuerzo a la mitad.",
         "D": "Impide el movimiento de la cuerda."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Una polea fija cambia la dirección de la fuerza, pero no disminuye el esfuerzo requerido."
     },
     {
       "id": 93,
@@ -1209,7 +1313,8 @@
         "C": "Mover al paciente inmediatamente.",
         "D": "Administrar oxígeno sin evaluación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "La seguridad de la escena debe verificarse antes de ingresar y atender al paciente."
     },
     {
       "id": 94,
@@ -1222,7 +1327,8 @@
         "C": "Compresión abdominal.",
         "D": "Compresión torácica."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "EXCELM se utiliza para abrir la vía aérea cuando no se sospecha de trauma."
     },
     {
       "id": 95,
@@ -1235,7 +1341,8 @@
         "C": "Aire, Vía aérea, Dolor e Inmovilización.",
         "D": "Alarma, Ventilación, Desfibrilación e Ingreso."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "AVDI significa Alerta, Verbal, Dolor e Inconsciente y permite valorar el nivel de respuesta."
     },
     {
       "id": 96,
@@ -1248,7 +1355,8 @@
         "C": "Controlar exclusivamente la temperatura.",
         "D": "Transportar alimentos."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "El sistema respiratorio lleva oxígeno a la sangre y elimina dióxido de carbono."
     },
     {
       "id": 97,
@@ -1261,7 +1369,8 @@
         "C": "Operación de ventilación asistida.",
         "D": "Observación y valoración de atención clínica."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "OVACE es la obstrucción de la vía aérea por un cuerpo extraño."
     },
     {
       "id": 98,
@@ -1274,7 +1383,8 @@
         "C": "Un equipo utilizado para apagar incendios.",
         "D": "Una sustancia que no representa ningún riesgo."
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "fundamento": "Un MATPEL puede ser una sustancia sólida, líquida o gaseosa capaz de dañar personas, bienes o ambiente."
     },
     {
       "id": 99,
@@ -1287,7 +1397,8 @@
         "C": "Advertencia.",
         "D": "Operaciones."
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "fundamento": "Advertencia es el primer nivel de competencia de los respondedores MATPEL."
     },
     {
       "id": 100,
@@ -1300,7 +1411,1128 @@
         "C": "Limitarse a observar el incidente.",
         "D": "Realizar exclusivamente la descontaminación."
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "fundamento": "El Comandante de Incidente MATPEL dirige a los técnicos, decide acciones y vela por la seguridad del personal."
+    },
+    {
+      "id": 101,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Qué elementos forman parte del Método Interactivo de Enseñanza (MIE) utilizado en el curso?",
+      "alternativas": {
+        "A": "Objetivos, contenido, interacción, retroalimentación y evaluación.",
+        "B": "Asistencia, disciplina, sanción, descanso y evaluación.",
+        "C": "Mando, logística, operaciones, seguridad y rescate.",
+        "D": "Teoría, práctica, descanso, alimentación y transporte."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual enumera cinco elementos del MIE: objetivos, contenido, interacción, retroalimentación y evaluación."
+    },
+    {
+      "id": 102,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "Según los lineamientos del curso, ¿cuántas tardanzas constituyen una falta?",
+      "alternativas": {
+        "A": "Una tardanza.",
+        "B": "Dos tardanzas.",
+        "C": "Tres tardanzas.",
+        "D": "Cuatro tardanzas."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material establece que tres tardanzas equivalen a una falta dentro del módulo."
+    },
+    {
+      "id": 103,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Qué situación de inasistencia puede ameritar la separación del aspirante durante un módulo?",
+      "alternativas": {
+        "A": "Una falta justificada.",
+        "B": "Tres faltas consecutivas o cuatro no consecutivas.",
+        "C": "Una tardanza.",
+        "D": "Dos faltas justificadas y sustentadas."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "Los lineamientos establecen la separación por tres faltas consecutivas o cuatro no consecutivas dentro de un módulo."
+    },
+    {
+      "id": 104,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Cuál es la nota mínima aprobatoria del promedio final de un módulo?",
+      "alternativas": {
+        "A": "10.",
+        "B": "11.",
+        "C": "12.",
+        "D": "14."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El promedio final de cada módulo requiere una nota mínima aprobatoria de 14."
+    },
+    {
+      "id": 105,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Qué se entiende por doctrina en el material de formación?",
+      "alternativas": {
+        "A": "Un conjunto de herramientas para combatir incendios.",
+        "B": "Enseñanzas y principios que orientan las actitudes y conductas de las personas y grupos.",
+        "C": "Una clasificación de emergencias.",
+        "D": "Un procedimiento para el uso del EPRA."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La doctrina se presenta como enseñanzas y principios que orientan las actitudes y conductas."
+    },
+    {
+      "id": 106,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Cuál es la finalidad del Código de Ética del CGBVP?",
+      "alternativas": {
+        "A": "Establecer los precios de los equipos.",
+        "B": "Regular únicamente el uso de vehículos.",
+        "C": "Orientar el accionar institucional mediante principios y valores.",
+        "D": "Reemplazar los procedimientos operativos."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El Código de Ética expresa los principios y valores que deben orientar a los integrantes y a la institución."
+    },
+    {
+      "id": 107,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿Qué método utilizaban antiguamente los vecinos para auxiliarse cuando se incendiaba una vivienda?",
+      "alternativas": {
+        "A": "Cadenas de baldes y reservorios con agua.",
+        "B": "Extintores de polvo químico.",
+        "C": "Rociadores automáticos.",
+        "D": "Equipos de respiración autónoma."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El relato histórico menciona cadenas de baldes y reservorios de agua organizados por los vecinos."
+    },
+    {
+      "id": 108,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿Qué acordaron los 54 asistentes a la primera reunión de la Chalaca del 5 de diciembre de 1860?",
+      "alternativas": {
+        "A": "Trasladar la compañía a Lima.",
+        "B": "Solicitar los permisos para crear una compañía de bomberos.",
+        "C": "Elegir al primer Comandante General del CGBVP.",
+        "D": "Crear una escuela nacional de bomberos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "Los asistentes acordaron solicitar los permisos correspondientes para crear una compañía de existencia duradera."
+    },
+    {
+      "id": 109,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Cuál es uno de los objetivos del CGBVP?",
+      "alternativas": {
+        "A": "Promover acciones de prevención de incendios y accidentes.",
+        "B": "Administrar todas las empresas privadas de seguridad.",
+        "C": "Realizar exclusivamente inspecciones comerciales.",
+        "D": "Reemplazar a los servicios de salud."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "Entre los objetivos institucionales se encuentra promover, realizar y coordinar acciones de prevención de incendios y accidentes."
+    },
+    {
+      "id": 110,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Cuál de las siguientes actividades corresponde a una función del CGBVP?",
+      "alternativas": {
+        "A": "Emitir licencias de conducir.",
+        "B": "Atender y controlar emergencias relacionadas con materiales peligrosos.",
+        "C": "Fiscalizar el transporte público.",
+        "D": "Administrar hospitales."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material incluye entre las funciones del CGBVP atender, dirigir y controlar incidentes con materiales peligrosos."
+    },
+    {
+      "id": 111,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿A través de qué entidad apoya el Estado el servicio público de bomberos?",
+      "alternativas": {
+        "A": "La Central de Emergencias.",
+        "B": "La Comandancia de cada compañía.",
+        "C": "La Intendencia Nacional de Bomberos del Perú.",
+        "D": "El Sistema de Comando de Incidentes."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material indica que el Estado apoya el servicio público de bomberos a través de la INBP."
+    },
+    {
+      "id": 112,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Para qué se utilizan las radiocomunicaciones durante una emergencia?",
+      "alternativas": {
+        "A": "Para alertar unidades, coordinar tácticas, solicitar recursos y monitorear actividades.",
+        "B": "Únicamente para informar el término de la emergencia.",
+        "C": "Para reemplazar el mando del incidente.",
+        "D": "Solamente para comunicarse con los medios de prensa."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual señala que las radiocomunicaciones permiten alertar, coordinar, solicitar recursos y monitorear unidades y personal."
+    },
+    {
+      "id": 113,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Qué significa “ruido” dentro de los elementos de la comunicación?",
+      "alternativas": {
+        "A": "La respuesta del receptor.",
+        "B": "La información que se transmite.",
+        "C": "Las interferencias que dificultan la comunicación.",
+        "D": "El sistema de signos utilizado."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El ruido es cualquier interferencia que dificulta el intercambio de información."
+    },
+    {
+      "id": 114,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "¿Qué es un accidente según las definiciones de seguridad del material?",
+      "alternativas": {
+        "A": "Una situación que siempre puede evitarse.",
+        "B": "Un suceso repentino e inesperado que puede causar daño a personas o cosas.",
+        "C": "La probabilidad de que ocurra un peligro.",
+        "D": "Una medida de protección personal."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual define accidente como un suceso repentino e inesperado que puede causar daño a personas o cosas."
+    },
+    {
+      "id": 115,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "¿Con qué deben orientar los bomberos sus acciones durante las emergencias?",
+      "alternativas": {
+        "A": "Con decisiones improvisadas.",
+        "B": "Con las preferencias individuales de cada integrante.",
+        "C": "Con los Procedimientos Operativos Estandarizados (POE).",
+        "D": "Únicamente con la experiencia personal."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material indica que los bomberos deben actuar de acuerdo con los Procedimientos Operativos Estandarizados."
+    },
+    {
+      "id": 116,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "¿Cuál de estas situaciones puede ser un evento estresante para un bombero?",
+      "alternativas": {
+        "A": "Una revisión rutinaria de inventario.",
+        "B": "Un incendio, un accidente de tránsito o un rescate en condiciones adversas.",
+        "C": "Una actividad administrativa sin presión.",
+        "D": "Una reunión de coordinación sin incidentes."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material menciona incendios, accidentes de tránsito, rescates adversos y pérdidas de vidas como eventos estresantes."
+    },
+    {
+      "id": 117,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "En el modelo continuo de estrés, ¿qué representa la condición verde?",
+      "alternativas": {
+        "A": "Desorden mental y daño por estrés.",
+        "B": "Angustia intensa y deterioro de la salud mental.",
+        "C": "Una situación de estrés grave y persistente.",
+        "D": "Un estado de bienestar y funcionamiento adaptativo."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La condición verde representa un estado de preparación, funcionamiento óptimo, crecimiento adaptativo y bienestar."
+    },
+    {
+      "id": 118,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Cuál es un beneficio del Sistema de Comando de Incidentes cuando intervienen varias instituciones?",
+      "alternativas": {
+        "A": "Permite que cada institución use una organización incompatible.",
+        "B": "Facilita trabajar bajo un marco común y optimizar los recursos.",
+        "C": "Elimina la necesidad de registrar recursos.",
+        "D": "Evita establecer objetivos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El SCI proporciona una estructura estandarizada y facilita la coordinación entre instituciones y el uso de recursos."
+    },
+    {
+      "id": 119,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Qué significa utilizar terminología común en el SCI?",
+      "alternativas": {
+        "A": "Usar códigos diferentes para cada institución.",
+        "B": "Evitar toda comunicación por radio.",
+        "C": "Utilizar lenguaje claro y nombres comunes para recursos e instalaciones.",
+        "D": "Permitir que cada equipo invente sus propias denominaciones."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La terminología común utiliza lenguaje claro y evita códigos o claves al nombrar recursos e instalaciones."
+    },
+    {
+      "id": 120,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Cuál es el alcance de control óptimo indicado en el material del SCI?",
+      "alternativas": {
+        "A": "Dos.",
+        "B": "Tres.",
+        "C": "Cinco.",
+        "D": "Diez."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material indica que el alcance de control óptimo es cinco."
+    },
+    {
+      "id": 121,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué significa que una atmósfera tenga deficiencia de oxígeno?",
+      "alternativas": {
+        "A": "Que contiene más nitrógeno que el aire normal.",
+        "B": "Que su concentración de oxígeno está por debajo del valor normal del aire.",
+        "C": "Que no contiene ningún gas.",
+        "D": "Que contiene exclusivamente vapor de agua."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material explica que existe deficiencia de oxígeno cuando la concentración cae por debajo del 21 % normal aproximado."
+    },
+    {
+      "id": 122,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué significan las siglas IDLH?",
+      "alternativas": {
+        "A": "Identificación de Líquidos y Desechos Peligrosos.",
+        "B": "Inspección Diaria de Líneas Hidráulicas.",
+        "C": "Peligro Inmediato para la Vida o la Salud.",
+        "D": "Indicador de Descarga y Lectura Hidráulica."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "IDLH corresponde a Immediately Dangerous to Life or Health: peligro inmediato para la vida o la salud."
+    },
+    {
+      "id": 123,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "¿Cuáles son los cuatro elementos del tetraedro del fuego?",
+      "alternativas": {
+        "A": "Combustible, comburente, calor y reacción química en cadena.",
+        "B": "Agua, humo, presión y temperatura.",
+        "C": "Combustible, vapor, ceniza y humo.",
+        "D": "Oxígeno, agua, nitrógeno y radiación."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El tetraedro incluye combustible, comburente, calor y reacción química en cadena."
+    },
+    {
+      "id": 124,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "¿Qué función cumple un agente oxidante en la combustión?",
+      "alternativas": {
+        "A": "Actúa siempre como combustible.",
+        "B": "Enfría el material que arde.",
+        "C": "Apoya o favorece la combustión al aportar oxígeno u otros gases oxidantes.",
+        "D": "Elimina la reacción química en cadena."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "Los oxidantes no son combustibles, pero favorecen la combustión cuando se combinan con un combustible."
+    },
+    {
+      "id": 125,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Qué es el Flashover?",
+      "alternativas": {
+        "A": "La entrada de aire fresco en un recinto con humo combustible.",
+        "B": "La ignición generalizada de los contenidos de un recinto calentado intensamente.",
+        "C": "La acumulación de agua en el fondo de un tanque.",
+        "D": "La interrupción del suministro de combustible."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El Flashover es una combustión rápida generalizada que ocurre cuando el recinto alcanza condiciones de ignición general."
+    },
+    {
+      "id": 126,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Qué relación tiene el Rollover con el Flashover?",
+      "alternativas": {
+        "A": "El Rollover puede ser un paso previo al Flashover.",
+        "B": "El Rollover ocurre después de extinguir el incendio.",
+        "C": "El Rollover es un tipo de hidrante.",
+        "D": "Ambos términos describen el golpe de ariete."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual describe el Rollover como la inflamación de los gases bajo el techo y como una condición previa al Flashover."
+    },
+    {
+      "id": 127,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Qué característica corresponde a la fase de decaimiento de un incendio?",
+      "alternativas": {
+        "A": "Aumento continuo del combustible y abundante visibilidad.",
+        "B": "Oxígeno normal y ausencia de brasas.",
+        "C": "Reducción del combustible, menor disponibilidad de oxígeno y visibilidad muy limitada.",
+        "D": "Ausencia total de gases de combustión."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material asocia la fase de decaimiento con una reducción casi total del combustible, disminución del oxígeno y poca visibilidad."
+    },
+    {
+      "id": 128,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué materiales corresponden a un fuego de Clase A?",
+      "alternativas": {
+        "A": "Gasolina y alcohol.",
+        "B": "Equipos eléctricos energizados.",
+        "C": "Metales combustibles.",
+        "D": "Sólidos como madera, papel y tela."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "Los fuegos Clase A involucran sólidos combustibles como madera, papel y tela, que pueden dejar brasas."
+    },
+    {
+      "id": 129,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué materiales corresponden a un fuego de Clase B?",
+      "alternativas": {
+        "A": "Líquidos y gases inflamables o combustibles.",
+        "B": "Madera, papel y cartón.",
+        "C": "Metales como magnesio y sodio.",
+        "D": "Equipos eléctricos energizados exclusivamente."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La Clase B comprende líquidos y gases inflamables o combustibles, como gasolina, aceites y alcoholes."
+    },
+    {
+      "id": 130,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué caracteriza a un fuego de Clase C?",
+      "alternativas": {
+        "A": "La combustión de madera.",
+        "B": "La combustión de metales.",
+        "C": "La presencia de equipos o sistemas eléctricos energizados.",
+        "D": "La combustión de aceites de cocina."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La Clase C corresponde a fuegos en equipos o sistemas de circuitos eléctricos energizados."
+    },
+    {
+      "id": 131,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "Al abastecer una autobomba desde un hidrante, ¿qué presión de entrada a la bomba recomienda mantener el material?",
+      "alternativas": {
+        "A": "Entre 5 y 15 psi.",
+        "B": "Entre 20 y 80 psi.",
+        "C": "Entre 100 y 150 psi.",
+        "D": "Entre 150 y 200 psi."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material recomienda cuidar que la presión de entrada a la bomba se mantenga entre 20 y 80 psi."
+    },
+    {
+      "id": 132,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "¿Dónde se encuentra normalmente un hidrante subterráneo?",
+      "alternativas": {
+        "A": "En una torre elevada.",
+        "B": "Dentro del tanque de la autobomba.",
+        "C": "En una caja situada bajo el nivel del suelo.",
+        "D": "En el interior de una manguera."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "Los hidrantes subterráneos se alojan bajo el nivel del suelo, dentro de cajas de protección."
+    },
+    {
+      "id": 133,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué estudia la hidrostática?",
+      "alternativas": {
+        "A": "Los líquidos en movimiento.",
+        "B": "Los fluidos en reposo.",
+        "C": "La transferencia de calor.",
+        "D": "La combustión de gases."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La hidráulica se divide en hidrostática, que estudia fluidos en reposo, e hidrodinámica, que estudia fluidos en movimiento."
+    },
+    {
+      "id": 134,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué es el golpe de ariete?",
+      "alternativas": {
+        "A": "Una pérdida de agua por evaporación.",
+        "B": "Un aumento brusco de presión por un cambio repentino en la velocidad del agua.",
+        "C": "Una disminución gradual de temperatura.",
+        "D": "Una obstrucción causada por espuma."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El golpe de ariete aparece cuando se interrumpe o varía bruscamente el caudal y se genera una onda de presión."
+    },
+    {
+      "id": 135,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué puede provocar la cavitación en una bomba?",
+      "alternativas": {
+        "A": "Una presión de agua excesiva en la red pública.",
+        "B": "La formación de burbujas por una brusca caída de presión que pueden erosionar los impulsores.",
+        "C": "La congelación del agua en la manguera.",
+        "D": "La expansión del vapor de un líquido inflamable."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La cavitación provoca una caída brusca de presión y la formación de burbujas que pueden erosionar los impulsores de la bomba."
+    },
+    {
+      "id": 136,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Para qué puede utilizarse el chorro de ventilación o media neblina?",
+      "alternativas": {
+        "A": "Para crear una barrera contra el agua.",
+        "B": "Para extraer humo mediante ventilación hidráulica a través de una abertura.",
+        "C": "Para penetrar profundamente en combustibles sólidos.",
+        "D": "Para aumentar la presión de la bomba."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El chorro de ventilación, con un cono aproximado de 30° a 60°, puede extraer productos de combustión mediante el efecto Venturi."
+    },
+    {
+      "id": 137,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Qué ventaja ofrece el chorro de protección o neblina al pitonero?",
+      "alternativas": {
+        "A": "Mayor penetración que un chorro compacto.",
+        "B": "Elimina la necesidad de protección personal.",
+        "C": "Alta absorción de calor y protección frente al calor radiante.",
+        "D": "Permite atacar líquidos inflamables con chorro directo."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El chorro de protección absorbe calor y brinda protección al pitonero, aunque tiene menor alcance y penetración."
+    },
+    {
+      "id": 138,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Cómo se aplica el chorro pulsante?",
+      "alternativas": {
+        "A": "Con ráfagas muy cortas sobre la capa térmica.",
+        "B": "Con un chorro continuo sobre todos los objetos.",
+        "C": "Con descargas de espuma sobre el suelo.",
+        "D": "Únicamente sobre el exterior de los edificios."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El chorro pulsante aplica ráfagas breves sobre la capa térmica para ayudar a extinguir sin perturbar el equilibrio térmico."
+    },
+    {
+      "id": 139,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "¿Por qué se deja un tiempo de reposo después de una aplicación de agua en un ataque indirecto?",
+      "alternativas": {
+        "A": "Para permitir que el vapor se redistribuya y se recupere el equilibrio térmico.",
+        "B": "Para que aumente la temperatura del recinto.",
+        "C": "Para permitir que ingrese más combustible.",
+        "D": "Para evitar evaluar el resultado de la aplicación."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El reposo permite que el vapor se distribuya, se alcance el equilibrio térmico y se evalúe la efectividad de la aplicación."
+    },
+    {
+      "id": 140,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "En un ataque directo, ¿cómo debe aplicarse el agua sobre las superficies incendiadas?",
+      "alternativas": {
+        "A": "Sin mover el pitón y concentrándola en un solo punto.",
+        "B": "Mediante una aplicación continua, moviendo el chorro para cubrir las superficies con una película de agua.",
+        "C": "Únicamente sobre el techo.",
+        "D": "Solo mediante pequeñas descargas al aire."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El ataque directo busca humedecer y enfriar las superficies combustibles con una película de agua."
+    },
+    {
+      "id": 141,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "Antes de realizar una abertura en un muro durante una entrada forzada, ¿qué debe revisar el bombero?",
+      "alternativas": {
+        "A": "Únicamente el color de la pared.",
+        "B": "La presencia de enchufes o interruptores eléctricos y la ubicación de elementos estructurales.",
+        "C": "La cantidad de ventanas del edificio.",
+        "D": "La ubicación de los extintores portátiles."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material indica inspeccionar enchufes e interruptores, y localizar vigas o columnas antes de abrir un muro."
+    },
+    {
+      "id": 142,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "¿Cómo debe transportarse un hacha de bombero?",
+      "alternativas": {
+        "A": "Con el filo pegado al cuerpo.",
+        "B": "Sobre el hombro, con el pico hacia atrás.",
+        "C": "Con el filo alejado del cuerpo y protegiendo el pico.",
+        "D": "Sujeta únicamente por la cabeza."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual indica llevar el filo a distancia del cuerpo, proteger el pico y no transportar el hacha sobre el hombro."
+    },
+    {
+      "id": 143,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Qué principio aprovecha la ventilación natural?",
+      "alternativas": {
+        "A": "La convección natural del aire caliente y su movimiento dentro de la estructura.",
+        "B": "La presión generada por una bomba hidráulica.",
+        "C": "La succión de una bomba de agua.",
+        "D": "La combustión de los gases acumulados."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La ventilación natural utiliza las corrientes de convección generadas por el calor y el movimiento del aire."
+    },
+    {
+      "id": 144,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Qué métodos incluye la ventilación forzada?",
+      "alternativas": {
+        "A": "Únicamente la apertura de ventanas.",
+        "B": "Ventilación mecánica por succión o presión positiva y ventilación hidráulica.",
+        "C": "Solo ventilación vertical.",
+        "D": "Exclusivamente ventilación horizontal."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual incluye ventilación mecánica por succión y presión positiva, además de ventilación hidráulica."
+    },
+    {
+      "id": 145,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Qué factor influye en la eficacia de la ventilación natural?",
+      "alternativas": {
+        "A": "El color de las paredes.",
+        "B": "La cantidad de vehículos en la calle.",
+        "C": "La proximidad, tamaño y cantidad de aberturas y los obstáculos al flujo del humo.",
+        "D": "La marca de los equipos de protección."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La eficacia depende de la ubicación y tamaño de las aberturas y de los obstáculos que dificulten la salida del humo."
+    },
+    {
+      "id": 146,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "¿Cuál de estos grupos contiene únicamente tipos de escaleras utilizadas por los bomberos?",
+      "alternativas": {
+        "A": "Simples, de gancho, plegables y de extensión.",
+        "B": "De presión, hidráulicas, neumáticas y de agua.",
+        "C": "De ventilación, de fuego, de humo y de rescate.",
+        "D": "De bomba, de manguera, de pitón y de espuma."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La clasificación del manual incluye escaleras simples, de gancho, plegables, de extensión, de bisagra y aéreas."
+    },
+    {
+      "id": 147,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "Al bajar una víctima con dos bomberos y dos escaleras, ¿cómo se distribuye el soporte?",
+      "alternativas": {
+        "A": "Ambos sostienen solo las piernas.",
+        "B": "Uno sostiene cadera y piernas; el otro, cabeza y torso.",
+        "C": "Uno sostiene la cabeza y el otro se retira.",
+        "D": "La víctima desciende sin asistencia."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El procedimiento descrito asigna a un bombero la cadera y piernas, y al otro la cabeza y el torso."
+    },
+    {
+      "id": 148,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "¿Cuál de estas acciones puede producir daños secundarios durante la extinción?",
+      "alternativas": {
+        "A": "La llama y el calor del incendio.",
+        "B": "La ventilación, la entrada forzada y la aplicación de agua.",
+        "C": "La combustión inicial del combustible.",
+        "D": "La generación de humo antes de la llegada de los bomberos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "Los daños secundarios pueden ser ocasionados por las operaciones de extinción, como entrada forzada, ventilación y aplicación de agua."
+    },
+    {
+      "id": 149,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "¿Qué comprende el reacondicionamiento después del incendio?",
+      "alternativas": {
+        "A": "Únicamente retirar los vehículos.",
+        "B": "Buscar y extinguir focos ocultos o remanentes y proteger el lugar y las evidencias.",
+        "C": "Destruir los objetos dañados.",
+        "D": "Abrir nuevas entradas a la estructura."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El reacondicionamiento incluye buscar y extinguir fuegos ocultos, proteger el lugar y conservar pruebas sobre el origen y la causa."
+    },
+    {
+      "id": 150,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "¿Cuál es una función de un muro estructural?",
+      "alternativas": {
+        "A": "Transmitir exclusivamente las cargas al suelo.",
+        "B": "Encerrar o separar ambientes y resistir cargas.",
+        "C": "Trabajar únicamente como techo.",
+        "D": "Generar ventilación natural."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El muro puede encerrar o separar ambientes y resistir cargas de gravedad y empujes laterales."
+    },
+    {
+      "id": 151,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "¿Para qué se utiliza una losa en una edificación?",
+      "alternativas": {
+        "A": "Como elemento de piso o techo.",
+        "B": "Para sustituir todas las columnas.",
+        "C": "Para transportar agua a los hidrantes.",
+        "D": "Para evacuar gases de combustión."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La losa es un elemento estructural que se utiliza como piso o techo."
+    },
+    {
+      "id": 152,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "¿Cuál es el propósito de la compartimentación en un edificio?",
+      "alternativas": {
+        "A": "Facilitar que el humo llegue a todos los pisos.",
+        "B": "Separar sectores para limitar la propagación del incendio.",
+        "C": "Eliminar la necesidad de evacuar.",
+        "D": "Aumentar la ventilación de los sótanos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La compartimentación vertical y horizontal es uno de los elementos que se consideran para controlar la propagación en edificios."
+    },
+    {
+      "id": 153,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Cómo define el material un sótano respecto al nivel de la vereda?",
+      "alternativas": {
+        "A": "Su techo debe estar siempre a más de dos metros sobre la vereda.",
+        "B": "La superficie superior de su techo se encuentra hasta 0,50 m por encima del nivel de la vereda frente al lote.",
+        "C": "Debe encontrarse completamente sobre el nivel de la calle.",
+        "D": "Debe tener acceso únicamente por una escalera."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La definición del manual considera la posición de la superficie superior del techo hasta 0,50 m sobre el nivel de la vereda."
+    },
+    {
+      "id": 154,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Cuál es el uso principal de un sótano de estacionamiento?",
+      "alternativas": {
+        "A": "Alojamiento de viviendas.",
+        "B": "Estacionamiento de vehículos.",
+        "C": "Almacenamiento exclusivo de agua.",
+        "D": "Instalación de oficinas administrativas."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El sótano de estacionamiento es un nivel subterráneo destinado principalmente al estacionamiento de vehículos."
+    },
+    {
+      "id": 155,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Qué peligro específico destaca el material para los vehículos eléctricos?",
+      "alternativas": {
+        "A": "La ausencia de energía almacenada.",
+        "B": "La alta tensión almacenada en las baterías y el cableado conectado al motor.",
+        "C": "La utilización exclusiva de combustible diésel.",
+        "D": "La imposibilidad de generar gases tóxicos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material advierte sobre la alta tensión almacenada en las baterías y en el cableado de los vehículos eléctricos."
+    },
+    {
+      "id": 156,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Cuál es una característica del Gas Natural Vehicular (GNV) descrita en el material?",
+      "alternativas": {
+        "A": "Está compuesto principalmente por propano y es más pesado que el aire.",
+        "B": "Está compuesto principalmente por metano y es más liviano que el aire.",
+        "C": "No es inflamable.",
+        "D": "Se utiliza exclusivamente en estado líquido a presión atmosférica."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material describe el GNV como compuesto principalmente por metano y más liviano que el aire."
+    },
+    {
+      "id": 157,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Cuáles son las tres condiciones fundamentales que permiten que se presenten fenómenos en incendios de tanques?",
+      "alternativas": {
+        "A": "Tanque vacío, presencia de espuma y lluvia.",
+        "B": "Incendio total con voladura del techo, presencia de agua en el combustible o fondo y desarrollo de una onda de calor.",
+        "C": "Temperatura ambiente baja, tanque nuevo y ausencia de combustible.",
+        "D": "Fuego pequeño, ventilación natural y ausencia de agua."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual enumera esas tres condiciones para que se produzcan fenómenos como Boilover, Slopover y Frothover."
+    },
+    {
+      "id": 158,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Qué caracteriza al Slopover?",
+      "alternativas": {
+        "A": "Una explosión de vapor en un recipiente presurizado.",
+        "B": "Un rebosamiento superficial parcial cuando la onda de calor encuentra capas de agua o emulsión bajo la superficie.",
+        "C": "La inflamación de gases bajo el techo de una habitación.",
+        "D": "La caída de una columna estructural."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El Slopover se describe como un rebosamiento superficial que puede producirse cuando la onda de calor encuentra agua o emulsiones en estratos intermedios."
+    },
+    {
+      "id": 159,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿En qué situación puede producirse un Frothover?",
+      "alternativas": {
+        "A": "Cuando el agua bajo la superficie de aceites minerales viscosos y calientes entra en ebullición y provoca derrames.",
+        "B": "Cuando ingresa aire fresco en un recinto con humo.",
+        "C": "Cuando una manguera pierde presión por fricción.",
+        "D": "Cuando se rompe la funda de una cuerda."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El Frothover ocurre en recipientes con aceites minerales viscosos a alta temperatura cuando el agua situada bajo la superficie hierve y produce derrames."
+    },
+    {
+      "id": 160,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "¿Por qué una fuga de GLP puede observarse como una nube blanquecina?",
+      "alternativas": {
+        "A": "Porque el GLP tiene color blanco.",
+        "B": "Porque su baja temperatura condensa la humedad del ambiente.",
+        "C": "Porque el gas contiene humo negro.",
+        "D": "Porque el producto se convierte inmediatamente en espuma."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material indica que el GLP es incoloro y que la fuga puede verse blanca por la condensación de la humedad ambiental debido a su baja temperatura."
+    },
+    {
+      "id": 161,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "¿Qué lesión puede provocar el contacto con GLP líquido debido a su baja temperatura?",
+      "alternativas": {
+        "A": "Quemadura por congelamiento.",
+        "B": "Quemadura solar.",
+        "C": "Lesión por radiación ionizante.",
+        "D": "Únicamente irritación auditiva."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual advierte que las bajas temperaturas del GLP pueden producir quemaduras por congelamiento."
+    },
+    {
+      "id": 162,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿En qué consiste el método de rodaje para aplicar espuma?",
+      "alternativas": {
+        "A": "Dirigir el chorro al aire y dejar que la espuma caiga.",
+        "B": "Descargar espuma en el suelo cerca del borde del charco para que ruede sobre la superficie del combustible.",
+        "C": "Aplicar espuma únicamente desde el fondo del tanque.",
+        "D": "Mezclar la espuma directamente con el combustible."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "En el método de rodaje, la espuma se descarga cerca del extremo frontal del charco y rueda sobre la superficie del combustible."
+    },
+    {
+      "id": 163,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Cómo funciona el método de lluvia para aplicar espuma?",
+      "alternativas": {
+        "A": "Se dirige el chorro hacia un objeto elevado para que rebote.",
+        "B": "Se descarga espuma en el suelo para que se desplace por el borde.",
+        "C": "Se dirige el chorro por encima del incendio y se deja caer suavemente sobre el combustible.",
+        "D": "Se introduce espuma por la base del recipiente sin llegar a la superficie."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El método de lluvia dirige el chorro por encima del incendio o derrame y permite que la espuma caiga suavemente sobre el combustible."
+    },
+    {
+      "id": 164,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Qué tipo de información puede conservar y entregar el primer respondedor al equipo de investigación?",
+      "alternativas": {
+        "A": "Únicamente recuerdos sin registrar.",
+        "B": "Fotografías, videos, planos, notas y datos de contacto de testigos.",
+        "C": "Solo el nombre del propietario.",
+        "D": "Únicamente los objetos que fueron retirados."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material recomienda preservar fotografías, videos, planos, notas y nombres y contactos de testigos."
+    },
+    {
+      "id": 165,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Por qué debe evitarse mover innecesariamente los objetos de la escena del incendio?",
+      "alternativas": {
+        "A": "Porque la escena completa puede constituir una evidencia para determinar el origen y la causa.",
+        "B": "Porque los objetos deben permanecer siempre calientes.",
+        "C": "Porque el movimiento impide ventilar el lugar.",
+        "D": "Porque se reduce la cantidad de agua disponible."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual considera la escena una evidencia que debe protegerse, por lo que el movimiento de objetos debe ser mínimo."
+    },
+    {
+      "id": 166,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Cuál de estas situaciones justifica que un bombero emita un MAYDAY personal?",
+      "alternativas": {
+        "A": "No recordar el número de su compañía.",
+        "B": "Estar desorientado, atrapado o tener un nivel de aire que pone en riesgo su evacuación.",
+        "C": "Necesitar reemplazar una herramienta.",
+        "D": "Haber terminado su labor de ventilación."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material incluye la desorientación, el atrapamiento y el bajo nivel de aire que impide evacuar entre las condiciones para emitir un MAYDAY."
+    },
+    {
+      "id": 167,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Qué debe hacer inicialmente un bombero que necesita emitir un MAYDAY?",
+      "alternativas": {
+        "A": "Correr sin controlar su respiración.",
+        "B": "Mantener la calma y conservar su reserva de aire.",
+        "C": "Retirar su EPRA inmediatamente.",
+        "D": "Separarse de su pareja o equipo."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El procedimiento indica mantener la calma, conservar la reserva de aire y evitar movimientos bruscos o pánico."
+    },
+    {
+      "id": 168,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "Antes de realizar maniobras dentro del cuarto de máquinas, el ducto o el foso del ascensor, ¿qué medida de seguridad se debe tomar?",
+      "alternativas": {
+        "A": "Mantener el ascensor en movimiento.",
+        "B": "Cortar el suministro eléctrico y evitar que pueda volver a activarse.",
+        "C": "Abrir todas las puertas sin revisar la cabina.",
+        "D": "Desconectar las comunicaciones."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material indica cortar la energía y bloquear o limitar el acceso al interruptor para impedir una puesta en marcha accidental."
+    },
+    {
+      "id": 169,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "¿Qué característica distingue al ascensor hidráulico?",
+      "alternativas": {
+        "A": "Utiliza cables y contrapeso como único sistema de tracción.",
+        "B": "Utiliza un sistema hidráulico para mover la cabina mediante presión de fluido.",
+        "C": "No requiere energía para funcionar.",
+        "D": "Se desplaza mediante una cuerda de rescate."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El ascensor hidráulico utiliza un sistema de fluido presurizado y un mecanismo de accionamiento hidráulico para mover la cabina."
+    },
+    {
+      "id": 170,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿Qué función cumple una polea móvil en un sistema de rescate?",
+      "alternativas": {
+        "A": "Cambia únicamente la dirección de la fuerza.",
+        "B": "Aumenta el peso de la carga.",
+        "C": "Reduce el esfuerzo necesario al distribuir el peso de la carga.",
+        "D": "Impide que la cuerda se desplace."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La polea móvil reduce el esfuerzo al distribuir el peso de la carga dentro del sistema."
+    },
+    {
+      "id": 171,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "En un sistema de ventaja mecánica 2:1, ¿qué ocurre con la fuerza necesaria para mover una carga ideal?",
+      "alternativas": {
+        "A": "Se duplica.",
+        "B": "Se reduce aproximadamente a la mitad.",
+        "C": "Permanece igual.",
+        "D": "Se reduce a una cuarta parte."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material indica que un sistema 2:1 reduce la carga a la mitad en condiciones ideales."
+    },
+    {
+      "id": 172,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿Qué puede ocurrir durante una suspensión inmóvil prolongada en un arnés?",
+      "alternativas": {
+        "A": "Se incrementa indefinidamente el retorno venoso.",
+        "B": "Las correas pueden comprimir las venas de las piernas y reducir el retorno de sangre al corazón.",
+        "C": "Se elimina la necesidad de rescate.",
+        "D": "El cuerpo aumenta automáticamente la presión arterial sin riesgos."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El síndrome del arnés se relaciona con la compresión de las venas de las piernas y la disminución del retorno venoso durante una suspensión inmóvil."
+    },
+    {
+      "id": 173,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "¿Qué significa la sigla GEPONLAS en la impresión general del estado del paciente?",
+      "alternativas": {
+        "A": "Género, Edad, Posición encontrada, Nivel de respuesta, Lesiones visibles, Agresivo potencial y Signos de shock.",
+        "B": "Glucosa, Estado, Pulso, Oxígeno, Nivel, Lesión, Alarma y Signos.",
+        "C": "Gravedad, Evaluación, Presión, Oxígeno, Náuseas, Lesiones, Alerta y Sangrado.",
+        "D": "Género, Emergencia, Presión, Oxígeno, Nivel, Lenguaje, Atención y Seguridad."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "GEPONLAS organiza la impresión inicial mediante género, edad, posición, respuesta, lesiones visibles, agresividad potencial y signos de shock."
+    },
+    {
+      "id": 174,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "¿Cuánto tiempo como máximo debe tomar la evaluación inicial del paciente según el material?",
+      "alternativas": {
+        "A": "Un minuto.",
+        "B": "Cinco minutos.",
+        "C": "Diez minutos.",
+        "D": "Quince minutos."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La evaluación inicial es un proceso ordenado para detectar y corregir problemas que amenazan la vida y no debe tomar más de un minuto."
+    },
+    {
+      "id": 175,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "¿Qué caracteriza a una obstrucción leve de la vía aérea por cuerpo extraño?",
+      "alternativas": {
+        "A": "El paciente no puede hablar ni respirar y tiene tos inefectiva.",
+        "B": "El paso del aire está disminuido y el paciente puede toser o hablar con dificultad.",
+        "C": "El paciente está inconsciente en todos los casos.",
+        "D": "No existe dificultad respiratoria."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La obstrucción leve permite cierto paso de aire y puede presentar tos y dificultad para hablar."
+    },
+    {
+      "id": 176,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "¿Qué relación de compresiones y ventilaciones se indica para la RCP de un adulto?",
+      "alternativas": {
+        "A": "15 compresiones y 1 ventilación.",
+        "B": "20 compresiones y 2 ventilaciones.",
+        "C": "30 compresiones y 2 ventilaciones.",
+        "D": "50 compresiones y 5 ventilaciones."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material señala ciclos de 30 compresiones y 2 ventilaciones para la RCP de buena calidad en adultos."
+    },
+    {
+      "id": 177,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué debe hacer un respondedor de nivel Advertencia ante un incidente MATPEL que no puede controlar?",
+      "alternativas": {
+        "A": "Ingresar para cerrar la válvula.",
+        "B": "Tomar una muestra directamente.",
+        "C": "Observar desde una ubicación segura, consultar la GRE, proteger el área y solicitar asistencia calificada.",
+        "D": "Realizar una contención ofensiva sin protección."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El nivel Advertencia reconoce desde una ubicación segura, utiliza la GRE y solicita asistencia calificada."
+    },
+    {
+      "id": 178,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué representa el número UN que aparece en un panel de seguridad?",
+      "alternativas": {
+        "A": "El número de bomberos que deben ingresar.",
+        "B": "El identificador numérico asignado a una sustancia o material peligroso.",
+        "C": "La presión interna del tanque.",
+        "D": "El número de teléfono del fabricante."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El número UN es un identificador utilizado para reconocer el material peligroso transportado o almacenado."
+    },
+    {
+      "id": 179,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué riesgos representa el diamante NFPA 704?",
+      "alternativas": {
+        "A": "Únicamente el riesgo de incendio.",
+        "B": "La cantidad de producto y su volumen.",
+        "C": "Salud, inflamabilidad, inestabilidad y riesgos específicos.",
+        "D": "La distancia de evacuación y el sentido del viento."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El material presenta el diamante NFPA 704 como una herramienta para reconocer riesgos de salud, inflamabilidad, inestabilidad y riesgos específicos."
+    },
+    {
+      "id": 180,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué nivel de protección ofrece el traje Nivel A?",
+      "alternativas": {
+        "A": "Protección mínima de la piel y ninguna protección respiratoria.",
+        "B": "Protección respiratoria y menor protección para la piel que el Nivel C.",
+        "C": "El mayor nivel de protección respiratoria, cutánea, ocular y de mucosas.",
+        "D": "Protección exclusivamente para las manos y los pies."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El Nivel A es el nivel más alto descrito para protección respiratoria, de la piel, ocular y de las mucosas."
     }
   ]
 }
