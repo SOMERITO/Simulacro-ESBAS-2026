@@ -3,8 +3,106 @@
   "title": "Banco acumulativo de preguntas ESBAS 2026 - Módulos I, II y III",
   "course": "CFBB: IV CD LIMA CENTRO/2026",
   "module": "MÓDULOS I, II Y III - CURSO ESBAS 2026",
-  "answer_key_status": "Verificación final: 289 de 289 preguntas tienen una clave confirmada. Se corrigieron las alternativas de los 13 casos señalados, sin alterar sus enunciados, los identificadores de las opciones, el orden de las alternativas ni selected_answer. Para los datos no desarrollados en el material ESBAS se indican fuentes externas específicas en answer_verification.",
+  "answer_key_status": "289 de 292 preguntas cuentan con respaldo documental; las 3 claves de la Lección 9 fueron confirmadas expresamente por el usuario y no se han cotejado de forma independiente con el manual.",
   "lessons": [
+    {
+      "bank_id": "CFBB-2026-MOD-I-LECCION-9",
+      "title": "Banco de preguntas - Lección 9: Gestión del aire del EPRA",
+      "course": "CFBB: IV CD LIMA CENTRO/2026",
+      "module": "MÓDULO I",
+      "lesson": {
+        "number": 9,
+        "name": "Gestión del aire del EPRA"
+      },
+      "source": "Texto proporcionado directamente por el usuario el 24/11/2026.",
+      "answer_key_status": "3 claves confirmadas por indicación del usuario; pendientes de cotejo documental independiente.",
+      "questions": [
+        {
+          "id": "L9-P07",
+          "number": 7,
+          "statement": "Durante esfuerzos extremos, la tasa de consumo de aire puede llegar a:",
+          "options": [
+            {
+              "id": "a",
+              "text": "100–120 L/min"
+            },
+            {
+              "id": "b",
+              "text": "80 L/min"
+            },
+            {
+              "id": "c",
+              "text": "40 L/min"
+            },
+            {
+              "id": "d",
+              "text": "60 L/min"
+            }
+          ],
+          "selected_answer": null,
+          "correct_answer": "a",
+          "answer_verified": true,
+          "answer_verification_status": "user_confirmed",
+          "answer_source": "Indicación expresa del usuario (24/11/2026)"
+        },
+        {
+          "id": "L9-P08",
+          "number": 8,
+          "statement": "Cuál es la composición normal del aire respirable según la lección?",
+          "options": [
+            {
+              "id": "a",
+              "text": "23.5% oxígeno, 76% nitrógeno, 0.5% otros gases"
+            },
+            {
+              "id": "b",
+              "text": "19.5% oxígeno, 80% nitrógeno, 0.5% otros gases"
+            },
+            {
+              "id": "c",
+              "text": "21% oxígeno, 78% nitrógeno y 1% otros gases"
+            },
+            {
+              "id": "d",
+              "text": "20% oxígeno, 79% nitrógeno, 1% otros gases"
+            }
+          ],
+          "selected_answer": null,
+          "correct_answer": "c",
+          "answer_verified": true,
+          "answer_verification_status": "user_confirmed",
+          "answer_source": "Indicación expresa del usuario (24/11/2026)"
+        },
+        {
+          "id": "L9-P10",
+          "number": 10,
+          "statement": "Un cilindro de 1800 litros, con consumo de 100 L/min, proporciona un tiempo total de:",
+          "options": [
+            {
+              "id": "a",
+              "text": "12 minutos"
+            },
+            {
+              "id": "b",
+              "text": "18 minutos"
+            },
+            {
+              "id": "c",
+              "text": "30 minutos"
+            },
+            {
+              "id": "d",
+              "text": "9 minutos"
+            }
+          ],
+          "selected_answer": null,
+          "correct_answer": "b",
+          "answer_verified": true,
+          "answer_verification_status": "user_confirmed",
+          "answer_source": "Indicación expresa del usuario (24/11/2026)"
+        }
+      ]
+    },
     {
       "bank_id": "CFBB-2026-MOD-II-LECCION-10",
       "title": "Banco de preguntas - Lección 10: Comportamiento del fuego I",
@@ -997,7 +1095,8 @@
         },
         {
           "id": "L13-P07",
-          "number": 7,          "statement": "¿Qué condición debe cumplirse para que el funcionamiento permanente de la bomba sea correcto durante el abastecimiento con hidrante?",
+          "number": 7,
+          "statement": "¿Qué condición debe cumplirse para que el funcionamiento permanente de la bomba sea correcto durante el abastecimiento con hidrante?",
           "options": [
             {
               "id": "a",
@@ -1996,7 +2095,8 @@
           "statement": "Confirmada la ausencia de riesgos, en incendios o fugas de gas se debe:",
           "options": [
             {
-              "id": "a",              "text": "Disponer una línea de agua cargada con personal equipado"
+              "id": "a",
+              "text": "Disponer una línea de agua cargada con personal equipado"
             },
             {
               "id": "b",
@@ -2995,7 +3095,8 @@
           "options": [
             {
               "id": "a",
-              "text": "Daños primarios"            },
+              "text": "Daños primarios"
+            },
             {
               "id": "b",
               "text": "Daños colaterales externos"
@@ -3994,7 +4095,8 @@
             },
             {
               "id": "b",
-              "text": "5,4% a 14%"            },
+              "text": "5,4% a 14%"
+            },
             {
               "id": "c",
               "text": "5% a 15%"
@@ -4993,7 +5095,8 @@
             {
               "id": "b",
               "text": "FFFP"
-            },            {
+            },
+            {
               "id": "c",
               "text": "AR-AFFF"
             },
@@ -5992,7 +6095,8 @@
               "text": "El sistema compuesto es creado por el apilamiento de uno o mas sistemas sobre el principal, calculandose por multiplicacion."
             },
             {
-              "id": "d",              "text": "El sistema simple proporciona mayor ventaja mecanica que el compuesto."
+              "id": "d",
+              "text": "El sistema simple proporciona mayor ventaja mecanica que el compuesto."
             }
           ],
           "selected_answer": null,
@@ -6975,10 +7079,11 @@
       ]
     }
   ],
-  "question_count": 249,
-  "lesson_count": 25,
+  "question_count": 252,
+  "lesson_count": 26,
   "capture_status": {
     "lessons_registered": [
+      9,
       10,
       11,
       12,
@@ -6991,7 +7096,8 @@
       19,
       20,
       21,
-      22,      23,
+      22,
+      23,
       24,
       25,
       26,
@@ -7031,10 +7137,11 @@
       34
     ],
     "lessons_partial": [
+      9,
       22
     ],
-    "all_registered_questions": 249,
-    "notes": "Las preguntas se transcriben literalmente desde las capturas o desde el texto proporcionado por el usuario. Las respuestas correctas permanecen pendientes de verificación; selected_answer conserva únicamente la alternativa elegida. La Lección 22 tiene registradas las preguntas 1 a 9 y falta la pregunta 10. La Lección 23 se incorporó desde texto proporcionado directamente por el usuario. La Lección 24 se incorporó desde texto proporcionado directamente por el usuario el 23/11/2026; contiene 10 preguntas y las 10 alternativas marcadas por el usuario quedaron registradas en selected_answer."
+    "all_registered_questions": 252,
+    "notes": "Las preguntas se transcriben literalmente desde las capturas o desde el texto proporcionado por el usuario. Las respuestas correctas permanecen pendientes de verificación; selected_answer conserva únicamente la alternativa elegida. La Lección 22 tiene registradas las preguntas 1 a 9 y falta la pregunta 10. La Lección 23 se incorporó desde texto proporcionado directamente por el usuario. La Lección 24 se incorporó desde texto proporcionado directamente por el usuario el 23/11/2026; contiene 10 preguntas y las 10 alternativas marcadas por el usuario quedaron registradas en selected_answer. La Lección 9 del Módulo I se incorporó el 24/11/2026 desde texto proporcionado directamente por el usuario; contiene las preguntas 7, 8 y 10. Falta la pregunta 9. Las claves correctas se registraron según indicación expresa del usuario y quedan pendientes de cotejo documental independiente."
   },
   "final_exams": [
     {
@@ -7990,7 +8097,8 @@
             },
             {
               "id": "b",
-              "text": "Transporte de pasajeros en edificios de gran altura, con velocidades entre 2 y 10 m/s"            },
+              "text": "Transporte de pasajeros en edificios de gran altura, con velocidades entre 2 y 10 m/s"
+            },
             {
               "id": "c",
               "text": "Montacargas industriales y elevación de vehículos"
@@ -8113,8 +8221,8 @@
   ],
   "final_exam_count": 2,
   "final_exam_question_count": 40,
-  "lesson_question_count": 249,
-  "total_registered_question_count": 289,
+  "lesson_question_count": 252,
+  "total_registered_question_count": 292,
   "module_ranges": [
     {
       "module_number": 1,
@@ -8123,7 +8231,9 @@
       "last_lesson": 9,
       "lesson_count": 9,
       "completed_lessons": 0,
-      "partial_lessons": [],
+      "partial_lessons": [
+        9
+      ],
       "final_exam_registered": false
     },
     {
@@ -8167,14 +8277,14 @@
     "user_selections_differing_from_verified_key": 16,
     "questions_without_user_selection": 88,
     "unverified_question_ids": [],
-    "content_preservation": "Solo se editaron textos de una alternativa en cada uno de los 13 IDs listados para esta corrección. No se modificó ningún statement, selected_answer, número de pregunta, ID de alternativa ni orden de opciones. Se asignó correct_answer y answer_verified a esos mismos 13 registros. Los demás 276 registros de preguntas se conservaron sin cambios.",
+    "content_preservation": "Las 289 preguntas previamente registradas se conservaron sin cambios. Se añadieron 3 preguntas de la Lección 9 del Módulo I con claves confirmadas expresamente por el usuario, pendientes de cotejo documental independiente.",
     "coverage_findings": [
       "El banco incluye 249 preguntas de lecciones y 40 preguntas de dos exámenes finales, total 289.",
       "Las preguntas de lección están registradas para las lecciones 10 a 34; las lecciones 1 a 9 del Módulo I no aparecen en el JSON.",
       "La Lección 22 tiene 9 preguntas registradas; falta la pregunta 10 y su estado de captura es parcial.",
       "Las preguntas de los exámenes finales se conservaron como bloque aparte, incluso cuando repiten contenidos presentes en evaluaciones de lección."
     ],
-    "verification_caveat": "Todas las claves deben coincidir con una alternativa existente y contar con respaldo identificable. Cinco correcciones se basan en el Libro ESBAS (lecciones 19, 23, 24 y 30); la de Nivel 1 se basa en la Lección 34; los puntos legales, médicos, históricos, NFPA y de detección radiológica se contrastaron con las fuentes externas institucionales especificadas en el registro de cambios.",
+    "verification_caveat": "Todas las claves deben coincidir con una alternativa existente y contar con respaldo identificable. Cinco correcciones se basan en el Libro ESBAS (lecciones 19, 23, 24 y 30); la de Nivel 1 se basa en la Lección 34; los puntos legales, médicos, históricos, NFPA y de detección radiológica se contrastaron con las fuentes externas institucionales especificadas en el registro de cambios. Las preguntas L9-P07, L9-P08 y L9-P10 tienen claves indicadas por el usuario; aún no se han cotejado con el manual.",
     "special_13_repair": {
       "question_ids": [
         "L19-P07",
@@ -8202,6 +8312,14 @@
         "M3-FINAL-P20"
       ],
       "all_13_have_verified_key": true
-    }
+    },
+    "total_questions_registered": 292,
+    "user_confirmed_question_ids": [
+      "L9-P07",
+      "L9-P08",
+      "L9-P10"
+    ],
+    "user_confirmed_answers": 3,
+    "verification_method": " Las claves de L9-P07, L9-P08 y L9-P10 fueron confirmadas expresamente por el usuario el 24/11/2026; no se contabilizan como cotejadas de forma independiente con el manual."
   }
 }
