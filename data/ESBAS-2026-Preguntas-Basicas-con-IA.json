@@ -1,0 +1,1306 @@
+{
+  "titulo": "Banco de 100 preguntas básicas ESBAS 2026",
+  "descripcion": "Preguntas de nivel básico de los tres módulos del Manual ESBAS, incluyendo la Lección 34 sobre respuesta a incidentes con materiales peligrosos. Cada pregunta contiene cuatro alternativas y una respuesta correcta.",
+  "total_preguntas": 100,
+  "preguntas": [
+    {
+      "id": 1,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Cuál es el objetivo principal del Curso de Formación Básica de Bomberos?",
+      "alternativas": {
+        "A": "Preparar al aspirante únicamente para combatir incendios.",
+        "B": "Desarrollar conocimientos y habilidades para un desempeño seguro y efectivo.",
+        "C": "Enseñar exclusivamente primeros auxilios.",
+        "D": "Preparar al aspirante para conducir vehículos."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 2,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Cuántas lecciones teóricas comprende el curso?",
+      "alternativas": {
+        "A": "20",
+        "B": "25",
+        "C": "34",
+        "D": "40"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 3,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "¿Cuántas prácticas de campo contempla el curso?",
+      "alternativas": {
+        "A": "5",
+        "B": "8",
+        "C": "10",
+        "D": "15"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 4,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Cuál es el lema institucional del CGBVP?",
+      "alternativas": {
+        "A": "Honor, Servicio y Disciplina.",
+        "B": "Dios, Patria y Humanidad.",
+        "C": "Vida, Patria y Solidaridad.",
+        "D": "Unión, Valor y Servicio."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 5,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Qué estudia la ética?",
+      "alternativas": {
+        "A": "La moral y las obligaciones del ser humano.",
+        "B": "El comportamiento del fuego.",
+        "C": "La organización de las emergencias.",
+        "D": "El funcionamiento de los equipos."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 6,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Cuál de los siguientes es un valor que debe representar al bombero voluntario?",
+      "alternativas": {
+        "A": "Indiferencia.",
+        "B": "Individualismo.",
+        "C": "Solidaridad.",
+        "D": "Desinterés."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 7,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿Qué compañía comenzó a organizarse después de la reunión realizada en el Callao el 5 de diciembre de 1860?",
+      "alternativas": {
+        "A": "Garibaldi.",
+        "B": "Chalaca.",
+        "C": "Roma.",
+        "D": "Salvadora Lima."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 8,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿En qué fecha se realizó la primera reunión para solicitar la creación de la Compañía Chalaca?",
+      "alternativas": {
+        "A": "2 de mayo de 1860.",
+        "B": "5 de diciembre de 1860.",
+        "C": "7 de diciembre de 1861.",
+        "D": "15 de enero de 1862."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 9,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿Quién fue elegido como primer Comandante Activo de la Chalaca N.° 1?",
+      "alternativas": {
+        "A": "Arthur M. Wholey.",
+        "B": "Enrique J. Prunier.",
+        "C": "Guillermo Higginson.",
+        "D": "José Miguel Corzo Moreno."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 10,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Qué significan las siglas CGBVP?",
+      "alternativas": {
+        "A": "Compañía General de Bomberos Voluntarios del Perú.",
+        "B": "Cuerpo General de Bomberos Voluntarios del Perú.",
+        "C": "Centro General de Bomberos Voluntarios del Perú.",
+        "D": "Comando General de Bomberos Voluntarios del Perú."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 11,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Cómo presta sus servicios el bombero voluntario del CGBVP?",
+      "alternativas": {
+        "A": "De manera obligatoria y remunerada.",
+        "B": "De manera voluntaria y ad honorem.",
+        "C": "De manera privada y comercial.",
+        "D": "De manera temporal y remunerada."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 12,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Qué decreto legislativo fortalece al CGBVP y regula la Intendencia Nacional de Bomberos del Perú?",
+      "alternativas": {
+        "A": "Decreto Legislativo N.° 1260.",
+        "B": "Decreto Legislativo N.° 1500.",
+        "C": "Decreto Legislativo N.° 1061.",
+        "D": "Decreto Legislativo N.° 1404."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 13,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Cuál es la función principal de la Central de Emergencias (CEEM)?",
+      "alternativas": {
+        "A": "Realizar mantenimiento de vehículos.",
+        "B": "Recibir llamadas y comunicaciones para despachar unidades y recursos.",
+        "C": "Administrar los materiales de las compañías.",
+        "D": "Realizar inspecciones de edificios."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 14,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Cuáles son los números de la Central de Comunicaciones indicados en el manual?",
+      "alternativas": {
+        "A": "105 y 911.",
+        "B": "100 y 105.",
+        "C": "3991111 y 116.",
+        "D": "106 y 119."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 15,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Quién es el emisor dentro de los elementos de la comunicación?",
+      "alternativas": {
+        "A": "Quien recibe el mensaje.",
+        "B": "Quien envía el mensaje.",
+        "C": "El medio utilizado para comunicarse.",
+        "D": "La situación donde ocurre la comunicación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 16,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "¿Qué es un peligro?",
+      "alternativas": {
+        "A": "Una situación capaz de causar daño.",
+        "B": "Una lesión que ya ocurrió.",
+        "C": "Una medida de protección.",
+        "D": "La ausencia de riesgo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 17,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "¿Qué es el riesgo?",
+      "alternativas": {
+        "A": "La ausencia de peligro.",
+        "B": "La probabilidad de que un peligro se materialice y genere daño.",
+        "C": "Una herramienta de trabajo.",
+        "D": "Un procedimiento de comunicación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 18,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "¿Qué permite el trabajo en equipo durante una emergencia?",
+      "alternativas": {
+        "A": "Que cada bombero trabaje sin comunicarse.",
+        "B": "Que los integrantes coordinen y colaboren para alcanzar un objetivo común.",
+        "C": "Que solamente una persona realice todas las tareas.",
+        "D": "Que se omitan los procedimientos de seguridad."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 19,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "¿Con qué se relaciona el estrés agudo en los bomberos?",
+      "alternativas": {
+        "A": "Con situaciones de alto riesgo o acontecimientos estresantes inmediatos.",
+        "B": "Con las vacaciones.",
+        "C": "Con el mantenimiento de los equipos.",
+        "D": "Con la organización de los vehículos."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 20,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "¿Con qué se relaciona principalmente el estrés crónico?",
+      "alternativas": {
+        "A": "Con una exposición constante y prolongada a situaciones estresantes.",
+        "B": "Con una actividad física aislada.",
+        "C": "Con una llamada radial.",
+        "D": "Con el uso de una escalera."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 21,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Qué significan las siglas SCI?",
+      "alternativas": {
+        "A": "Sistema de Control de Incendios.",
+        "B": "Sistema de Comando de Incidentes.",
+        "C": "Sistema de Comunicación Institucional.",
+        "D": "Sistema de Coordinación Interna."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 22,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Quién asume inicialmente el mando al llegar primero a una emergencia con capacidad operativa?",
+      "alternativas": {
+        "A": "El primer respondedor que llega a la escena.",
+        "B": "El conductor de la última unidad.",
+        "C": "El personal administrativo.",
+        "D": "Cualquier ciudadano presente."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 23,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Para qué sirve la contabilidad del personal?",
+      "alternativas": {
+        "A": "Para registrar únicamente los gastos.",
+        "B": "Para controlar y conocer la ubicación del personal durante las operaciones.",
+        "C": "Para contabilizar el agua utilizada.",
+        "D": "Para registrar el combustible de los vehículos."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 24,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Cuál es la función principal del EPRA?",
+      "alternativas": {
+        "A": "Proporcionar agua al bombero.",
+        "B": "Permitir respirar en atmósferas peligrosas.",
+        "C": "Proteger exclusivamente los ojos.",
+        "D": "Aumentar la presión de las mangueras."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 25,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué porcentaje de oxígeno contiene normalmente el aire?",
+      "alternativas": {
+        "A": "10 %.",
+        "B": "15 %.",
+        "C": "21 %.",
+        "D": "30 %."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 26,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué indica la alarma de aire bajo del EPRA?",
+      "alternativas": {
+        "A": "Que el cilindro está lleno.",
+        "B": "Que se está consumiendo el aire de reserva.",
+        "C": "Que el equipo está apagado.",
+        "D": "Que se puede continuar trabajando sin restricciones."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 27,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "¿Qué es el fuego?",
+      "alternativas": {
+        "A": "Una reacción química que produce calor entre un combustible y un oxidante.",
+        "B": "Una sustancia líquida.",
+        "C": "Un fenómeno producido únicamente por el agua.",
+        "D": "Una mezcla de humo y vapor."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 28,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "¿Cuáles son las tres formas de transferencia de calor?",
+      "alternativas": {
+        "A": "Evaporación, condensación y fusión.",
+        "B": "Conducción, convección y radiación.",
+        "C": "Combustión, pirólisis y oxidación.",
+        "D": "Presión, temperatura y humedad."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 29,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "¿Qué es la pirólisis?",
+      "alternativas": {
+        "A": "La descomposición de un material por efecto del calor.",
+        "B": "La congelación de un combustible.",
+        "C": "La eliminación del humo.",
+        "D": "La transformación del agua en hielo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 30,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Cómo se puede extinguir un incendio?",
+      "alternativas": {
+        "A": "Aumentando el oxígeno.",
+        "B": "Eliminando o interrumpiendo uno o más elementos de la combustión.",
+        "C": "Aumentando el combustible.",
+        "D": "Incrementando la temperatura."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 31,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Qué es el enfriamiento como método de extinción?",
+      "alternativas": {
+        "A": "Eliminar el combustible.",
+        "B": "Reducir la temperatura del material que está ardiendo.",
+        "C": "Aumentar la cantidad de oxígeno.",
+        "D": "Incrementar la temperatura del ambiente."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 32,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "¿Qué caracteriza al Backdraft?",
+      "alternativas": {
+        "A": "La entrada de oxígeno en un ambiente con gases calientes y combustión incompleta, que provoca una combustión súbita.",
+        "B": "El enfriamiento de una habitación.",
+        "C": "La pérdida de presión de una bomba.",
+        "D": "La ventilación natural de un edificio."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 33,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Cuál es la función principal de un extintor portátil?",
+      "alternativas": {
+        "A": "Extinguir fuegos en su etapa inicial.",
+        "B": "Transportar agua.",
+        "C": "Ventilar habitaciones.",
+        "D": "Detectar gases."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 34,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué es un agente extintor?",
+      "alternativas": {
+        "A": "El recipiente metálico del extintor.",
+        "B": "Los compuestos ignífugos que forman la carga del extintor.",
+        "C": "El manómetro del equipo.",
+        "D": "La manguera del extintor."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 35,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué método de extinción elimina el oxígeno del proceso de combustión?",
+      "alternativas": {
+        "A": "Enfriamiento.",
+        "B": "Sofocación.",
+        "C": "Conducción.",
+        "D": "Radiación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 36,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "¿Qué es un hidrante?",
+      "alternativas": {
+        "A": "Un aparato hidráulico conectado a una red de abastecimiento de agua.",
+        "B": "Un equipo de protección respiratoria.",
+        "C": "Una herramienta para romper puertas.",
+        "D": "Un dispositivo para detectar humo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 37,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "¿Cuáles son los dos modelos de hidrantes aéreos mencionados en el manual?",
+      "alternativas": {
+        "A": "Cilindro seco y cilindro húmedo.",
+        "B": "Cilindro corto y cilindro largo.",
+        "C": "Manual y automático.",
+        "D": "Simple y doble."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 38,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "¿Qué tipo de hidrante se utiliza en zonas donde existe riesgo de congelación?",
+      "alternativas": {
+        "A": "Cilindro húmedo.",
+        "B": "Cilindro seco.",
+        "C": "Hidrante portátil.",
+        "D": "Monitor fijo."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 39,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué estudia la hidráulica?",
+      "alternativas": {
+        "A": "Las propiedades mecánicas de los líquidos.",
+        "B": "La composición del humo.",
+        "C": "La estructura de los edificios.",
+        "D": "La formación de gases inflamables."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 40,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué es el caudal?",
+      "alternativas": {
+        "A": "La temperatura del agua.",
+        "B": "La cantidad de líquido que circula por unidad de tiempo.",
+        "C": "La altura de una manguera.",
+        "D": "La fuerza del viento."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 41,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "¿Qué establece el principio de Bernoulli?",
+      "alternativas": {
+        "A": "La energía total del fluido se mantiene constante bajo las condiciones del principio.",
+        "B": "El agua siempre pierde toda su presión.",
+        "C": "La velocidad del agua nunca cambia.",
+        "D": "La presión siempre aumenta."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 42,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Cuál es la fórmula química del agua?",
+      "alternativas": {
+        "A": "CO2.",
+        "B": "H2O.",
+        "C": "O2.",
+        "D": "NaCl."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 43,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Cuál es la principal ventaja del alto calor específico del agua en la extinción?",
+      "alternativas": {
+        "A": "Absorber grandes cantidades de calor antes de aumentar considerablemente su temperatura.",
+        "B": "Evitar que el agua se convierta en vapor.",
+        "C": "Aumentar la temperatura del combustible.",
+        "D": "Eliminar todos los gases del incendio."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 44,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "¿Qué es el calor latente de evaporación?",
+      "alternativas": {
+        "A": "El calor que pierde el agua al congelarse.",
+        "B": "El calor que absorbe una sustancia al pasar de líquido a vapor.",
+        "C": "La temperatura a la que se congela el agua.",
+        "D": "El calor producido por el combustible."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 45,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "¿Cuál es el objetivo del ataque indirecto?",
+      "alternativas": {
+        "A": "Alcanzar directamente el combustible encendido.",
+        "B": "Extinguir mediante la inundación del recinto con vapor de agua desde un punto exterior.",
+        "C": "Incrementar el oxígeno del ambiente.",
+        "D": "Evitar que el agua absorba calor."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 46,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "¿Qué caracteriza al ataque directo?",
+      "alternativas": {
+        "A": "El chorro no llega al foco del incendio.",
+        "B": "El agua se aplica directamente sobre las superficies combustibles incendiadas.",
+        "C": "Se utiliza exclusivamente desde el techo.",
+        "D": "Se realiza sin utilizar agua."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 47,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "¿Qué significa 3DWF?",
+      "alternativas": {
+        "A": "Three Direction Water Flow.",
+        "B": "3D Water Fog.",
+        "C": "Three Direct Water Fire.",
+        "D": "Three Dimension Fire."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 48,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "¿Qué es la entrada forzada?",
+      "alternativas": {
+        "A": "Ingresar a una estructura utilizando la fuerza cuando los accesos están bloqueados.",
+        "B": "Abrir una puerta normalmente.",
+        "C": "Evacuar a las personas de un edificio.",
+        "D": "Instalar una línea de agua."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 49,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "¿Qué deben buscar los bomberos al realizar una entrada forzada?",
+      "alternativas": {
+        "A": "Causar el mayor daño posible.",
+        "B": "Causar el menor daño posible y proporcionar acceso rápido.",
+        "C": "Romper todos los accesos disponibles.",
+        "D": "Ingresar sin evaluar la situación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 50,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "¿Debe utilizarse la entrada forzada cuando existen medios normales de acceso disponibles?",
+      "alternativas": {
+        "A": "Sí, siempre.",
+        "B": "No, cuando existen medios normales de acceso no debe utilizarse.",
+        "C": "Sí, para ahorrar tiempo.",
+        "D": "Sí, únicamente en edificios pequeños."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 51,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿En qué consiste la ventilación?",
+      "alternativas": {
+        "A": "En introducir más humo a una estructura.",
+        "B": "En retirar aire caliente, humo y gases y sustituirlos por aire fresco.",
+        "C": "En cerrar todas las ventanas.",
+        "D": "En aumentar la presión de las mangueras."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 52,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Cuáles son los tipos de ventilación natural?",
+      "alternativas": {
+        "A": "Vertical y horizontal.",
+        "B": "Mecánica e hidráulica.",
+        "C": "Eléctrica y manual.",
+        "D": "Positiva y negativa."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 53,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Cuál de las siguientes es una modalidad de ventilación forzada?",
+      "alternativas": {
+        "A": "Ventilación natural vertical.",
+        "B": "Ventilación mecánica por presión positiva.",
+        "C": "Convección natural.",
+        "D": "Ventilación natural horizontal."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 54,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "¿Cuál de las siguientes es una escalera utilizada por los bomberos?",
+      "alternativas": {
+        "A": "Escalera plegable.",
+        "B": "Escalera de presión.",
+        "C": "Escalera hidráulica doméstica.",
+        "D": "Escalera de ventilación."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 55,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "¿Cuál es una medida de seguridad al utilizar una escalera?",
+      "alternativas": {
+        "A": "Subir sin revisar la escalera.",
+        "B": "Utilizarla sin mantener puntos de apoyo.",
+        "C": "Mantener tres puntos de apoyo durante el ascenso o descenso.",
+        "D": "Transportarla sin asegurarla."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 56,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "¿Cuál de estos tipos de escalera aparece en la clasificación del manual?",
+      "alternativas": {
+        "A": "Escalera de extensión.",
+        "B": "Escalera de presión.",
+        "C": "Escalera de agua.",
+        "D": "Escalera de ventilación."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 57,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "¿Cuál es la filosofía principal de la conservación de la propiedad?",
+      "alternativas": {
+        "A": "Causar el menor daño posible durante la atención de la emergencia.",
+        "B": "Destruir todos los bienes afectados.",
+        "C": "Priorizar los objetos sobre las vidas.",
+        "D": "Evitar las operaciones de salvamento."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 58,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "¿Cuál es la finalidad del salvamento?",
+      "alternativas": {
+        "A": "Incrementar los daños.",
+        "B": "Reducir los daños primarios y secundarios.",
+        "C": "Destruir los bienes que no fueron afectados.",
+        "D": "Retrasar la extinción."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 59,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "¿Qué elementos producen los daños primarios durante un incendio?",
+      "alternativas": {
+        "A": "Llama, calor y humo.",
+        "B": "Agua, espuma y polvo.",
+        "C": "Escaleras, mangueras y herramientas.",
+        "D": "Viento, lluvia y humedad."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 60,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "¿Cuál es la función de la cimentación?",
+      "alternativas": {
+        "A": "Transmitir las cargas de la estructura al suelo.",
+        "B": "Soportar únicamente las ventanas.",
+        "C": "Dividir las habitaciones.",
+        "D": "Proteger las puertas."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 61,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "¿Qué elemento estructural trabaja fundamentalmente a flexión?",
+      "alternativas": {
+        "A": "Columna.",
+        "B": "Viga.",
+        "C": "Cimentación.",
+        "D": "Puerta."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 62,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "¿Qué elemento estructural resiste principalmente fuerzas a lo largo de su eje central?",
+      "alternativas": {
+        "A": "Columna.",
+        "B": "Ventana.",
+        "C": "Puerta.",
+        "D": "Acabado."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 63,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "¿A partir de cuántos pisos considera el manual una estructura elevada para efectos de incendio?",
+      "alternativas": {
+        "A": "Más de 2 pisos.",
+        "B": "Más de 3 pisos.",
+        "C": "Más de 4 pisos.",
+        "D": "Más de 10 pisos."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 64,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "¿Cuál es una dificultad para los bomberos durante un incendio en un edificio elevado?",
+      "alternativas": {
+        "A": "La facilidad para llegar a todos los pisos.",
+        "B": "La dificultad para acceder a los pisos superiores.",
+        "C": "La ausencia de personas.",
+        "D": "La inexistencia de humo."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 65,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "¿Qué aspecto debe considerarse en un incendio en edificios elevados?",
+      "alternativas": {
+        "A": "La evacuación de las personas.",
+        "B": "La compartimentación del edificio.",
+        "C": "El acceso de los bomberos.",
+        "D": "Todas las anteriores."
+      },
+      "respuesta_correcta": "D"
+    },
+    {
+      "id": 66,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Cuál es una característica frecuente de los sótanos?",
+      "alternativas": {
+        "A": "Tienen muchas puertas y ventanas.",
+        "B": "Poseen pocas aberturas de puertas y ventanas.",
+        "C": "Siempre tienen ventilación natural abundante.",
+        "D": "No contienen materiales combustibles."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 67,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Qué ocurre con el humo en un incendio en sótanos?",
+      "alternativas": {
+        "A": "Desaparece inmediatamente.",
+        "B": "Puede acumularse y resultar difícil de ventilar.",
+        "C": "No se produce humo.",
+        "D": "Sale siempre por las ventanas."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 68,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Cuál es una dificultad durante las operaciones en sótanos?",
+      "alternativas": {
+        "A": "La localización de víctimas.",
+        "B": "La excesiva iluminación.",
+        "C": "La ausencia de obstáculos.",
+        "D": "La falta de temperatura."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 69,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Qué tipos de vehículos se consideran en las operaciones contra incendios del material?",
+      "alternativas": {
+        "A": "Solamente vehículos a gasolina.",
+        "B": "Vehículos térmicos, híbridos y eléctricos.",
+        "C": "Solamente vehículos a diésel.",
+        "D": "Únicamente vehículos pesados."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 70,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Cuál es una causa posible de incendios en vehículos?",
+      "alternativas": {
+        "A": "Fallas mecánicas o eléctricas.",
+        "B": "La presencia de agua potable.",
+        "C": "El uso de cinturones de seguridad.",
+        "D": "La señalización de carreteras."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 71,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Qué debe considerarse durante una intervención en un incendio vehicular en carretera?",
+      "alternativas": {
+        "A": "La advertencia y señalización de la vía.",
+        "B": "Solamente el color del vehículo.",
+        "C": "Solamente la marca del vehículo.",
+        "D": "La limpieza del vehículo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 72,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Qué son los hidrocarburos?",
+      "alternativas": {
+        "A": "Compuestos de carbono e hidrógeno.",
+        "B": "Compuestos de agua y oxígeno.",
+        "C": "Compuestos de hierro y agua.",
+        "D": "Compuestos de nitrógeno y oxígeno."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 73,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Cuál de los siguientes es un ejemplo de líquido inflamable mencionado en el manual?",
+      "alternativas": {
+        "A": "Agua.",
+        "B": "Gasolina.",
+        "C": "Diésel DB-5.",
+        "D": "Aceite mineral frío."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 74,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Cuáles son los tres fenómenos de incendios en tanques atmosféricos mencionados en el manual?",
+      "alternativas": {
+        "A": "Flashover, Backdraft y Rollover.",
+        "B": "Boilover, Slopover y Frothover.",
+        "C": "BLEVE, Venturi y Pirólisis.",
+        "D": "Conducción, Convección y Radiación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 75,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "¿Qué característica tiene el GLP respecto al aire?",
+      "alternativas": {
+        "A": "Es más liviano que el aire.",
+        "B": "Es más denso que el aire.",
+        "C": "Tiene siempre la misma densidad que el aire.",
+        "D": "No tiene densidad."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 76,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "¿Cuántas veces aproximadamente puede expandirse un volumen de GLP líquido al convertirse en gas?",
+      "alternativas": {
+        "A": "10 veces.",
+        "B": "50 veces.",
+        "C": "100 veces.",
+        "D": "270 veces."
+      },
+      "respuesta_correcta": "D"
+    },
+    {
+      "id": 77,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "¿Qué significa BLEVE?",
+      "alternativas": {
+        "A": "Expansión explosiva del vapor de un líquido en ebullición.",        "B": "Combustión lenta de gases.",
+        "C": "Disminución de presión de una tubería.",
+        "D": "Enfriamiento de un recipiente."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 78,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Qué es la espuma contra incendios?",
+      "alternativas": {
+        "A": "Una masa estable de pequeñas burbujas.",
+        "B": "Un gas inflamable.",
+        "C": "Un combustible líquido.",
+        "D": "Una sustancia que aumenta la combustión."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 79,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Cuál es una función de la espuma contra incendios?",
+      "alternativas": {
+        "A": "Incrementar la liberación de vapores.",
+        "B": "Cubrir el combustible y aislarlo del aire.",
+        "C": "Aumentar la temperatura del combustible.",
+        "D": "Agregar oxígeno al incendio."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 80,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Sobre qué tipo de incendio se aplica principalmente la espuma clase B?",
+      "alternativas": {
+        "A": "Incendios de líquidos inflamables y combustibles.",
+        "B": "Incendios de metales combustibles.",
+        "C": "Incendios exclusivamente eléctricos.",
+        "D": "Incendios de madera y papel."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 81,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Cuál es la finalidad principal de la investigación de incendios?",
+      "alternativas": {
+        "A": "Determinar el origen y la causa del fuego.",
+        "B": "Destruir los elementos de la escena.",
+        "C": "Retirar todos los objetos.",
+        "D": "Determinar el costo de los equipos."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 82,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Qué debe hacer el primer respondedor con la escena del incendio?",
+      "alternativas": {
+        "A": "Modificarla.",
+        "B": "Preservarla lo más intacta e inalterada posible.",
+        "C": "Retirar todas las evidencias.",
+        "D": "Permitir el ingreso de cualquier persona."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 83,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Qué características debe tener la información proporcionada por el primer respondedor?",
+      "alternativas": {
+        "A": "Objetiva y veraz.",
+        "B": "Inventada y aproximada.",
+        "C": "Modificada y parcial.",
+        "D": "Confusa y desordenada."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 84,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Cuál es el objetivo principal del rescate en incendios?",
+      "alternativas": {
+        "A": "Recuperar materiales.",
+        "B": "Localizar, acceder, estabilizar y evacuar a personas en peligro.",
+        "C": "Destruir las estructuras.",
+        "D": "Realizar únicamente ventilación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 85,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Cuál es la primera prioridad táctica fundamental en las operaciones contra incendios?",
+      "alternativas": {
+        "A": "Conservación de la propiedad.",
+        "B": "Búsqueda y rescate.",
+        "C": "Investigación del incendio.",
+        "D": "Limpieza de la escena."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 86,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Qué información permite localizar inicialmente a un bombero atrapado?",
+      "alternativas": {
+        "A": "Su último punto conocido.",
+        "B": "El color de su casco.",
+        "C": "La marca del vehículo.",
+        "D": "El número de hidrantes de la zona."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 87,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "¿Cuáles son los dos tipos de ascensores según su sistema de funcionamiento?",
+      "alternativas": {
+        "A": "Manual y automático.",
+        "B": "Eléctrico e hidráulico.",
+        "C": "Simple y doble.",
+        "D": "Mecánico y neumático."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 88,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "¿Qué deben seguir los bomberos durante una emergencia en un ascensor?",
+      "alternativas": {
+        "A": "Instrucciones improvisadas.",
+        "B": "Las instrucciones del fabricante.",
+        "C": "Solamente las instrucciones de los usuarios.",
+        "D": "Cualquier procedimiento sin evaluar el ascensor."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 89,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "¿Qué puede provocar una emergencia en un ascensor según el material?",
+      "alternativas": {
+        "A": "La falta de mantenimiento o un mantenimiento inadecuado.",
+        "B": "La limpieza del ascensor.",
+        "C": "La correcta inspección del equipo.",
+        "D": "El uso normal de las puertas."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 90,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿Qué tipo de cuerda se prefiere para el rescate con cuerdas según el material?",
+      "alternativas": {
+        "A": "Cuerda estática.",
+        "B": "Cuerda doméstica.",
+        "C": "Cuerda de algodón.",
+        "D": "Cuerda sin especificaciones."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 91,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿Cuáles son las dos partes principales de una cuerda con construcción kernmantle?",
+      "alternativas": {
+        "A": "Polea y mosquetón.",
+        "B": "Núcleo y funda.",
+        "C": "Anclaje y tensor.",
+        "D": "Cinta y gancho."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 92,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿Qué función cumple una polea fija?",
+      "alternativas": {
+        "A": "Cambia la dirección de la fuerza, pero no reduce el esfuerzo.",
+        "B": "Elimina completamente el peso.",
+        "C": "Reduce siempre el esfuerzo a la mitad.",
+        "D": "Impide el movimiento de la cuerda."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 93,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "¿Qué debe hacerse antes de atender a un paciente?",
+      "alternativas": {
+        "A": "Ingresar rápidamente sin observar el entorno.",
+        "B": "Verificar que la escena sea segura y utilizar el EPP correspondiente.",
+        "C": "Mover al paciente inmediatamente.",
+        "D": "Administrar oxígeno sin evaluación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 94,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "¿Qué maniobra se utiliza para abrir la vía aérea cuando no se sospecha de trauma?",
+      "alternativas": {
+        "A": "Empuje mandibular.",
+        "B": "Extensión de la cabeza y elevación mandibular (EXCELM).",
+        "C": "Compresión abdominal.",
+        "D": "Compresión torácica."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 95,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "¿Qué significa AVDI en la evaluación del paciente?",
+      "alternativas": {
+        "A": "Alerta, Verbal, Dolor e Inconsciente.",
+        "B": "Atención, Valoración, Diagnóstico e Intervención.",
+        "C": "Aire, Vía aérea, Dolor e Inmovilización.",
+        "D": "Alarma, Ventilación, Desfibrilación e Ingreso."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 96,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "¿Cuál es la función principal del sistema respiratorio?",
+      "alternativas": {
+        "A": "Llevar oxígeno a la sangre y eliminar dióxido de carbono.",
+        "B": "Producir sangre.",
+        "C": "Controlar exclusivamente la temperatura.",
+        "D": "Transportar alimentos."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 97,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "¿Qué significa OVACE?",
+      "alternativas": {
+        "A": "Obstrucción de la vía aérea por un cuerpo extraño.",
+        "B": "Oxigenación vascular avanzada.",
+        "C": "Operación de ventilación asistida.",
+        "D": "Observación y valoración de atención clínica."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 98,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué es un material peligroso (MATPEL)?",
+      "alternativas": {
+        "A": "Una sustancia que puede provocar daños a las personas, bienes y ambiente.",
+        "B": "Cualquier objeto que se encuentra en una vivienda.",
+        "C": "Un equipo utilizado para apagar incendios.",
+        "D": "Una sustancia que no representa ningún riesgo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 99,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Cuál es el primer nivel de competencia de los respondedores a incidentes MATPEL?",
+      "alternativas": {
+        "A": "Técnico MATPEL.",
+        "B": "Comandante de Incidente MATPEL.",
+        "C": "Advertencia.",
+        "D": "Operaciones."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 100,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Cuál es la responsabilidad principal del Comandante de Incidente MATPEL?",
+      "alternativas": {
+        "A": "Realizar directamente todas las mediciones.",
+        "B": "Conducir las operaciones, decidir las acciones y velar por la seguridad del personal.",
+        "C": "Limitarse a observar el incidente.",
+        "D": "Realizar exclusivamente la descontaminación."
+      },
+      "respuesta_correcta": "B"
+    }
+  ]
+}
