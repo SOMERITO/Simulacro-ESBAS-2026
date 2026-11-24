@@ -4525,7 +4525,7 @@
         const lessonQuestionCounts = new Map();
         return rawBank.preguntas.map(question => {
             const sourceId = String(question?.id ?? '').trim();
-            const moduleToken = String(question?.modulo || '').trim().replace(/^M[oó]dulo\\s*/i, '').toUpperCase();
+            const moduleToken = String(question?.modulo || '').trim().replace(/^M[oó]dulo/i, '').trim().toUpperCase();
             const moduleName = moduleNames[moduleToken];
             const lessonNumber = Number(question?.leccion);
             const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
