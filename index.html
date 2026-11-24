@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V66 (Cuatro bancos independientes de preguntas) -->
+    <!-- VERSIÓN: V67 (Banco NFPA con IA) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -2914,6 +2914,8 @@
         .bank-mode-intermediate-ai .bank-mode-count { color:#a65c16; background:#fff3e5; }
         .bank-mode-dates-ai .bank-mode-symbol { color:#2766a8; background:#eaf3ff; }
         .bank-mode-dates-ai .bank-mode-count { color:#2766a8; background:#eaf3ff; }
+        .bank-mode-nfpa-ai .bank-mode-symbol { color:#9b5a20; background:#fff2e5; }
+        .bank-mode-nfpa-ai .bank-mode-count { color:#9b5a20; background:#fff2e5; }
         .bank-mode-card:hover .bank-mode-symbol { transform:rotate(-6deg) scale(1.06); }
         .bank-mode-card-copy { display:flex; flex:1 1 auto; min-width:0; flex-direction:column; gap:.27rem; }
         .bank-mode-title { color:#253449; font-size:.9rem; font-weight:830; letter-spacing:-.015em; }
@@ -3728,6 +3730,15 @@
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
+                    <button class="bank-mode-card bank-mode-nfpa-ai" type="button" id="btn-bank-nfpa-ai" aria-pressed="false" onclick="selectSimulationBank('nfpa-ai', this)">
+                        <span class="bank-mode-symbol" aria-hidden="true">⚑</span>
+                        <span class="bank-mode-card-copy">
+                            <span class="bank-mode-title">Preguntas NFPA con IA</span>
+                            <span class="bank-mode-description">Banco especializado de 33 preguntas sobre 10 normas NFPA mencionadas en el material ESBAS. Incluye contenido de las lecciones 5, 8, 9, 12, 25, 27, 28, 29, 31 y 34.</span>
+                            <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-nfpa-ai-count">33 preguntas</span></span>
+                        </span>
+                        <span class="bank-mode-check" aria-hidden="true">✓</span>
+                    </button>
                 </div>
             </section>
             <div class="sim-fields">
@@ -4430,7 +4441,8 @@
     let cachedIntermediateAIQuestionBank = null;
     let cachedAdvancedAIQuestionBank = null;
     let cachedDateAIQuestionBank = null;
-    let currentSimulationBankType = 'advanced-ai'; // advanced-ai | basic-ai | intermediate-ai | dates-ai | real | ai (legacy)
+    let cachedNFPAQuestionBank = null;
+    let currentSimulationBankType = 'advanced-ai'; // advanced-ai | basic-ai | intermediate-ai | dates-ai | nfpa-ai | real | ai (legacy)
     let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'advanced-ai' };
 
     function getActiveSimulationQuestionBank() {
@@ -4448,6 +4460,9 @@
         }
         if (currentSimulationBankType === 'dates-ai') {
             return Array.isArray(cachedDateAIQuestionBank) ? cachedDateAIQuestionBank : [];
+        }
+        if (currentSimulationBankType === 'nfpa-ai') {
+            return Array.isArray(cachedNFPAQuestionBank) ? cachedNFPAQuestionBank : [];
         }
         if (Array.isArray(appData.questions) && appData.questions.length) return appData.questions;
         return Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
@@ -4817,6 +4832,87 @@
         return cachedAdvancedAIQuestionBank;
     }
 
+    function normalizeNFPAQuestionBank(rawBank) {
+        if (!rawBank || !Array.isArray(rawBank.preguntas) ||
+            Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
+            rawBank.preguntas.length !== 33) {
+            throw new Error('El banco Preguntas NFPA con IA debe contener las 33 preguntas declaradas.');
+        }
+
+        const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
+        const ids = new Set();
+        const lessonQuestionCounts = new Map();
+        const normalizedQuestions = rawBank.preguntas.map(question => {
+            const sourceId = String(question?.id ?? '').trim();
+            const moduleToken = String(question?.modulo || '').trim().toUpperCase();
+            const moduleName = moduleNames[moduleToken];
+            const lessonNumber = Number(question?.leccion);
+            const expectedModule = lessonNumber <= 9 ? 'I' : (lessonNumber <= 21 ? 'II' : 'III');
+            const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
+
+            if (!sourceId || ids.has(sourceId)) {
+                throw new Error('El banco NFPA contiene identificadores vacíos o duplicados.');
+            }
+            ids.add(sourceId);
+
+            if (!moduleName || !Number.isInteger(lessonNumber) || lessonNumber < 1 ||
+                lessonNumber > 34 || moduleToken !== expectedModule) {
+                throw new Error('El banco NFPA contiene una referencia de módulo o lección no válida.');
+            }
+            if (!question.pregunta || !question.alternativas ||
+                !['A','B','C','D'].every(key =>
+                    typeof question.alternativas[key] === 'string' && question.alternativas[key].trim().length
+                )) {
+                throw new Error('El banco NFPA contiene una pregunta sin sus cuatro alternativas.');
+            }
+            if (!['a','b','c','d'].includes(answer)) {
+                throw new Error('El banco NFPA contiene una clave de respuesta no válida.');
+            }
+            if (!/^NFPA\\s+\\d+$/i.test(String(question.norma || '').trim())) {
+                throw new Error('El banco NFPA contiene una referencia de norma no válida.');
+            }
+
+            const groupKey = moduleToken + '-' + lessonNumber;
+            const questionNumber = (lessonQuestionCounts.get(groupKey) || 0) + 1;
+            lessonQuestionCounts.set(groupKey, questionNumber);
+
+            return {
+                id: 'nfpa-ai-' + sourceId,
+                modulo: moduleName,
+                tipo: 'leccion',
+                leccion_num: lessonNumber,
+                leccion_nombre: getOfficialLessonTitle(lessonNumber),
+                pregunta_num: questionNumber,
+                pregunta_global: Number(sourceId),
+                pregunta: String(question.pregunta),
+                opciones: {
+                    a: String(question.alternativas.A),
+                    b: String(question.alternativas.B),
+                    c: String(question.alternativas.C),
+                    d: String(question.alternativas.D)
+                },
+                respuesta: answer,
+                sustento: typeof question.fundamento === 'string' ? question.fundamento.trim() : '',
+                norma: String(question.norma).trim().toUpperCase(),
+                _source: 'nfpa-ai-bank'
+            };
+        });
+
+        return normalizedQuestions;
+    }
+
+    async function loadNFPAQuestionBank() {
+        if (cachedNFPAQuestionBank) return cachedNFPAQuestionBank;
+        const response = await fetch('./data/ESBAS-2026-Preguntas-NFPA-con-IA.json', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('No se pudo cargar el banco Preguntas NFPA con IA (' + response.status + ').');
+        const rawBank = await response.json();
+        cachedNFPAQuestionBank = normalizeNFPAQuestionBank(rawBank);
+        return cachedNFPAQuestionBank;
+    }
+
     function normalizeDateAIQuestionBank(rawBank) {
         if (!rawBank || !Array.isArray(rawBank.preguntas) ||
             Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
@@ -5020,14 +5116,15 @@
     }
 
     window.selectSimulationBank = async function(type, button) {
-        const allowedTypes = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'real'];
+        const allowedTypes = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai', 'real'];
         const nextType = allowedTypes.includes(type) ? type : 'advanced-ai';
         const buttons = [
             document.getElementById('btn-bank-advanced-ai'),
             document.getElementById('btn-bank-real'),
             document.getElementById('btn-bank-basic-ai'),
             document.getElementById('btn-bank-intermediate-ai'),
-            document.getElementById('btn-bank-dates-ai')
+            document.getElementById('btn-bank-dates-ai'),
+            document.getElementById('btn-bank-nfpa-ai')
         ].filter(Boolean);
         buttons.forEach(item => {
             item.disabled = true;
@@ -5044,6 +5141,8 @@
             setAppLoading(true, 'Cargando preguntas nivel intermedio con IA', 'Preparando las 500 preguntas intermedias y los exámenes finales…', '✧');
         } else if (nextType === 'dates-ai' && !cachedDateAIQuestionBank) {
             setAppLoading(true, 'Cargando preguntas de fechas con IA', 'Preparando las 77 preguntas cronológicas…', '▦');
+        } else if (nextType === 'nfpa-ai' && !cachedNFPAQuestionBank) {
+            setAppLoading(true, 'Cargando preguntas NFPA con IA', 'Preparando las 33 preguntas de normas NFPA…', '⚑');
         }
         try {
             if (nextType === 'advanced-ai') {
@@ -5056,6 +5155,8 @@
                 await loadIntermediateAIQuestionBank();
             } else if (nextType === 'dates-ai') {
                 await loadDateAIQuestionBank();
+            } else if (nextType === 'nfpa-ai') {
+                await loadNFPAQuestionBank();
             } else if (!appData.questions.length) {
                 const questions = await loadBundledQuestionBank();
                 appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
@@ -5066,7 +5167,8 @@
                 ? 'btn-bank-advanced-ai'
                 : (nextType === 'real' ? 'btn-bank-real'
                 : (nextType === 'basic-ai' ? 'btn-bank-basic-ai'
-                : (nextType === 'intermediate-ai' ? 'btn-bank-intermediate-ai' : 'btn-bank-dates-ai')));
+                : (nextType === 'intermediate-ai' ? 'btn-bank-intermediate-ai'
+                : (nextType === 'dates-ai' ? 'btn-bank-dates-ai' : 'btn-bank-nfpa-ai'))));
             buttons.forEach(item => {
                 const active = item.id === activeButtonId;
                 item.classList.toggle('is-active', active);
@@ -5082,6 +5184,8 @@
             if (intermediateCount && cachedIntermediateAIQuestionBank) intermediateCount.textContent = cachedIntermediateAIQuestionBank.length + ' preguntas';
             const datesCount = document.getElementById('bank-dates-ai-count');
             if (datesCount && cachedDateAIQuestionBank) datesCount.textContent = cachedDateAIQuestionBank.length + ' preguntas';
+            const nfpaCount = document.getElementById('bank-nfpa-ai-count');
+            if (nfpaCount && cachedNFPAQuestionBank) nfpaCount.textContent = cachedNFPAQuestionBank.length + ' preguntas';
             window.refreshSimulationModuleDropdown('all');
         } catch (error) {
             console.error('No se pudo cambiar de banco de preguntas:', error);
@@ -5981,7 +6085,7 @@
         const moduleSelect = document.getElementById('sim-module');
         if (!moduleSelect) return;
         const bank = getActiveSimulationQuestionBank();
-        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai'].includes(currentSimulationBankType);
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai'].includes(currentSimulationBankType);
         const availableModules = Object.keys(moduleLessonsMap).filter(moduleName =>
             bank.some(question => question.modulo === moduleName)
         );
@@ -6006,7 +6110,7 @@
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         const bank = getActiveSimulationQuestionBank();
-        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai'].includes(currentSimulationBankType);
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai'].includes(currentSimulationBankType);
 
         if (isStructuredAI && moduleName === 'all') {
             const practiceCount = bank.filter(question => question.tipo === 'leccion').length;
@@ -6075,7 +6179,7 @@
     }
 
     function getLocalSimulationQuestions(moduleFilter, lessonFilter) {
-        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai'].includes(currentSimulationBankType);
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai'].includes(currentSimulationBankType);
         const selectedModuleFinal = /^final-(I|II|III)$/.exec(String(lessonFilter || ''));
         const selectedModuleFinalName = selectedModuleFinal ? 'Módulo ' + selectedModuleFinal[1] : null;
         const selected = getActiveSimulationQuestionBank().filter(question => {
@@ -6692,6 +6796,8 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
                     await loadIntermediateAIQuestionBank();
                 } else if (currentSimulationBankType === 'dates-ai') {
                     await loadDateAIQuestionBank();
+                } else if (currentSimulationBankType === 'nfpa-ai') {
+                    await loadNFPAQuestionBank();
                 } else if (!appData.questions.length) {
                     const bundled = await loadBundledQuestionBank();
                     appData.questions = bundled.map(question => ({ ...question, _source: 'bundle' }));
@@ -6757,6 +6863,8 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
                     modeNote.textContent = 'Preguntas nivel intermedio con IA: se utilizaron únicamente preguntas de tu banco intermedio. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
                 } else if (currentSimulationBankType === 'dates-ai') {
                     modeNote.textContent = 'Preguntas de fechas con IA: se utilizaron únicamente las 77 preguntas cronológicas de tu banco. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
+                } else if (currentSimulationBankType === 'nfpa-ai') {
+                    modeNote.textContent = 'Preguntas NFPA con IA: se utilizaron únicamente las 33 preguntas de tu banco NFPA. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
                 } else if (currentUser.isPublicVisitor) {
                     modeNote.textContent = 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText;
                 } else if (currentSimulationMode === 'local') {
@@ -6816,6 +6924,13 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
         if (currentSimulationBankType === 'dates-ai') {
             const datesBank = Array.isArray(cachedDateAIQuestionBank) ? cachedDateAIQuestionBank : [];
             const source = datesBank.find(question =>
+                String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+            ) || simQuestion;
+            return applyAttemptOrder(source);
+        }
+        if (currentSimulationBankType === 'nfpa-ai') {
+            const nfpaBank = Array.isArray(cachedNFPAQuestionBank) ? cachedNFPAQuestionBank : [];
+            const source = nfpaBank.find(question =>
                 String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
             ) || simQuestion;
             return applyAttemptOrder(source);
