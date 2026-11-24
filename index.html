@@ -4594,8 +4594,8 @@
                 tipo: isLesson ? 'leccion' : sourceType,
                 leccion_num: lessonNumber,
                 leccion_nombre: isLesson
-                    ? 'Preguntas básicas · Lección ' + String(lessonNumber).padStart(2, '0')
-                    : String(question.examen),
+                    ? String(question.leccion_nombre || ('Lección ' + lessonNumber)).trim()
+                    : String(question.leccion_nombre || question.examen || ''),
                 examen_modulo_num: isModuleFinal ? moduleNumbers[moduleToken] : null,
                 pregunta_num: questionNumber,
                 pregunta_global: Number(sourceId),
@@ -4716,8 +4716,8 @@
                 tipo: isLesson ? 'leccion' : sourceType,
                 leccion_num: lessonNumber,
                 leccion_nombre: isLesson
-                    ? 'Preguntas intermedias · Lección ' + String(lessonNumber).padStart(2, '0')
-                    : String(question.examen),
+                    ? String(question.leccion_nombre || ('Lección ' + lessonNumber)).trim()
+                    : String(question.leccion_nombre || question.examen || ''),
                 examen_modulo_num: isModuleFinal ? moduleNumbers[moduleToken] : null,
                 pregunta_num: questionNumber,
                 pregunta_global: Number(sourceId),
@@ -5796,7 +5796,7 @@
         });
         Array.from(lessonMap.keys()).sort((a, b) => a - b).forEach(number => {
             const lessonTitle = lessonMap.get(number);
-            const optionLabel = 'L' + String(number).padStart(2, '0') + ' - ' + lessonTitle;
+            const optionLabel = 'Lección ' + number + ' - ' + lessonTitle;
             lessonSelect.innerHTML += '<option value="' + number + '">' + optionLabel + '</option>';
         });
         const finalCount = bank.filter(question =>
@@ -5857,8 +5857,9 @@
             .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
             .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
             .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
+            .replace(/^Lecci[oó]n\s+\d+\s*[-:–]\s*/i, '')
             .trim();
-        return 'L' + String(lessonNumber).padStart(2, '0') + ' - ' + lessonName;
+        return 'Lección ' + lessonNumber + ' - ' + lessonName;
     }
 
     function getSimulationSessionLessonLabel() {
