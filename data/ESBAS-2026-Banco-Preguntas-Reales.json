@@ -15,8 +15,36 @@
         "name": "Gestión del aire del EPRA"
       },
       "source": "Texto proporcionado directamente por el usuario el 24/11/2026.",
-      "answer_key_status": "6 claves confirmadas por indicación del usuario; pendientes de cotejo documental independiente.",
+      "answer_key_status": "7 claves confirmadas por indicación del usuario; pendientes de cotejo documental independiente.",
       "questions": [
+        {
+          "id": "L9-P04",
+          "number": 4,
+          "statement": "Según la buena práctica operativa, con el cilindro al 50% se debe:",
+          "options": [
+            {
+              "id": "a",
+              "text": "Activar el by-pass"
+            },
+            {
+              "id": "b",
+              "text": "Continuar la operación"
+            },
+            {
+              "id": "c",
+              "text": "Iniciar el retorno a la zona tibia"
+            },
+            {
+              "id": "d",
+              "text": "Cambiar de tarea"
+            }
+          ],
+          "selected_answer": null,
+          "correct_answer": "c",
+          "answer_verified": true,
+          "answer_verification_status": "user_confirmed",
+          "answer_source": "Indicación expresa del usuario (24/11/2026)"
+        },
         {
           "id": "L9-P05",
           "number": 5,
@@ -7163,7 +7191,7 @@
       ]
     }
   ],
-  "question_count": 255,
+  "question_count": 256,
   "lesson_count": 26,
   "capture_status": {
     "lessons_registered": [
@@ -7224,8 +7252,8 @@
     "lessons_partial": [
       22
     ],
-    "all_registered_questions": 255,
-    "notes": "Las preguntas se transcriben literalmente desde las capturas o desde el texto proporcionado por el usuario. Las respuestas correctas permanecen pendientes de verificación; selected_answer conserva únicamente la alternativa elegida. La Lección 22 tiene registradas las preguntas 1 a 9 y falta la pregunta 10. La Lección 23 se incorporó desde texto proporcionado directamente por el usuario. La Lección 24 se incorporó desde texto proporcionado directamente por el usuario el 23/11/2026; contiene 10 preguntas y las 10 alternativas marcadas por el usuario quedaron registradas en selected_answer. La Lección 9 del Módulo I se incorporó el 24/11/2026 desde texto proporcionado directamente por el usuario; contiene las preguntas 7, 8 y 10. Falta la pregunta 9. Las claves correctas se registraron según indicación expresa del usuario y quedan pendientes de cotejo documental independiente. La Lección 9 del Módulo I quedó completa el 24/11/2026 al incorporarse la pregunta 9, junto con las preguntas 7, 8 y 10. Las cuatro claves fueron confirmadas expresamente por el usuario y están pendientes de cotejo documental independiente. La pregunta 6 de la Lección 9 se añadió el 24/11/2026 a partir del texto y clave proporcionados expresamente por el usuario. La pregunta 5 de la Lección 9 se añadió el 24/11/2026 a partir del texto y clave proporcionados expresamente por el usuario."
+    "all_registered_questions": 256,
+    "notes": "Las preguntas se transcriben literalmente desde las capturas o desde el texto proporcionado por el usuario. Las respuestas correctas permanecen pendientes de verificación; selected_answer conserva únicamente la alternativa elegida. La Lección 22 tiene registradas las preguntas 1 a 9 y falta la pregunta 10. La Lección 23 se incorporó desde texto proporcionado directamente por el usuario. La Lección 24 se incorporó desde texto proporcionado directamente por el usuario el 23/11/2026; contiene 10 preguntas y las 10 alternativas marcadas por el usuario quedaron registradas en selected_answer. La Lección 9 del Módulo I se incorporó el 24/11/2026 desde texto proporcionado directamente por el usuario; contiene las preguntas 7, 8 y 10. Falta la pregunta 9. Las claves correctas se registraron según indicación expresa del usuario y quedan pendientes de cotejo documental independiente. La Lección 9 del Módulo I quedó completa el 24/11/2026 al incorporarse la pregunta 9, junto con las preguntas 7, 8 y 10. Las cuatro claves fueron confirmadas expresamente por el usuario y están pendientes de cotejo documental independiente. La pregunta 6 de la Lección 9 se añadió el 24/11/2026 a partir del texto y clave proporcionados expresamente por el usuario. La pregunta 5 de la Lección 9 se añadió el 24/11/2026 a partir del texto y clave proporcionados expresamente por el usuario. La pregunta 4 de la Lección 9 se añadió el 24/11/2026 a partir del texto y clave proporcionados expresamente por el usuario."
   },
   "final_exams": [
     {
@@ -8305,8 +8333,8 @@
   ],
   "final_exam_count": 2,
   "final_exam_question_count": 40,
-  "lesson_question_count": 255,
-  "total_registered_question_count": 295,
+  "lesson_question_count": 256,
+  "total_registered_question_count": 296,
   "module_ranges": [
     {
       "module_number": 1,
@@ -8361,14 +8389,14 @@
     "user_selections_differing_from_verified_key": 16,
     "questions_without_user_selection": 88,
     "unverified_question_ids": [],
-    "content_preservation": "Las preguntas previamente registradas se conservaron sin cambios. Se añadió la pregunta L9-P05 de la Lección 9 del Módulo I con clave confirmada expresamente por el usuario, pendiente de cotejo documental independiente.",
+    "content_preservation": "Las preguntas previamente registradas se conservaron sin cambios. Se añadió la pregunta L9-P04 de la Lección 9 del Módulo I con clave confirmada expresamente por el usuario, pendiente de cotejo documental independiente.",
     "coverage_findings": [
       "El banco incluye 249 preguntas de lecciones y 40 preguntas de dos exámenes finales, total 289.",
       "Las preguntas de lección están registradas para las lecciones 10 a 34; las lecciones 1 a 9 del Módulo I no aparecen en el JSON.",
       "La Lección 22 tiene 9 preguntas registradas; falta la pregunta 10 y su estado de captura es parcial.",
       "Las preguntas de los exámenes finales se conservaron como bloque aparte, incluso cuando repiten contenidos presentes en evaluaciones de lección."
     ],
-    "verification_caveat": "Todas las claves deben coincidir con una alternativa existente y contar con respaldo identificable. Cinco correcciones se basan en el Libro ESBAS (lecciones 19, 23, 24 y 30); la de Nivel 1 se basa en la Lección 34; los puntos legales, médicos, históricos, NFPA y de detección radiológica se contrastaron con las fuentes externas institucionales especificadas en el registro de cambios. Las preguntas L9-P07, L9-P08 y L9-P10 tienen claves indicadas por el usuario; aún no se han cotejado con el manual. La pregunta L9-P09 tiene clave indicada por el usuario; aún no se ha cotejado con el manual. La pregunta L9-P06 tiene clave indicada por el usuario; aún no se ha cotejado con el manual. La pregunta L9-P05 tiene clave indicada por el usuario; aún no se ha cotejado con el manual.",
+    "verification_caveat": "Todas las claves deben coincidir con una alternativa existente y contar con respaldo identificable. Cinco correcciones se basan en el Libro ESBAS (lecciones 19, 23, 24 y 30); la de Nivel 1 se basa en la Lección 34; los puntos legales, médicos, históricos, NFPA y de detección radiológica se contrastaron con las fuentes externas institucionales especificadas en el registro de cambios. Las preguntas L9-P07, L9-P08 y L9-P10 tienen claves indicadas por el usuario; aún no se han cotejado con el manual. La pregunta L9-P09 tiene clave indicada por el usuario; aún no se ha cotejado con el manual. La pregunta L9-P06 tiene clave indicada por el usuario; aún no se ha cotejado con el manual. La pregunta L9-P05 tiene clave indicada por el usuario; aún no se ha cotejado con el manual. La pregunta L9-P04 tiene clave indicada por el usuario; aún no se ha cotejado con el manual.",
     "special_13_repair": {
       "question_ids": [
         "L19-P07",
@@ -8397,16 +8425,17 @@
       ],
       "all_13_have_verified_key": true
     },
-    "total_questions_registered": 295,
+    "total_questions_registered": 296,
     "user_confirmed_question_ids": [
       "L9-P07",
       "L9-P08",
       "L9-P10",
       "L9-P09",
       "L9-P06",
-      "L9-P05"
+      "L9-P05",
+      "L9-P04"
     ],
-    "user_confirmed_answers": 6,
-    "verification_method": " Las claves de L9-P07, L9-P08 y L9-P10 fueron confirmadas expresamente por el usuario el 24/11/2026; no se contabilizan como cotejadas de forma independiente con el manual. La clave de L9-P09 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual. La clave de L9-P06 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual. La clave de L9-P05 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual."
+    "user_confirmed_answers": 7,
+    "verification_method": " Las claves de L9-P07, L9-P08 y L9-P10 fueron confirmadas expresamente por el usuario el 24/11/2026; no se contabilizan como cotejadas de forma independiente con el manual. La clave de L9-P09 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual. La clave de L9-P06 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual. La clave de L9-P05 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual. La clave de L9-P04 fue confirmada expresamente por el usuario el 24/11/2026; no se contabiliza como cotejada de forma independiente con el manual."
   }
 }
