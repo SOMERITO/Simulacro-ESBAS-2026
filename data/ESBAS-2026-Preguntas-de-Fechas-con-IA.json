@@ -1,0 +1,1265 @@
+{
+  "titulo": "Preguntas de fechas con IA",
+  "descripcion": "Banco de práctica dedicado exclusivamente a fechas, años y periodos cronológicos mencionados en el Manual ESBAS 2026-1 y en el documento independiente de la Lección 34 sobre respuesta a incidentes con MATPEL.",
+  "nivel": "Práctica cronológica",
+  "enfoque": "Solo fechas",
+  "total_preguntas": 77,
+  "alternativas_por_pregunta": 4,
+  "incluye_leccion_34": true,
+  "fuentes": [
+    "Libro Completo ESBAS 2026-1",
+    "ESBAS 2026-1 - Módulo III - Lección 34: Respuesta a Incidentes con MATPEL"
+  ],
+  "observaciones_documentales": [
+    "El manual contiene una discrepancia interna sobre el año asociado a la fundación: en la Lección 2 aparece el 5 de diciembre de 1860 al describir al CGBVP, mientras que en la Lección 3 aparece el 5 de diciembre de 1869 al referirse a la primera compañía; la cronología de la Chalaca describe la primera reunión de creación el 5 de diciembre de 1860. Por esa razón, el banco no formula una pregunta que obligue a elegir un único año como fecha definitiva de fundación de la primera compañía.",
+    "Las fechas de eventos históricos, normas y publicaciones se formulan según el texto fuente, sin corregir ni completar datos mediante fuentes externas.",
+    "Cuando el material solo proporciona mes o año, la pregunta conserva ese mismo nivel de precisión y no inventa un día exacto."
+  ],
+  "resumen_validacion": {
+    "preguntas": 77,
+    "preguntas_solo_de_fechas": true,
+    "preguntas_con_fundamento": 77,
+    "preguntas_con_4_alternativas": 77,
+    "distribucion_respuestas_correctas": {
+      "A": 20,
+      "B": 19,
+      "C": 19,
+      "D": 19
+    },
+    "leccion_34_incluida": true
+  },
+  "preguntas": [
+    {
+      "id": 1,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se fundó la primera organización de bomberos creada por el virrey Manuel Amat y Juniet?",
+      "alternativas": {
+        "A": "2 de enero de 1772",
+        "B": "2 de enero de 1810",
+        "C": "11 de noviembre de 1823",
+        "D": "7 de octubre de 1845"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual indica que la organización creada por el virrey Amat se fundó el 2 de enero de 1772."
+    },
+    {
+      "id": 2,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué año se registra la existencia de la Compañía de Bomberos Morenos Libres, durante el gobierno del virrey José Fernando Abascal y Souza?",
+      "alternativas": {
+        "A": "1772",
+        "B": "1810",
+        "C": "1823",
+        "D": "1845"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El material señala que en 1810 existió la Compañía de Bomberos Morenos Libres, capitaneada por Ignacio Molina."
+    },
+    {
+      "id": 3,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha el mariscal Agustín Gamarra dictó el Reglamento de Policía con disposiciones preventivas frente a los incendios?",
+      "alternativas": {
+        "A": "3 de diciembre de 1823",
+        "B": "7 de octubre de 1845",
+        "C": "11 de noviembre de 1823",
+        "D": "2 de octubre de 1847"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual fecha ese Reglamento de Policía el 11 de noviembre de 1823."
+    },
+    {
+      "id": 4,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se dispuso la creación de depósitos para guardar lampas, picos, escaleras y baldes destinados a casos de incendio?",
+      "alternativas": {
+        "A": "11 de noviembre de 1823",
+        "B": "20 de septiembre de 1846",
+        "C": "2 de octubre de 1847",
+        "D": "3 de diciembre de 1823"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El texto menciona la disposición del 3 de diciembre de 1823 para crear depósitos de herramientas contra incendios."
+    },
+    {
+      "id": 5,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha Ramón Castilla dispuso, mediante una resolución, organizar una compañía de bomberos sobre la base de la Intendencia de Policía?",
+      "alternativas": {
+        "A": "7 de octubre de 1845",
+        "B": "20 de septiembre de 1846",
+        "C": "2 de octubre de 1847",
+        "D": "3 de noviembre de 1855"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La resolución para organizar la compañía de bomberos fue emitida el 7 de octubre de 1845."
+    },
+    {
+      "id": 6,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha ocurrió el incendio de los Portales de la Plaza de Armas de Lima que impresionó al mariscal Ramón Castilla?",
+      "alternativas": {
+        "A": "7 de octubre de 1845",
+        "B": "20 de septiembre de 1846",
+        "C": "2 de octubre de 1847",
+        "D": "18 de noviembre de 1855"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual fecha ese incendio en la noche del 20 de septiembre de 1846."
+    },
+    {
+      "id": 7,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se encargó a la prefectura formular el reglamento para el manejo de las bombas contra incendio?",
+      "alternativas": {
+        "A": "20 de septiembre de 1846",
+        "B": "7 de octubre de 1845",
+        "C": "2 de octubre de 1847",
+        "D": "3 de noviembre de 1855"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El encargo a la prefectura está fechado el 2 de octubre de 1847."
+    },
+    {
+      "id": 8,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se aprobó el funcionamiento de la Compañía de Ganchos, Hachas y Escalas y se designó capitán a Guillermo Higginson?",
+      "alternativas": {
+        "A": "18 de noviembre de 1855",
+        "B": "28 de agosto de 1860",
+        "C": "5 de diciembre de 1860",
+        "D": "3 de noviembre de 1855"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual indica que la reglamentación fue aprobada el 3 de noviembre de 1855."
+    },
+    {
+      "id": 9,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha inició sus actividades en el Callao la Compañía de Ganchos, Hachas y Escalas REYNA?",
+      "alternativas": {
+        "A": "18 de noviembre de 1855",
+        "B": "3 de noviembre de 1855",
+        "C": "1 de diciembre de 1860",
+        "D": "30 de diciembre de 1860"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La compañía REYNA inició sus actividades el 18 de noviembre de 1855."
+    },
+    {
+      "id": 10,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué año se disolvieron Los Playeros, según la cronología histórica del manual?",
+      "alternativas": {
+        "A": "1855",
+        "B": "1862",
+        "C": "1860",
+        "D": "1864"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual señala que Los Playeros se disolvieron en 1862 por falta de continuidad."
+    },
+    {
+      "id": 11,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se creó la Compañía de Bomberos Voluntarios de Paita?",
+      "alternativas": {
+        "A": "24 de noviembre de 1860",
+        "B": "5 de diciembre de 1860",
+        "C": "28 de agosto de 1860",
+        "D": "30 de diciembre de 1860"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La creación de la compañía de Paita está fechada el 28 de agosto de 1860."
+    },
+    {
+      "id": 12,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿Desde qué fecha asumió Alejandro Blaker el mando de la Compañía de Bomberos Voluntarios de Paita?",
+      "alternativas": {
+        "A": "28 de agosto de 1860",
+        "B": "1 de diciembre de 1860",
+        "C": "5 de diciembre de 1860",
+        "D": "24 de noviembre de 1860"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El material indica que Alejandro Blaker asumió el mando desde el 24 de noviembre de 1860."
+    },
+    {
+      "id": 13,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha ocurrió el incendio del molino a vapor de los señores Moller, More y Cía., en la calle Marco Polo del Callao?",
+      "alternativas": {
+        "A": "1 de diciembre de 1860",
+        "B": "24 de noviembre de 1860",
+        "C": "5 de diciembre de 1860",
+        "D": "30 de diciembre de 1860"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual ubica el incendio del molino en el 1 de diciembre de 1860."
+    },
+    {
+      "id": 14,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Antecedentes históricos",
+      "pregunta": "¿En qué fecha se creó en Lima la Compañía de Seguridad Pública conocida como Guardia Nocturna?",
+      "alternativas": {
+        "A": "1 de diciembre de 1860",
+        "B": "30 de diciembre de 1860",
+        "C": "5 de diciembre de 1860",
+        "D": "7 de diciembre de 1860"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La Compañía de Seguridad Pública se creó el 30 de diciembre de 1860."
+    },
+    {
+      "id": 15,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de la Chalaca",
+      "pregunta": "¿En qué fecha se realizó la primera reunión de 54 concurrentes que acordaron solicitar permisos para crear una compañía de bomberos en el Callao?",
+      "alternativas": {
+        "A": "7 de diciembre de 1860",
+        "B": "15 de diciembre de 1860",
+        "C": "5 de diciembre de 1860",
+        "D": "2 de enero de 1861"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La primera reunión para iniciar la creación de la Chalaca se realizó el 5 de diciembre de 1860."
+    },
+    {
+      "id": 16,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de la Chalaca",
+      "pregunta": "¿En qué fecha se efectuó la reunión en la que se eligieron a Arthur M. Wholey como presidente y a Enrique J. Prunier como secretario de los trabajos iniciales de la Chalaca?",
+      "alternativas": {
+        "A": "5 de diciembre de 1860",
+        "B": "15 de diciembre de 1860",
+        "C": "2 de enero de 1861",
+        "D": "7 de diciembre de 1860"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual fecha esa primera reunión organizativa el 7 de diciembre de 1860."
+    },
+    {
+      "id": 17,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de la Chalaca",
+      "pregunta": "¿En qué fecha los miembros de la Chalaca eligieron su primer directorio?",
+      "alternativas": {
+        "A": "15 de diciembre de 1860",
+        "B": "5 de diciembre de 1860",
+        "C": "7 de diciembre de 1860",
+        "D": "2 de enero de 1861"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La elección del primer directorio de la Chalaca tuvo lugar el 15 de diciembre de 1860."
+    },
+    {
+      "id": 18,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de la Chalaca",
+      "pregunta": "¿En qué fecha fue elegido Guillermo Higginson como primer Comandante Activo de la Chalaca N.° 1?",
+      "alternativas": {
+        "A": "15 de diciembre de 1860",
+        "B": "2 de enero de 1861",
+        "C": "26 de julio de 1868",
+        "D": "3 de abril de 1866"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "Guillermo Higginson fue elegido Comandante el 2 de enero de 1861."
+    },
+    {
+      "id": 19,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de Paita",
+      "pregunta": "¿En qué año dejó de prestar servicios a la comunidad la Compañía de Bomberos de Paita por falta de recursos y apoyo?",
+      "alternativas": {
+        "A": "1860",
+        "B": "1862",
+        "C": "1864",
+        "D": "1868"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual indica que la compañía de Paita dejó de prestar servicios en 1864."
+    },
+    {
+      "id": 20,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha Theodore Wattecamps ofreció, durante una sesión municipal, organizar una compañía de bomberos con el apoyo de la colonia francesa?",
+      "alternativas": {
+        "A": "10 de abril de 1866",
+        "B": "15 de abril de 1866",
+        "C": "20 de abril de 1866",
+        "D": "3 de abril de 1866"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La oferta de Theodore Wattecamps se realizó el 3 de abril de 1866."
+    },
+    {
+      "id": 21,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha Emilio Longhi convocó la primera reunión de coordinación para organizar la compañía italiana Roma?",
+      "alternativas": {
+        "A": "10 de abril de 1866",
+        "B": "3 de abril de 1866",
+        "C": "15 de abril de 1866",
+        "D": "25 de abril de 1866"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La primera reunión de coordinación de Roma se convocó el 10 de abril de 1866."
+    },
+    {
+      "id": 22,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha se realizó la asamblea de fundación de la Compañía Italiana de Bomberos Voluntarios Roma N.° 1?",
+      "alternativas": {
+        "A": "10 de abril de 1866",
+        "B": "15 de abril de 1866",
+        "C": "20 de abril de 1866",
+        "D": "21 de abril de 1866"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La asamblea de fundación de Roma N.° 1 se realizó el 15 de abril de 1866."
+    },
+    {
+      "id": 23,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha se fundó la Compañía de Bomberos Voluntarios France?",
+      "alternativas": {
+        "A": "3 de abril de 1866",
+        "B": "15 de abril de 1866",
+        "C": "20 de abril de 1866",
+        "D": "21 de abril de 1866"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La fundación de la compañía France ocurrió en una asamblea del 20 de abril de 1866."
+    },
+    {
+      "id": 24,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha se fundó la Compañía Municipal Lima?",
+      "alternativas": {
+        "A": "15 de abril de 1866",
+        "B": "20 de abril de 1866",
+        "C": "25 de abril de 1866",
+        "D": "21 de abril de 1866"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La Compañía Municipal Lima fue fundada el 21 de abril de 1866."
+    },
+    {
+      "id": 25,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha tuvo lugar la Primera Junta General de la Compañía Roma?",
+      "alternativas": {
+        "A": "25 de abril de 1866",
+        "B": "10 de abril de 1866",
+        "C": "15 de abril de 1866",
+        "D": "12 de mayo de 1866"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La Primera Junta General de Roma se realizó el 25 de abril de 1866."
+    },
+    {
+      "id": 26,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia del Combate del Callao",
+      "pregunta": "¿En qué fecha se declaró el bloqueo del Callao, antes del Combate del Dos de Mayo?",
+      "alternativas": {
+        "A": "21 de abril de 1866",
+        "B": "25 de abril de 1866",
+        "C": "2 de mayo de 1866",
+        "D": "12 de mayo de 1866"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual indica que el bloqueo del Callao fue declarado el 25 de abril de 1866."
+    },
+    {
+      "id": 27,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia del Combate del Callao",
+      "pregunta": "¿En qué fecha se produjo el Combate del Dos de Mayo?",
+      "alternativas": {
+        "A": "25 de abril de 1866",
+        "B": "12 de mayo de 1866",
+        "C": "2 de mayo de 1866",
+        "D": "28 de julio de 1866"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El Combate del Dos de Mayo ocurrió el 2 de mayo de 1866."
+    },
+    {
+      "id": 28,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha regresaron los bomberos de Roma a Lima después de su participación en el Callao y recibieron reconocimientos?",
+      "alternativas": {
+        "A": "2 de mayo de 1866",
+        "B": "25 de abril de 1866",
+        "C": "28 de julio de 1866",
+        "D": "12 de mayo de 1866"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El texto señala que los bomberos romanos retornaron a Lima el 12 de mayo de 1866."
+    },
+    {
+      "id": 29,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha el general Mariano Ignacio Prado condecoró a los miembros de la France N.° 2 con una Cinta de Honor?",
+      "alternativas": {
+        "A": "28 de julio de 1866",
+        "B": "2 de mayo de 1866",
+        "C": "12 de mayo de 1866",
+        "D": "18 de septiembre de 1871"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La ceremonia de condecoración de la France tuvo lugar el 28 de julio de 1866."
+    },
+    {
+      "id": 30,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de la Unión Chalaca",
+      "pregunta": "¿En qué fecha los dirigentes de la Chalaca y del Club Unión acordaron conformar una sola institución llamada Unión Chalaca N.° 1?",
+      "alternativas": {
+        "A": "8 de septiembre de 1868",
+        "B": "26 de julio de 1868",
+        "C": "15 de diciembre de 1860",
+        "D": "2 de enero de 1861"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El acuerdo para unir la Compañía Chalaca y el Club Unión se tomó el 26 de julio de 1868."
+    },
+    {
+      "id": 31,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha se reunieron los exvoluntarios de la Municipal Lima y los ex Artesanos de Lima para unir esfuerzos y reorganizar una compañía?",
+      "alternativas": {
+        "A": "26 de julio de 1868",
+        "B": "18 de septiembre de 1871",
+        "C": "8 de septiembre de 1868",
+        "D": "15 de abril de 1866"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual indica que esa reunión de reorganización ocurrió el 8 de septiembre de 1868."
+    },
+    {
+      "id": 32,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de las compañías",
+      "pregunta": "¿En qué fecha el Gobierno concedió por segunda vez a los bomberos romanos el título de Beneméritos de la Patria en Grado Heroico?",
+      "alternativas": {
+        "A": "28 de julio de 1866",
+        "B": "12 de mayo de 1866",
+        "C": "26 de julio de 1868",
+        "D": "18 de septiembre de 1871"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El segundo reconocimiento a los bomberos romanos se concedió el 18 de septiembre de 1871."
+    },
+    {
+      "id": 33,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha ocurrieron los incendios de Chorrillos durante los cuales fueron fusilados los Trece Garibaldinos?",
+      "alternativas": {
+        "A": "13 de enero de 1881",
+        "B": "14 de enero de 1887",
+        "C": "1 de noviembre de 1929",
+        "D": "14 de febrero de 1931"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual sitúa los acontecimientos de los Trece Garibaldinos el 13 de enero de 1881."
+    },
+    {
+      "id": 34,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha se desenterraron los restos de los garibaldinos y fueron trasladados en secreto a la Compañía Roma N.° 1?",
+      "alternativas": {
+        "A": "13 de enero de 1881",
+        "B": "14 de enero de 1887",
+        "C": "1 de noviembre de 1929",
+        "D": "14 de febrero de 1931"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El rescate de los restos de los garibaldinos se realizó el 14 de enero de 1887."
+    },
+    {
+      "id": 35,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha fueron trasladados el mausoleo y los restos de los Trece Garibaldinos al cementerio de San Pedro de Chorrillos?",
+      "alternativas": {
+        "A": "14 de enero de 1887",
+        "B": "13 de enero de 1881",
+        "C": "1 de noviembre de 1929",
+        "D": "14 de febrero de 1931"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El traslado al cementerio de San Pedro de Chorrillos se realizó el 1 de noviembre de 1929."
+    },
+    {
+      "id": 36,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha ocurrió el incendio en Mollendo en el que Samuel Málaga sufrió las heridas que posteriormente causaron su fallecimiento?",
+      "alternativas": {
+        "A": "12 de abril de 1913",
+        "B": "14 de febrero de 1931",
+        "C": "3 de octubre de 1948",
+        "D": "8 de abril de 1913"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El incendio en Mollendo ocurrió el 8 de abril de 1913; Samuel Málaga falleció cuatro días después."
+    },
+    {
+      "id": 37,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha falleció Samuel Málaga, bombero de la Compañía Mollendo?",
+      "alternativas": {
+        "A": "12 de abril de 1913",
+        "B": "8 de abril de 1913",
+        "C": "14 de febrero de 1931",
+        "D": "3 de octubre de 1948"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual indica que Samuel Málaga falleció el 12 de abril de 1913 a consecuencia de las heridas sufridas en el incendio del 8 de abril."
+    },
+    {
+      "id": 38,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿Qué fecha señala el manual como la tragedia de los Mártires de Plumereros?",
+      "alternativas": {
+        "A": "1 de noviembre de 1929",
+        "B": "14 de febrero de 1931",
+        "C": "3 de octubre de 1948",
+        "D": "15 de enero de 1974"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El incendio y derrumbe de Plumereros se produjo el 14 de febrero de 1931."
+    },
+    {
+      "id": 39,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha falleció el bombero Julio Upiachihua Cárdenas durante la revolución de 1948 en el Callao?",
+      "alternativas": {
+        "A": "14 de febrero de 1931",
+        "B": "29 de junio de 1970",
+        "C": "3 de octubre de 1948",
+        "D": "15 de enero de 1974"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "Julio Upiachihua y Lorenzo Giraldo cayeron el 3 de octubre de 1948."
+    },
+    {
+      "id": 40,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué año Mateo Olcese impulsó la iniciativa de crear la Fiesta del Bombero?",
+      "alternativas": {
+        "A": "1911",
+        "B": "1921",
+        "C": "1949",
+        "D": "1910"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La iniciativa de Mateo Olcese se sitúa en 1910; el acuerdo del Directorio llegó al año siguiente."
+    },
+    {
+      "id": 41,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué fecha el Directorio de Bomberos de Lima acordó celebrar la Fiesta del Bombero el segundo domingo de mayo?",
+      "alternativas": {
+        "A": "20 de abril de 1911",
+        "B": "1910",
+        "C": "1921",
+        "D": "mayo de 1949"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El acuerdo del Directorio se tomó el 20 de abril de 1911."
+    },
+    {
+      "id": 42,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué año la Primera Asamblea del Cuerpo de Bomberos de Lima ratificó el acuerdo de 1911 y cambió la denominación de Fiesta del Bombero a Día del Bombero?",
+      "alternativas": {
+        "A": "1910",
+        "B": "1921",
+        "C": "1911",
+        "D": "1949"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La Primera Asamblea del Cuerpo de Bomberos de Lima se realizó en 1921 y ratificó el acuerdo de 1911."
+    },
+    {
+      "id": 43,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué mes y año el Directorio del Cuerpo de Bomberos de Lima trasladó la celebración del Día del Bombero al tercer domingo de mayo?",
+      "alternativas": {
+        "A": "mayo de 1921",
+        "B": "abril de 1911",
+        "C": "mayo de 1949",
+        "D": "diciembre de 1951"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El cambio al tercer domingo de mayo se decidió en mayo de 1949."
+    },
+    {
+      "id": 44,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué mes y año Delfín Puccio Ulloa presentó la idea de unificar nacionalmente el bomberismo, con ocasión del 50.º aniversario de Olaya?",
+      "alternativas": {
+        "A": "agosto de 1950",
+        "B": "enero de 1953",
+        "C": "noviembre de 1953",
+        "D": "junio de 1940"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual sitúa la propuesta de unificación de Delfín Puccio Ulloa en junio de 1940."
+    },
+    {
+      "id": 45,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué año los bomberos de la Compañía Salvadora Chiclayo retomaron la idea de la unificación nacional?",
+      "alternativas": {
+        "A": "1947",
+        "B": "1940",
+        "C": "1950",
+        "D": "1953"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La iniciativa fue retomada en 1947 por bomberos de la Salvadora Chiclayo."
+    },
+    {
+      "id": 46,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó en Chiclayo la Primera Asamblea Nor Peruana de Bomberos?",
+      "alternativas": {
+        "A": "23 de enero de 1953",
+        "B": "3 de agosto de 1950",
+        "C": "19 de noviembre de 1953",
+        "D": "2 de diciembre de 1953"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La Primera Asamblea Nor Peruana se realizó el 3 de agosto de 1950."
+    },
+    {
+      "id": 47,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué fecha la Asamblea de Bomberos del Perú acordó solicitar al Gobierno que el 5 de diciembre se conmemorara como Día del Bombero?",
+      "alternativas": {
+        "A": "5 de diciembre de 1951",
+        "B": "4 de diciembre de 1973",
+        "C": "22 de mayo de 1951",
+        "D": "25 de junio de 1982"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El acuerdo para solicitar el reconocimiento oficial fue adoptado en sesión del 22 de mayo de 1951."
+    },
+    {
+      "id": 48,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué fecha se expidió el Decreto Supremo N.° 1802 que declaró oficialmente el 5 de diciembre como Día del Bombero?",
+      "alternativas": {
+        "A": "22 de mayo de 1951",
+        "B": "4 de diciembre de 1973",
+        "C": "25 de enero de 1985",
+        "D": "5 de diciembre de 1951"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El Decreto Supremo N.° 1802 aparece fechado en Lima el 5 de diciembre de 1951."
+    },
+    {
+      "id": 49,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿Entre qué fechas se realizó en Huacho la Segunda Asamblea Nor Peruana de Bomberos?",
+      "alternativas": {
+        "A": "Del 23 al 25 de enero de 1953",
+        "B": "Del 19 al 30 de noviembre de 1953",
+        "C": "Del 9 al 13 de octubre de 1957",
+        "D": "Del 3 al 5 de agosto de 1950"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La Segunda Asamblea Nor Peruana se llevó a cabo del 23 al 25 de enero de 1953."
+    },
+    {
+      "id": 50,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó la primera sesión de las Juntas Preparatorias para organizar el CGBVP?",
+      "alternativas": {
+        "A": "25 de noviembre de 1953",
+        "B": "19 de noviembre de 1953",
+        "C": "30 de noviembre de 1953",
+        "D": "2 de diciembre de 1953"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La primera sesión preparatoria se realizó el 19 de noviembre de 1953."
+    },
+    {
+      "id": 51,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó la segunda sesión de las Juntas Preparatorias?",
+      "alternativas": {
+        "A": "19 de noviembre de 1953",
+        "B": "30 de noviembre de 1953",
+        "C": "25 de noviembre de 1953",
+        "D": "2 de diciembre de 1953"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La segunda sesión de las Juntas Preparatorias se realizó el 25 de noviembre de 1953."
+    },
+    {
+      "id": 52,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó la tercera sesión de las Juntas Preparatorias?",
+      "alternativas": {
+        "A": "19 de noviembre de 1953",
+        "B": "25 de noviembre de 1953",
+        "C": "2 de diciembre de 1953",
+        "D": "30 de noviembre de 1953"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La tercera sesión de las Juntas Preparatorias se realizó el 30 de noviembre de 1953."
+    },
+    {
+      "id": 53,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó la cuarta sesión de las Juntas Preparatorias y se nombró el primer Directorio Provisional del CGBVP?",
+      "alternativas": {
+        "A": "2 de diciembre de 1953",
+        "B": "19 de noviembre de 1953",
+        "C": "25 de noviembre de 1953",
+        "D": "26 de diciembre de 1953"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La cuarta sesión y el nombramiento del Directorio Provisional ocurrieron el 2 de diciembre de 1953; el manual considera esa fecha como fundación del CGBVP."
+    },
+    {
+      "id": 54,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se reunió la Asamblea Solemne para elegir el Directorio Definitivo del CGBVP?",
+      "alternativas": {
+        "A": "2 de diciembre de 1953",
+        "B": "26 de diciembre de 1953",
+        "C": "30 de enero de 1954",
+        "D": "3 de agosto de 1950"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La elección del Directorio Definitivo se realizó el 26 de diciembre de 1953."
+    },
+    {
+      "id": 55,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Unificación del bomberismo",
+      "pregunta": "¿En qué fecha se realizó la instalación solemne y juramentación del Directorio Ejecutivo Titular del CGBVP?",
+      "alternativas": {
+        "A": "26 de diciembre de 1953",
+        "B": "2 de diciembre de 1953",
+        "C": "30 de enero de 1954",
+        "D": "23 de enero de 1953"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La instalación y juramentación del Directorio Titular tuvo lugar el 30 de enero de 1954."
+    },
+    {
+      "id": 56,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Lema institucional",
+      "pregunta": "¿Entre qué fechas se realizó el Segundo Congreso Nacional de Bomberos en el que se acordó reglamentar el lema Dios, Patria, Humanidad?",
+      "alternativas": {
+        "A": "Del 23 al 25 de enero de 1953",
+        "B": "Del 3 al 5 de agosto de 1950",
+        "C": "Del 19 al 30 de noviembre de 1953",
+        "D": "Del 9 al 13 de octubre de 1957"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El Segundo Congreso Nacional se realizó del 9 al 13 de octubre de 1957 y acordó el lema institucional vigente."
+    },
+    {
+      "id": 57,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Día del Bombero",
+      "pregunta": "¿En qué año se organizó la primera brigada femenina de bomberas y auxiliaristas en la Compañía Italia, según el material?",
+      "alternativas": {
+        "A": "1970",
+        "B": "1957",
+        "C": "1982",
+        "D": "1999"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El material ubica la organización de la primera brigada femenina en 1970."
+    },
+    {
+      "id": 58,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha ocurrió el terremoto de Huaraz en el que las jóvenes de la primera brigada femenina apoyaron a los damnificados?",
+      "alternativas": {
+        "A": "29 de junio de 1970",
+        "B": "31 de mayo de 1970",
+        "C": "15 de enero de 1974",
+        "D": "26 de agosto de 2000"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El terremoto de Huaraz ocurrió el 31 de mayo de 1970."
+    },
+    {
+      "id": 59,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha perdió la vida el sargento CBP Carlos Francisco León Delgado durante una presentación de paracaidismo?",
+      "alternativas": {
+        "A": "31 de mayo de 1970",
+        "B": "15 de enero de 1974",
+        "C": "29 de junio de 1970",
+        "D": "3 de octubre de 1948"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual señala que el paracaídas de Carlos León no se abrió el 29 de junio de 1970."
+    },
+    {
+      "id": 60,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha falleció el teniente Manuel Suárez Pinzas durante un incendio en un local de venta de discos de vinilo?",
+      "alternativas": {
+        "A": "29 de junio de 1970",
+        "B": "26 de agosto de 2000",
+        "C": "19 de octubre de 2016",
+        "D": "15 de enero de 1974"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El fallecimiento de Manuel Suárez Pinzas está fechado el 15 de enero de 1974."
+    },
+    {
+      "id": 61,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha falleció el capitán CBP Andrés Hugo Román Gutiérrez por las heridas sufridas en la colisión y volcadura de una unidad de rescate?",
+      "alternativas": {
+        "A": "26 de agosto de 2000",
+        "B": "15 de enero de 1974",
+        "C": "29 de junio de 1970",
+        "D": "19 de octubre de 2016"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual indica que Andrés Hugo Román Gutiérrez murió el 26 de agosto de 2000."
+    },
+    {
+      "id": 62,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 3,
+      "categoria": "Historia de los mártires",
+      "pregunta": "¿En qué fecha ocurrió el incendio de El Agustino en el que fallecieron tres bomberos durante las labores de búsqueda y rescate?",
+      "alternativas": {
+        "A": "26 de agosto de 2000",
+        "B": "19 de octubre de 2016",
+        "C": "15 de enero de 1974",
+        "D": "31 de mayo de 1970"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El incendio de El Agustino está fechado el 19 de octubre de 2016."
+    },
+    {
+      "id": 63,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se emitió el Decreto Ley N.° 20235, que aprobó una nueva Ley Orgánica del CGBVP y mantuvo el 5 de diciembre como Día del Bombero?",
+      "alternativas": {
+        "A": "5 de diciembre de 1951",
+        "B": "25 de junio de 1982",
+        "C": "4 de diciembre de 1973",
+        "D": "25 de enero de 1985"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El Decreto Ley N.° 20235 fue emitido el 4 de diciembre de 1973."
+    },
+    {
+      "id": 64,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se expidió la Ley N.° 23449, que ratificó el 5 de diciembre como Día del Bombero Peruano?",
+      "alternativas": {
+        "A": "4 de diciembre de 1973",
+        "B": "25 de enero de 1985",
+        "C": "9 de marzo de 1999",
+        "D": "25 de junio de 1982"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La Ley N.° 23449 fue expedida el 25 de junio de 1982."
+    },
+    {
+      "id": 65,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se rubricó el Decreto Legislativo N.° 324, Ley Orgánica del CGBVP?",
+      "alternativas": {
+        "A": "25 de enero de 1985",
+        "B": "25 de junio de 1982",
+        "C": "9 de marzo de 1999",
+        "D": "4 de diciembre de 1973"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El Decreto Legislativo N.° 324 fue rubricado el 25 de enero de 1985."
+    },
+    {
+      "id": 66,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se aprobó la Ley N.° 27067, cuya disposición complementaria señala el 5 de diciembre como Día del Bombero Voluntario del Perú?",
+      "alternativas": {
+        "A": "25 de enero de 1985",
+        "B": "9 de marzo de 1999",
+        "C": "25 de junio de 1982",
+        "D": "4 de diciembre de 1973"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La Ley N.° 27067 fue aprobada el 9 de marzo de 1999."
+    },
+    {
+      "id": 67,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Día del Veterano Bombero Voluntario",
+      "pregunta": "¿En qué fecha se emitió la Resolución Jefatural N.° 281-2017 CGBVP que instituyó el Día del Veterano Bombero Voluntario?",
+      "alternativas": {
+        "A": "17 de septiembre de 2017",
+        "B": "20 de septiembre de 2017",
+        "C": "15 de septiembre de 2017",
+        "D": "11 de marzo de 2018"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La Resolución Jefatural N.° 281-2017 está fechada el 15 de septiembre de 2017."
+    },
+    {
+      "id": 68,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Día del Veterano Bombero Voluntario",
+      "pregunta": "¿Qué día del mes se estableció para celebrar cada año el Día del Veterano Bombero Voluntario?",
+      "alternativas": {
+        "A": "El primer domingo de mayo",
+        "B": "El segundo domingo de mayo",
+        "C": "El 5 de diciembre",
+        "D": "El último domingo de agosto"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La Resolución Jefatural instituyó la celebración el último domingo de agosto de cada año."
+    },
+    {
+      "id": 69,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se publicó el Decreto Legislativo N.° 1260 que fortalece al CGBVP y regula la INBP?",
+      "alternativas": {
+        "A": "8 de diciembre de 2016",
+        "B": "17 de junio de 2017",
+        "C": "17 de septiembre de 2017",
+        "D": "20 de septiembre de 2017"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El Decreto Legislativo N.° 1260 aparece fechado el 8 de diciembre de 2016."
+    },
+    {
+      "id": 70,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se aprobó el Decreto Supremo N.° 019-2017-IN, que reglamenta el Decreto Legislativo N.° 1260?",
+      "alternativas": {
+        "A": "8 de diciembre de 2016",
+        "B": "17 de junio de 2017",
+        "C": "17 de septiembre de 2017",
+        "D": "20 de septiembre de 2017"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El Decreto Supremo N.° 019-2017-IN fue aprobado el 17 de junio de 2017."
+    },
+    {
+      "id": 71,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se aprobó el Decreto Supremo N.° 025-2017-IN, que contiene el Reglamento de Organización y Funciones de la INBP?",
+      "alternativas": {
+        "A": "15 de septiembre de 2017",
+        "B": "17 de junio de 2017",
+        "C": "17 de septiembre de 2017",
+        "D": "20 de septiembre de 2017"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El Decreto Supremo N.° 025-2017-IN está fechado el 17 de septiembre de 2017."
+    },
+    {
+      "id": 72,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se aprobó la Resolución Ministerial N.° 897-2017-IN sobre el Reglamento Interno de Funcionamiento del CGBVP?",
+      "alternativas": {
+        "A": "15 de septiembre de 2017",
+        "B": "17 de septiembre de 2017",
+        "C": "11 de marzo de 2018",
+        "D": "20 de septiembre de 2017"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La Resolución Ministerial N.° 897-2017-IN fue aprobada el 20 de septiembre de 2017."
+    },
+    {
+      "id": 73,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se modificó el Reglamento Interno de Funcionamiento del CGBVP mediante acuerdo del Consejo de Oficiales Generales?",
+      "alternativas": {
+        "A": "11 de marzo de 2018",
+        "B": "20 de septiembre de 2017",
+        "C": "6 de junio de 2019",
+        "D": "7 de agosto de 2023"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El acuerdo de modificación indicado en el material corresponde al 11 de marzo de 2018."
+    },
+    {
+      "id": 74,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 4,
+      "categoria": "Marco legal del CGBVP",
+      "pregunta": "¿En qué fecha se emitió la Resolución de Intendencia N.° 087-2019-INBP que aprobó la directiva para emitir certificaciones de la Escuela de Bomberos de la INBP?",
+      "alternativas": {
+        "A": "11 de marzo de 2018",
+        "B": "6 de junio de 2019",
+        "C": "7 de agosto de 2023",
+        "D": "20 de septiembre de 2017"
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La Resolución de Intendencia N.° 087-2019-INBP está fechada el 6 de junio de 2019."
+    },
+    {
+      "id": 75,
+      "tipo": "fecha",
+      "modulo": "I",
+      "leccion": 1,
+      "categoria": "Normativa de admisión ESBAS",
+      "pregunta": "¿En qué fecha se publicó la Norma de Desarrollo Reglamentario de Admisión a la Escuela Básica - ESBAS, edición junio de 2023?",
+      "alternativas": {
+        "A": "6 de junio de 2019",
+        "B": "11 de marzo de 2018",
+        "C": "7 de agosto de 2023",
+        "D": "17 de septiembre de 2017"
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El documento indica que la edición junio de 2023 fue publicada el 7 de agosto de 2023."
+    },
+    {
+      "id": 76,
+      "tipo": "fecha",
+      "modulo": "III",
+      "leccion": 34,
+      "categoria": "Base legal MATPEL",
+      "pregunta": "¿En qué fecha se publicó la Ley N.° 28256 que regula el transporte terrestre de materiales y residuos peligrosos?",
+      "alternativas": {
+        "A": "10 de junio de 2008",
+        "B": "8 de diciembre de 2016",
+        "C": "17 de junio de 2017",
+        "D": "18 de junio de 2004"
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La Lección 34 indica que la Ley N.° 28256 fue publicada el 18 de junio de 2004."
+    },
+    {
+      "id": 77,
+      "tipo": "fecha",
+      "modulo": "III",
+      "leccion": 34,
+      "categoria": "Base legal MATPEL",
+      "pregunta": "¿En qué fecha se publicó el Decreto Supremo N.° 021-2008-MTC que aprueba el Reglamento Nacional de Transporte Terrestre de Materiales y Residuos Peligrosos?",
+      "alternativas": {
+        "A": "10 de junio de 2008",
+        "B": "18 de junio de 2004",
+        "C": "6 de junio de 2019",
+        "D": "8 de diciembre de 2016"
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La Lección 34 indica que el Decreto Supremo N.° 021-2008-MTC fue publicado el 10 de junio de 2008."
+    }
+  ]
+}
