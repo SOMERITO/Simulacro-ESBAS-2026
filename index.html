@@ -3708,9 +3708,9 @@
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
                             <span class="bank-mode-title">Preguntas Intermedias con IA</span>
-                            <span class="bank-mode-description">Banco de 68 preguntas de nivel intermedio para practicar los tres módulos ESBAS 2026.</span>
+                            <span class="bank-mode-description">Banco intermedio completo de 500 preguntas: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
                             <span class="bank-mode-meta">
-                                <span class="bank-mode-count" id="bank-intermediate-ai-count">68 preguntas</span>
+                                <span class="bank-mode-count" id="bank-intermediate-ai-count">500 preguntas</span>
                             </span>
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
@@ -4575,9 +4575,6 @@
             if (!['a','b','c','d'].includes(answer)) {
                 throw new Error('El banco básico contiene una clave de respuesta no válida.');
             }
-            if (typeof question.fundamento !== 'string' || !question.fundamento.trim()) {
-                throw new Error('El banco básico contiene una pregunta sin fundamento.');
-            }
             if (isModuleFinal && String(question.examen || '') !== 'Examen final del ' + moduleName) {
                 throw new Error('El banco básico contiene un examen final de módulo sin identificar.');
             }
@@ -4610,7 +4607,7 @@
                     d: String(question.alternativas.D)
                 },
                 respuesta: answer,
-                sustento: String(question.fundamento).trim(),
+                sustento: typeof question.fundamento === 'string' ? question.fundamento.trim() : '',
                 _source: 'basic-ai-bank'
             };
         });
@@ -4654,40 +4651,74 @@
     function normalizeIntermediateAIQuestionBank(rawBank) {
         if (!rawBank || !Array.isArray(rawBank.preguntas) ||
             Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
-            rawBank.preguntas.length !== 68) {
-            throw new Error('El banco de Preguntas Intermedias con IA debe contener las 68 preguntas declaradas.');
+            rawBank.preguntas.length !== 500) {
+            throw new Error('El banco de Preguntas Intermedias con IA debe contener las 500 preguntas declaradas.');
         }
+
         const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
+        const moduleNumbers = { I: 1, II: 2, III: 3 };
         const ids = new Set();
-        const lessonQuestionCounts = new Map();
-        return rawBank.preguntas.map(question => {
+        const groupQuestionCounts = new Map();
+        const normalizedQuestions = rawBank.preguntas.map(question => {
             const sourceId = String(question?.id ?? '').trim();
-            const moduleToken = String(question?.modulo || '').trim().toUpperCase();
+            const moduleToken = String(question?.modulo || '').trim().replace(/^M[oó]dulo\s*/i, '').trim().toUpperCase();
             const moduleName = moduleNames[moduleToken];
-            const lessonNumber = Number(question?.leccion);
+            const sourceType = String(question?.tipo || 'por_leccion').trim();
             const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
-            const expectedModule = lessonNumber <= 9 ? 'I' : (lessonNumber <= 21 ? 'II' : 'III');
-            if (!sourceId || ids.has(sourceId)) throw new Error('El banco intermedio contiene identificadores vacíos o duplicados.');
+            const isLesson = sourceType === 'por_leccion';
+            const isModuleFinal = sourceType === 'examen_final_modulo';
+            const isGeneralFinal = sourceType === 'examen_final_general';
+            const isSupportedType = isLesson || isModuleFinal || isGeneralFinal;
+            const lessonNumber = isLesson ? Number(question?.leccion) : 0;
+            const lessonReference = isLesson ? lessonNumber : Number(question?.leccion_referencia);
+            const expectedModule = lessonReference <= 9 ? 'I' : (lessonReference <= 21 ? 'II' : 'III');
+
+            if (!sourceId || ids.has(sourceId)) {
+                throw new Error('El banco intermedio contiene identificadores vacíos o duplicados.');
+            }
             ids.add(sourceId);
-            if (!moduleName || !Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34 ||
+
+            if (!moduleName || !isSupportedType) {
+                throw new Error('El banco intermedio contiene un módulo o tipo de pregunta no válido.');
+            }
+            if (!Number.isInteger(lessonReference) || lessonReference < 1 || lessonReference > 34 ||
                 moduleToken !== expectedModule) {
-                throw new Error('El banco intermedio contiene un módulo o número de lección no válido.');
+                throw new Error('El banco intermedio contiene una referencia de lección o módulo no válida.');
+            }
+            if (isLesson && (!Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34)) {
+                throw new Error('El banco intermedio contiene un número de lección no válido.');
             }
             if (!question.pregunta || !question.alternativas ||
-                !['A','B','C','D'].every(key => typeof question.alternativas[key] === 'string' && question.alternativas[key].length)) {
+                !['A','B','C','D'].every(key =>
+                    typeof question.alternativas[key] === 'string' && question.alternativas[key].trim().length
+                )) {
                 throw new Error('El banco intermedio contiene una pregunta sin sus cuatro alternativas.');
             }
-            if (!['a','b','c','d'].includes(answer)) throw new Error('El banco intermedio contiene una clave de respuesta no válida.');
-            const lessonKey = moduleToken + '-' + lessonNumber;
-            const questionNumber = (lessonQuestionCounts.get(lessonKey) || 0) + 1;
-            lessonQuestionCounts.set(lessonKey, questionNumber);
+            if (!['a','b','c','d'].includes(answer)) {
+                throw new Error('El banco intermedio contiene una clave de respuesta no válida.');
+            }
+            if (isModuleFinal && String(question.examen || '') !== 'Examen final del ' + moduleName) {
+                throw new Error('El banco intermedio contiene un examen final de módulo sin identificar.');
+            }
+            if (isGeneralFinal && String(question.examen || '') !== 'Examen final general ESBAS') {
+                throw new Error('El banco intermedio contiene un examen final general sin identificar.');
+            }
+
+            const groupKey = isLesson
+                ? 'leccion-' + moduleToken + '-' + lessonNumber
+                : (isModuleFinal ? 'examen-modulo-' + moduleToken : 'examen-general');
+            const questionNumber = (groupQuestionCounts.get(groupKey) || 0) + 1;
+            groupQuestionCounts.set(groupKey, questionNumber);
+
             return {
                 id: 'intermediate-ai-' + sourceId,
                 modulo: moduleName,
-                tipo: 'leccion',
+                tipo: isLesson ? 'leccion' : sourceType,
                 leccion_num: lessonNumber,
-                leccion_nombre: 'Preguntas intermedias · Lección ' + lessonNumber,
-                examen_modulo_num: null,
+                leccion_nombre: isLesson
+                    ? 'Preguntas intermedias · Lección ' + String(lessonNumber).padStart(2, '0')
+                    : String(question.examen),
+                examen_modulo_num: isModuleFinal ? moduleNumbers[moduleToken] : null,
                 pregunta_num: questionNumber,
                 pregunta_global: Number(sourceId),
                 pregunta: String(question.pregunta),
@@ -4698,10 +4729,33 @@
                     d: String(question.alternativas.D)
                 },
                 respuesta: answer,
-                sustento: '',
+                sustento: typeof question.fundamento === 'string' ? question.fundamento.trim() : '',
                 _source: 'intermediate-ai-bank'
             };
         });
+
+        const lessonQuestions = normalizedQuestions.filter(question => question.tipo === 'leccion');
+        const moduleFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_modulo');
+        const generalFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_general');
+        const lessonCounts = new Map();
+        lessonQuestions.forEach(question => {
+            const key = question.modulo + '-' + question.leccion_num;
+            lessonCounts.set(key, (lessonCounts.get(key) || 0) + 1);
+        });
+        if (lessonQuestions.length !== 340 || lessonCounts.size !== 34 ||
+            Array.from(lessonCounts.values()).some(count => count !== 10)) {
+            throw new Error('El banco intermedio debe tener 10 preguntas en cada una de las 34 lecciones.');
+        }
+        if (moduleFinalQuestions.length !== 60 ||
+            ['Módulo I','Módulo II','Módulo III'].some(moduleName =>
+                moduleFinalQuestions.filter(question => question.modulo === moduleName).length !== 20
+            )) {
+            throw new Error('El banco intermedio debe tener 20 preguntas en cada examen final de módulo.');
+        }
+        if (generalFinalQuestions.length !== 100) {
+            throw new Error('El examen final general ESBAS debe contener exactamente 100 preguntas.');
+        }
+        return normalizedQuestions;
     }
 
     async function loadIntermediateAIQuestionBank() {
@@ -4736,7 +4790,7 @@
         } else if (nextType === 'basic-ai' && !cachedBasicAIQuestionBank) {
             setAppLoading(true, 'Cargando preguntas básicas con IA', 'Preparando las 500 preguntas básicas y los exámenes finales…', '✧');
         } else if (nextType === 'intermediate-ai' && !cachedIntermediateAIQuestionBank) {
-            setAppLoading(true, 'Cargando preguntas intermedias con IA', 'Preparando las 68 preguntas de nivel intermedio…', '✧');
+            setAppLoading(true, 'Cargando preguntas intermedias con IA', 'Preparando las 500 preguntas intermedias y los exámenes finales…', '✧');
         }
         try {
             if (nextType === 'real') {
@@ -5667,19 +5721,19 @@
         const moduleSelect = document.getElementById('sim-module');
         if (!moduleSelect) return;
         const bank = getActiveSimulationQuestionBank();
-        const isBasicAI = currentSimulationBankType === 'basic-ai';
+        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
         const availableModules = Object.keys(moduleLessonsMap).filter(moduleName =>
             bank.some(question => question.modulo === moduleName)
         );
         moduleSelect.innerHTML = '<option value="all">Todos los módulos (' + bank.length + ' preguntas disponibles)</option>';
         availableModules.forEach(moduleName => {
             const lessonCount = bank.filter(question =>
-                question.modulo === moduleName && (!isBasicAI || question.tipo === 'leccion')
+                question.modulo === moduleName && (!isStructuredAI || question.tipo === 'leccion')
             ).length;
-            const finalCount = isBasicAI
+            const finalCount = isStructuredAI
                 ? bank.filter(question => question.modulo === moduleName && question.tipo === 'examen_final_modulo').length
                 : 0;
-            const label = isBasicAI
+            const label = isStructuredAI
                 ? moduleName + ' (' + lessonCount + ' de práctica + ' + finalCount + ' de examen)'
                 : moduleName + ' (' + bank.filter(question => question.modulo === moduleName).length + ' preguntas)';
             moduleSelect.innerHTML += '<option value="' + moduleName + '">' + label + '</option>';
@@ -5692,9 +5746,9 @@
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         const bank = getActiveSimulationQuestionBank();
-        const isBasicAI = currentSimulationBankType === 'basic-ai';
+        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
 
-        if (isBasicAI && moduleName === 'all') {
+        if (isStructuredAI && moduleName === 'all') {
             const practiceCount = bank.filter(question => question.tipo === 'leccion').length;
             lessonSelect.innerHTML = '<option value="all">Todas las lecciones (' + practiceCount + ' preguntas)</option>';
             ['I','II','III'].forEach(moduleToken => {
@@ -5727,7 +5781,7 @@
         const lessonMap = new Map();
         bank.filter(question =>
             question.modulo === moduleName &&
-            (isBasicAI ? question.tipo === 'leccion' : question.tipo !== 'examen_final_modulo')
+            (isStructuredAI ? question.tipo === 'leccion' : question.tipo !== 'examen_final_modulo')
         ).forEach(question => {
             const number = Number(question.leccion_num);
             if (Number.isInteger(number) && number > 0 && !lessonMap.has(number)) {
@@ -5765,7 +5819,7 @@
     }
 
     function getLocalSimulationQuestions(moduleFilter, lessonFilter) {
-        const isBasicAI = currentSimulationBankType === 'basic-ai';
+        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
         const selectedModuleFinal = /^final-(I|II|III)$/.exec(String(lessonFilter || ''));
         const selectedModuleFinalName = selectedModuleFinal ? 'Módulo ' + selectedModuleFinal[1] : null;
         const selected = getActiveSimulationQuestionBank().filter(question => {
@@ -5779,7 +5833,7 @@
             } else if (selectedModuleFinal) {
                 sameLesson = question.tipo === 'examen_final_modulo' && question.modulo === selectedModuleFinalName;
             } else if (lessonFilter === 'all') {
-                sameLesson = isBasicAI ? question.tipo === 'leccion' : true;
+                sameLesson = isStructuredAI ? question.tipo === 'leccion' : true;
             } else {
                 sameLesson = question.tipo !== 'examen_final_modulo' &&
                     question.tipo !== 'examen_final_general' &&
