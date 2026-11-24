@@ -3699,9 +3699,9 @@
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
                             <span class="bank-mode-title">Preguntas Básicas con IA</span>
-                            <span class="bank-mode-description">Banco complementario de 100 preguntas básicas de los tres módulos ESBAS 2026.</span>
+                            <span class="bank-mode-description">Banco ampliado de 180 preguntas básicas de los tres módulos y las 34 lecciones ESBAS 2026.</span>
                             <span class="bank-mode-meta">
-                                <span class="bank-mode-count" id="bank-basic-ai-count">100 preguntas</span>
+                                <span class="bank-mode-count" id="bank-basic-ai-count">180 preguntas</span>
                             </span>
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
@@ -4530,10 +4530,9 @@
     }
 
     function normalizeBasicAIQuestionBank(rawBank) {
-        if (!rawBank || !Array.isArray(rawBank.preguntas) ||
-            Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
-            rawBank.preguntas.length !== 100) {
-            throw new Error('El banco de Preguntas Básicas con IA debe contener las 100 preguntas declaradas.');
+        if (!rawBank || !Array.isArray(rawBank.preguntas) || rawBank.preguntas.length === 0 ||
+            Number(rawBank.total_preguntas) !== rawBank.preguntas.length) {
+            throw new Error('El total declarado del banco de Preguntas Básicas con IA debe coincidir con la cantidad de preguntas del archivo.');
         }
         const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
         const ids = new Set();
@@ -4554,6 +4553,9 @@
                 throw new Error('El banco básico contiene una pregunta sin sus cuatro alternativas.');
             }
             if (!['a','b','c','d'].includes(answer)) throw new Error('El banco básico contiene una clave de respuesta no válida.');
+            if (typeof question.fundamento !== 'string' || !question.fundamento.trim()) {
+                throw new Error('El banco básico contiene una pregunta sin fundamento.');
+            }
             const lessonKey = moduleToken + '-' + lessonNumber;
             const questionNumber = (lessonQuestionCounts.get(lessonKey) || 0) + 1;
             lessonQuestionCounts.set(lessonKey, questionNumber);
@@ -4574,7 +4576,7 @@
                     d: String(question.alternativas.D)
                 },
                 respuesta: answer,
-                sustento: '',
+                sustento: String(question.fundamento).trim(),
                 _source: 'basic-ai-bank'
             };
         });
@@ -4675,7 +4677,7 @@
         if (nextType === 'real' && !cachedRealQuestionBank) {
             setAppLoading(true, 'Cargando preguntas reales', 'Preparando las preguntas recopiladas de tus evaluaciones…', '📚');
         } else if (nextType === 'basic-ai' && !cachedBasicAIQuestionBank) {
-            setAppLoading(true, 'Cargando preguntas básicas con IA', 'Preparando las 100 preguntas básicas de los tres módulos…', '✧');
+            setAppLoading(true, 'Cargando preguntas básicas con IA', 'Preparando las 180 preguntas básicas de los tres módulos…', '✧');
         } else if (nextType === 'intermediate-ai' && !cachedIntermediateAIQuestionBank) {
             setAppLoading(true, 'Cargando preguntas intermedias con IA', 'Preparando las 68 preguntas de nivel intermedio…', '✧');
         }
