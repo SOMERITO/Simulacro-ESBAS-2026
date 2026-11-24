@@ -3979,8 +3979,9 @@
                         <input type="number" id="q-lesson" placeholder="Ej: 30" min="1" max="100" required oninput="autoFillLessonName(); autoIncrementQuestionNumber();">
                     </div>
                     <div class="form-group">
-                        <label for="q-lesson-name">Lección (Nombre)</label>
-                        <input type="text" id="q-lesson-name" placeholder="Ej: Rescate en Ascensores" autocomplete="off">
+                        <label for="q-lesson-name">Título oficial de la lección</label>
+                        <input type="text" id="q-lesson-name" placeholder="Se completará según el número de lección" autocomplete="off">
+                        <small style="display:block;margin-top:.35rem;color:var(--text-muted);font-size:.78rem;line-height:1.45;">En las evaluaciones se mostrará como «Lección N - Nombre del título».</small>
                     </div>
                     <div class="form-group">
                         <label for="q-num">N° de Pregunta</label>
@@ -5394,7 +5395,8 @@
         const currentModule = document.getElementById('q-module').value;
         const currentLessonNum = document.getElementById('q-lesson').value;
         const currentQNum = document.getElementById('q-num').value;
-        const currentLessonName = document.getElementById('q-lesson-name').value;
+        const currentLessonName = getOfficialLessonTitle(currentLessonNum, document.getElementById('q-lesson-name').value.trim());
+        if (currentLessonName) document.getElementById('q-lesson-name').value = currentLessonName;
         const qText = document.getElementById('q-text').value.trim();
         const optA = document.getElementById('q-opt-a').value.trim();
         const optB = document.getElementById('q-opt-b').value.trim();
@@ -5552,10 +5554,7 @@
         }
         filtered.forEach((q, i) => {
             const isFinal = q.tipo === 'examen_final_modulo';
-            const numRaw = String(q.leccion_num ?? '').replace(/\D/g, '');
-            const lessonBadge = escapeHTML(isFinal
-                ? (q.leccion_nombre || ('Examen final del ' + q.modulo))
-                : (q.leccion_nombre ? 'L' + String(numRaw).padStart(2, '0') + ' - ' + q.leccion_nombre : 'L' + numRaw));
+            const lessonBadge = escapeHTML(formatSimulationLessonLabel(q));
             const answerKey = String(q.respuesta || '').toLowerCase();
             const correctText = escapeHTML(q.opciones ? (q.opciones[answerKey] || '') : '');
             const pNum = escapeHTML(q.pregunta_global || q.pregunta_num || '?');
@@ -5595,10 +5594,7 @@
         tbody.innerHTML = '';
         appData.questions.forEach(q => {
             const isFinal = q.tipo === 'examen_final_modulo';
-            const numRaw = String(q.leccion_num ?? '').replace(/\D/g, '');
-            const lessonBadge = escapeHTML(isFinal
-                ? (q.leccion_nombre || ('Examen final del ' + q.modulo))
-                : (q.leccion_nombre ? 'L' + String(numRaw).padStart(2, '0') + ' - ' + q.leccion_nombre : 'L' + numRaw));
+            const lessonBadge = escapeHTML(formatSimulationLessonLabel(q));
             const questionNumber = escapeHTML(q.pregunta_global || q.pregunta_num || '?');
             const actions = isFinal
                 ? '<span style="color:var(--text-muted);font-size:.78rem;">Examen integrador</span>'
@@ -5619,14 +5615,15 @@
         if (!selectedModule) return;
         if (formMemory[selectedModule].num !== '') {
             document.getElementById('q-lesson').value = formMemory[selectedModule].num;
-            document.getElementById('q-lesson-name').value = formMemory[selectedModule].name;
+            document.getElementById('q-lesson-name').value = getOfficialLessonTitle(formMemory[selectedModule].num, formMemory[selectedModule].name);
         }
     };
     window.autoFillLessonName = function() {
         const numInput = document.getElementById('q-lesson').value.trim();
         if(!numInput) return;
         const existing = appData.questions.find(q => String(q.leccion_num).replace(/\D/g, '') === numInput && (q.leccion_nombre || '').trim() !== '');
-        if(existing) document.getElementById('q-lesson-name').value = existing.leccion_nombre;
+        const title = getOfficialLessonTitle(numInput, existing?.leccion_nombre || '');
+        if (title) document.getElementById('q-lesson-name').value = title;
     };
     window.autoIncrementQuestionNumber = function() {
         const mod = document.getElementById('q-module').value;
@@ -5681,6 +5678,7 @@
                 document.getElementById('q-module').value = formMemory.lastModule;
                 document.getElementById('q-lesson').value = formMemory[formMemory.lastModule].num;
                 document.getElementById('q-lesson-name').value = formMemory[formMemory.lastModule].name;
+                window.autoFillLessonName();
                 window.autoIncrementQuestionNumber();
             } else {
                 document.getElementById('q-module').value = '';
@@ -5701,7 +5699,7 @@
                 document.getElementById('q-id').value = q.id;
                 document.getElementById('q-module').value = q.modulo || '';
                 document.getElementById('q-lesson').value = String(q.leccion_num).replace(/\D/g, '');
-                document.getElementById('q-lesson-name').value = q.leccion_nombre || '';
+                document.getElementById('q-lesson-name').value = getOfficialLessonTitle(q.leccion_num, q.leccion_nombre);
                 document.getElementById('q-num').value = q.pregunta_num || '';
                 document.getElementById('q-text').value = q.pregunta || '';
                 document.getElementById('q-opt-a').value = q.opciones ? q.opciones.a : '';
@@ -5786,11 +5784,7 @@
             const number = Number(question.leccion_num);
             if (Number.isInteger(number) && number > 0 && !lessonMap.has(number)) {
                 const rawTitle = question.leccion_nombre || '';
-                const lessonTitle = String(rawTitle)
-                    .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
-                    .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
-                    .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
-                    .trim() || ('Lección ' + String(number).padStart(2, '0'));
+                const lessonTitle = getOfficialLessonTitle(number, rawTitle) || ('Lección ' + number);
                 lessonMap.set(number, lessonTitle);
             }
         });
@@ -5844,6 +5838,54 @@
         return shuffleQuestionList(selected);
     }
 
+const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
+    "1": "INTRODUCCIÓN AL CURSO DE FORMACIÓN BÁSICA DE BOMBEROS (CFBB)",
+    "2": "DOCTRINA Y MÍSTICA DEL CGBVP",
+    "3": "HISTORIA DEL CGBVP",
+    "4": "ORGANIZACIÓN, NORMAS Y REGLAMENTOS",
+    "5": "COMUNICACIONES",
+    "6": "SEGURIDAD Y TRABAJO EN EQUIPO",
+    "7": "MANEJO PSICOLÓGICO - ESTRÉS EN BOMBEROS",
+    "8": "SISTEMA DE COMANDO DE INCIDENTES (SCI) Y CONTABILIDAD DE PERSONAL",
+    "9": "GESTIÓN DEL AIRE DEL EPRA",
+    "10": "COMPORTAMIENTO DEL FUEGO I",
+    "11": "COMPORTAMIENTO DEL FUEGO II",
+    "12": "EXTINTORES PORTÁTILES",
+    "13": "MÉTODOS DE ABASTECIMIENTO DE AGUA",
+    "14": "MANGUERAS, ACCESORIOS E HIDRÁULICA CONTRA INCENDIOS",
+    "15": "CHORROS DE EXTINCIÓN",
+    "16": "TÉCNICAS DE EXTINCIÓN DE INCENDIOS",
+    "17": "ENTRADA FORZADA",
+    "18": "VENTILACIÓN EN INCENDIOS",
+    "19": "ESCALERAS DE INCENDIO: TIPOS Y USOS",
+    "20": "CONSERVACIÓN DE LA PROPIEDAD (SALVAMENTO Y REACONDICIONAMIENTO)",
+    "21": "EVALUACIÓN DE ESTRUCTURAS",
+    "22": "INCENDIO EN EDIFICIOS (ESTRUCTURAS ELEVADAS)",
+    "23": "INCENDIOS EN SÓTANOS",
+    "24": "INCENDIOS EN VEHÍCULOS",
+    "25": "INCENDIOS EN LÍQUIDOS INFLAMABLES Y COMBUSTIBLES",
+    "26": "FUGAS E INCENDIOS EN GASES INFLAMABLES",
+    "27": "CONCENTRADOS Y ESPUMAS CONTRA INCENDIO",
+    "28": "INVESTIGACIÓN DE INCENDIOS",
+    "29": "RESCATE EN INCENDIOS (ACTUALIZACIÓN CFBB-VER-2025)",
+    "30": "RESCATE EN ASCENSORES",
+    "31": "SISTEMAS DE RESCATE CON CUERDAS",
+    "32": "ATENCIÓN PREHOSPITALARIA I (APH I)",
+    "33": "ATENCIÓN PREHOSPITALARIA II (APH II — OVACE Y RCP)",
+    "34": "RESPUESTA A INCIDENTES CON MATERIALES PELIGROSOS (MATPEL)"
+});
+
+    function getOfficialLessonTitle(lessonNumber, fallbackTitle = '') {
+        const number = Number(lessonNumber);
+        const rawTitle = String(fallbackTitle || '')
+            .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
+            .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
+            .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
+            .replace(/^Lecci[oó]n\s+\d+\s*[-:–]?\s*/i, '')
+            .trim();
+        return OFFICIAL_ESBAS_LESSON_TITLES[String(number)] || rawTitle;
+    }
+
     function formatSimulationLessonLabel(question) {
         if (!question || typeof question !== 'object') return 'Lección no identificada';
         const moduleName = String(question.modulo || '').trim();
@@ -5853,13 +5895,10 @@
         }
         const lessonNumber = Number(question.leccion_num);
         if (!Number.isInteger(lessonNumber) || lessonNumber < 1) return 'Lección no identificada';
-        const lessonName = String(question.leccion_nombre || ('Lección ' + String(lessonNumber).padStart(2, '0')))
-            .replace(/\s*10 Preguntas Inéditas[\s\S]*$/i, '')
-            .replace(/\s*\|\s*Referencia:[\s\S]*$/i, '')
-            .replace(/\s+Pregunta\s+1\s*\(#.*$/i, '')
-            .replace(/^Lecci[oó]n\s+\d+\s*[-:–]\s*/i, '')
-            .trim();
-        return 'Lección ' + lessonNumber + ' - ' + lessonName;
+        const lessonName = getOfficialLessonTitle(lessonNumber, question.leccion_nombre);
+        return lessonName
+            ? 'Lección ' + lessonNumber + ' - ' + lessonName
+            : 'Lección ' + lessonNumber;
     }
 
     function getSimulationSessionLessonLabel() {
