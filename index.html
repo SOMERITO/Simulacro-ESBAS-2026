@@ -6410,20 +6410,17 @@
                 (options[correctKey] || 'Texto no disponible');
         }
         const details = feedback.querySelector('details');
-        const showExplanation = currentSimulationBankType !== 'real';
+        const hasExplanation = currentSimulationBankType !== 'real' &&
+            typeof source.sustento === 'string' && source.sustento.trim().length > 0;
         if (details) {
-            details.hidden = !showExplanation;
-            details.open = showExplanation;
+            details.hidden = !hasExplanation;
+            details.open = hasExplanation;
         }
-        if (showExplanation && explanation) {
-            explanation.textContent = source.sustento
-                ? source.sustento
-                : 'El banco no incluye un sustento adicional para esta pregunta.';
+        if (hasExplanation && explanation) {
+            explanation.textContent = source.sustento.trim();
         }
-        if (showExplanation && summary) {
-            summary.textContent = source.sustento
-                ? '¿Por qué esta es la respuesta correcta?'
-                : 'Ver respuesta correcta';
+        if (hasExplanation && summary) {
+            summary.textContent = '¿Por qué esta es la respuesta correcta?';
         }
         return true;
     }
