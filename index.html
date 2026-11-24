@@ -4868,9 +4868,11 @@
             if (!['a','b','c','d'].includes(answer)) {
                 throw new Error('El banco NFPA contiene una clave de respuesta no válida.');
             }
-            if (!/^NFPA\\s+\\d+$/i.test(String(question.norma || '').trim())) {
+            const normaToken = String(question.norma || '').trim().toUpperCase();
+            if (!normaToken.startsWith('NFPA ') || !Number.isInteger(Number(normaToken.slice(5)))) {
                 throw new Error('El banco NFPA contiene una referencia de norma no válida.');
             }
+
 
             const groupKey = moduleToken + '-' + lessonNumber;
             const questionNumber = (lessonQuestionCounts.get(groupKey) || 0) + 1;
