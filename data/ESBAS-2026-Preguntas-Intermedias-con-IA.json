@@ -1,0 +1,893 @@
+{
+  "titulo": "Banco de Preguntas ESBAS 2026 - Nivel Intermedio",
+  "nivel": "Intermedio",
+  "total_preguntas": 68,
+  "alternativas_por_pregunta": 4,
+  "incluye_leccion_34": true,
+  "preguntas": [
+    {
+      "id": 1,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "Un aspirante demuestra conocimientos teóricos, pero no desarrolla adecuadamente las habilidades necesarias para actuar de manera segura durante una emergencia. ¿Qué aspecto del objetivo del curso todavía necesita alcanzar?",
+      "alternativas": {
+        "A": "La capacidad de memorizar los reglamentos institucionales.",
+        "B": "La demostración de conocimientos y habilidades para un desempeño seguro y efectivo.",
+        "C": "La capacidad de dirigir una compañía.",
+        "D": "La especialización en investigación de incendios."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 2,
+      "modulo": "I",
+      "leccion": 1,
+      "pregunta": "Durante el desarrollo del curso, un instructor propone realizar un ejercicio con fuego real que no está contemplado en las guías de prácticas de campo. ¿Qué establece el material de formación?",
+      "alternativas": {
+        "A": "Se permite cuando todos los aspirantes aceptan participar.",
+        "B": "Se permite únicamente cuando existe supervisión.",
+        "C": "No se deben realizar actividades con fuego ni altura fuera de las estipuladas en las guías de prácticas de campo.",
+        "D": "Se permite si la práctica tiene fines de evaluación."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 3,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "Un bombero atiende una emergencia sin recibir ninguna remuneración, guiado por sus valores y compromiso con la comunidad. ¿Qué aspecto de la doctrina institucional representa principalmente esta conducta?",
+      "alternativas": {
+        "A": "La competencia administrativa.",
+        "B": "La mística y los valores del servicio voluntario.",
+        "C": "La jerarquía institucional.",
+        "D": "La organización territorial."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 4,
+      "modulo": "I",
+      "leccion": 2,
+      "pregunta": "¿Qué representa principalmente el componente Humanidad del lema institucional Dios, Patria y Humanidad?",
+      "alternativas": {
+        "A": "La defensa de los bienes materiales de las compañías.",
+        "B": "La obediencia exclusiva a los superiores.",
+        "C": "El compromiso de brindar servicio y ayudar al prójimo.",
+        "D": "La participación en actividades administrativas."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 5,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "En la historia de la Compañía Chalaca, ¿qué sucedió después de la reunión inicial del 5 de diciembre de 1860?",
+      "alternativas": {
+        "A": "Se eligió inmediatamente al primer Comandante Activo.",
+        "B": "El 7 de diciembre se nombraron representantes para dirigir los trabajos iniciales y el 15 de diciembre se eligió el primer directorio.",
+        "C": "Se produjo inmediatamente la unificación del CGBVP.",
+        "D": "Se estableció oficialmente el Día del Bombero Peruano."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 6,
+      "modulo": "I",
+      "leccion": 3,
+      "pregunta": "¿Qué relación existe entre la fundación de las primeras compañías de bomberos peruanas y el crecimiento de las ciudades?",
+      "alternativas": {
+        "A": "La necesidad de organizar una respuesta colectiva ante incendios que afectaban viviendas, comercios e industrias.",
+        "B": "La necesidad de crear instituciones exclusivamente militares.",
+        "C": "La necesidad de reemplazar los servicios municipales.",
+        "D": "La necesidad de organizar el transporte público."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 7,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "Un ciudadano consulta por qué los bomberos realizan servicios sin recibir un sueldo por cada emergencia atendida. Según la definición institucional, ¿cuál es la explicación correcta?",
+      "alternativas": {
+        "A": "Porque el CGBVP es una empresa privada.",
+        "B": "Porque los bomberos prestan un servicio público voluntario y ad honorem.",
+        "C": "Porque solamente los oficiales pueden recibir remuneraciones.",
+        "D": "Porque las emergencias son actividades particulares."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 8,
+      "modulo": "I",
+      "leccion": 4,
+      "pregunta": "¿Cuál es la relación entre el CGBVP y la Intendencia Nacional de Bomberos del Perú según el marco legal presentado en el material?",
+      "alternativas": {
+        "A": "Son exactamente la misma organización y tienen idénticas funciones.",
+        "B": "La INBP regula exclusivamente la atención médica prehospitalaria.",
+        "C": "El Decreto Legislativo 1260 fortalece al CGBVP y regula también la INBP.",
+        "D": "La INBP es una compañía de bomberos especializada."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 9,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "La Central de Emergencias recibe una llamada informando de un incendio y necesita enviar los recursos correspondientes. ¿Qué función está realizando?",
+      "alternativas": {
+        "A": "Investigación posterior al incendio.",
+        "B": "Recepción, procesamiento de información y despacho de unidades.",
+        "C": "Inspección de los equipos de protección.",
+        "D": "Evaluación estructural del edificio."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 10,
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Por qué la Central de Emergencias necesita una fuente de energía alterna confiable e independiente?",
+      "alternativas": {
+        "A": "Para aumentar la velocidad de los vehículos.",
+        "B": "Para evitar el uso de radios portátiles.",
+        "C": "Para mantener la continuidad de sus operaciones cuando falla el suministro eléctrico principal.",
+        "D": "Para permitir que los bomberos realicen inspecciones."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 11,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "Un bombero observa cables eléctricos caídos en una zona de intervención. ¿Cómo debe interpretar esta situación?",
+      "alternativas": {
+        "A": "Es un peligro que puede generar riesgos para el personal y terceros.",
+        "B": "Es un accidente que necesariamente ya ocurrió.",
+        "C": "Es una condición segura si no hay humo.",
+        "D": "Es únicamente un problema de infraestructura."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 12,
+      "modulo": "I",
+      "leccion": 6,
+      "pregunta": "Durante una emergencia, el equipo identifica varios peligros y decide aplicar medidas para reducir la posibilidad de lesiones. ¿Qué están haciendo?",
+      "alternativas": {
+        "A": "Eliminando la necesidad de comunicación.",
+        "B": "Aplicando medidas de control de riesgos.",
+        "C": "Incrementando la exposición del personal.",
+        "D": "Reemplazando el SCI."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 13,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "Un bombero ha participado repetidamente en emergencias traumáticas y comienza a experimentar dificultades emocionales durante un periodo prolongado. ¿Con qué tipo de estrés se relaciona principalmente esta situación?",
+      "alternativas": {
+        "A": "Estrés agudo.",
+        "B": "Estrés crónico.",
+        "C": "Estrés exclusivamente físico.",
+        "D": "Ausencia de estrés."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 14,
+      "modulo": "I",
+      "leccion": 7,
+      "pregunta": "¿Por qué es importante que los bomberos reconozcan los indicadores emocionales del estrés?",
+      "alternativas": {
+        "A": "Para evitar comunicar sus problemas.",
+        "B": "Para demostrar superioridad frente a sus compañeros.",
+        "C": "Para reconocer oportunamente las dificultades y aplicar estrategias de prevención y apoyo.",
+        "D": "Para evitar participar en cualquier actividad institucional."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 15,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "Dos instituciones con competencia legal y jurisdiccional participan en la atención de una emergencia. ¿Qué modalidad de comando puede establecerse?",
+      "alternativas": {
+        "A": "Mando individual.",
+        "B": "Comando Unificado.",
+        "C": "Mando administrativo.",
+        "D": "Comando de compañía."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 16,
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "Una unidad llega primero a una emergencia. Después de informar su arribo y asumir el mando, ¿cuál es una de las acciones que debe realizar el efectivo al mando?",
+      "alternativas": {
+        "A": "Retirarse para esperar a las demás unidades.",
+        "B": "Establecer un perímetro de seguridad y evaluar la situación.",
+        "C": "Permitir el ingreso libre de los ciudadanos.",
+        "D": "Iniciar las operaciones sin establecer objetivos."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 17,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "Un bombero trabaja dentro de una estructura con deficiencia de oxígeno y presencia de gases peligrosos. ¿Por qué necesita utilizar un EPRA?",
+      "alternativas": {
+        "A": "Porque el equipo incrementa la cantidad de oxígeno del ambiente.",
+        "B": "Porque el equipo proporciona un suministro de aire respirable independiente de la atmósfera peligrosa.",
+        "C": "Porque elimina los gases combustibles de la estructura.",
+        "D": "Porque evita que el cuerpo produzca calor."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 18,
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "Un bombero consume aire más rápidamente de lo previsto durante una intervención. ¿Qué aspecto debe haber considerado antes de ingresar?",
+      "alternativas": {
+        "A": "Solamente el peso del cilindro.",
+        "B": "Únicamente la presión de salida de la bomba.",
+        "C": "La planificación de su consumo, el suministro de reserva y la salida segura.",
+        "D": "La cantidad de agua disponible en el vehículo."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 19,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "Un material sólido comienza a calentarse y libera vapores que posteriormente pueden encenderse. ¿Qué proceso explica principalmente la liberación de esos vapores?",
+      "alternativas": {
+        "A": "Condensación.",
+        "B": "Pirólisis.",
+        "C": "Solidificación.",
+        "D": "Cavitación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 20,
+      "modulo": "II",
+      "leccion": 10,
+      "pregunta": "Un bombero se encuentra frente a un incendio y observa que el calor se transmite desde los gases calientes hacia otros sectores del recinto mediante el movimiento de esos gases. ¿Qué mecanismo de transferencia de calor está interviniendo?",
+      "alternativas": {
+        "A": "Conducción.",
+        "B": "Convección.",
+        "C": "Solidificación.",
+        "D": "Inhibición química."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 21,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "En una habitación incendiada, las llamas comienzan a desplazarse por la capa de gases acumulados debajo del techo. ¿Qué fenómeno está observando el bombero?",
+      "alternativas": {
+        "A": "Backdraft.",
+        "B": "Rollover.",
+        "C": "Cavitación.",
+        "D": "Boilover."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 22,
+      "modulo": "II",
+      "leccion": 11,
+      "pregunta": "Un compartimiento presenta humo bajo presión, pocas llamas visibles y vidrios ennegrecidos. Al abrir una puerta, se observa una rápida entrada de aire. ¿Qué fenómeno debe sospecharse?",
+      "alternativas": {
+        "A": "Flashover.",
+        "B": "Rollover.",
+        "C": "Backdraft.",
+        "D": "Frothover."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 23,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "Un extintor utiliza un agente que interrumpe la reacción química en cadena de la combustión. ¿Qué método de extinción está aplicando?",
+      "alternativas": {
+        "A": "Enfriamiento.",
+        "B": "Separación.",
+        "C": "Sofocación.",
+        "D": "Inhibición química."
+      },
+      "respuesta_correcta": "D"
+    },
+    {
+      "id": 24,
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "Una empresa desea distribuir extintores en sus instalaciones. ¿Qué criterio debe utilizar para determinar su número, tamaño y ubicación?",
+      "alternativas": {
+        "A": "La cantidad de trabajadores exclusivamente.",
+        "B": "El estudio de seguridad y riesgos del establecimiento.",
+        "C": "El color de las paredes.",
+        "D": "La distancia entre las compañías de bomberos."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 25,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "Una autobomba comienza a agotar el agua de su tanque durante un incendio urbano. Existe un hidrante conectado a la red pública cerca del lugar. ¿Qué alternativa permite establecer un abastecimiento continuo desde la red?",
+      "alternativas": {
+        "A": "Conectar la unidad al hidrante.",
+        "B": "Utilizar exclusivamente la reserva del tanque.",
+        "C": "Cerrar todas las válvulas de la bomba.",
+        "D": "Desconectar las líneas de ataque."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 26,
+      "modulo": "II",
+      "leccion": 13,
+      "pregunta": "Una compañía debe abastecer agua desde una piscina ubicada fuera de la red pública. ¿Qué tipo de fuente está utilizando?",
+      "alternativas": {
+        "A": "Hidrante aéreo.",
+        "B": "Napa de agua o fuente de abastecimiento natural o artificial.",
+        "C": "Sistema de rociadores.",
+        "D": "Red privada de comunicaciones."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 27,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "En una instalación hidráulica se incrementa la velocidad del agua al pasar por una sección más estrecha, manteniendo la misma altura. Según Bernoulli, ¿qué sucede con la presión?",
+      "alternativas": {
+        "A": "Aumenta proporcionalmente.",
+        "B": "Disminuye.",
+        "C": "Permanece necesariamente igual.",
+        "D": "Se transforma completamente en temperatura."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 28,
+      "modulo": "II",
+      "leccion": 14,
+      "pregunta": "Una línea de mangueras presenta pérdidas importantes de presión durante el desplazamiento del agua. ¿Cuáles son las tres fuentes principales de pérdida consideradas en el material?",
+      "alternativas": {
+        "A": "Temperatura, humedad y densidad.",
+        "B": "Fricción, elevación y componentes del sistema.",
+        "C": "Viento, radiación y convección.",
+        "D": "Caudal, oxígeno y combustible."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 29,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "Dos chorros utilizan el mismo volumen de agua, pero uno divide el líquido en gotas más pequeñas. ¿Por qué el chorro nebulizado puede absorber calor con mayor rapidez?",
+      "alternativas": {
+        "A": "Porque disminuye la superficie expuesta del agua.",
+        "B": "Porque aumenta la superficie de contacto del agua con el calor.",
+        "C": "Porque elimina el calor específico.",
+        "D": "Porque evita la evaporación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 30,
+      "modulo": "II",
+      "leccion": 15,
+      "pregunta": "Un pitonero necesita barrer y empujar el fuego en un incendio incipiente a corta o mediana distancia. ¿Qué patrón de chorro corresponde a esa finalidad?",
+      "alternativas": {
+        "A": "Chorro de protección.",
+        "B": "Chorro de ventilación.",
+        "C": "Chorro de ataque, cono de poder o barrido.",
+        "D": "Chorro de protección total."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 31,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "Un incendio se encuentra dentro de un recinto y los bomberos deciden aplicar agua desde una abertura exterior, sin alcanzar directamente el foco, buscando inundar el ambiente con vapor. ¿Qué técnica están utilizando?",
+      "alternativas": {
+        "A": "Ataque directo.",
+        "B": "Ataque indirecto.",
+        "C": "Ventilación natural horizontal.",
+        "D": "Ataque con chorro sólido exclusivamente."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 32,
+      "modulo": "II",
+      "leccion": 16,
+      "pregunta": "Durante el enfriamiento de gases sobrecalentados, el pitonero genera más vapor del mínimo aceptable. ¿Qué consecuencia peligrosa puede producirse según el material?",
+      "alternativas": {
+        "A": "La reducción inmediata del riesgo de propagación.",
+        "B": "El efecto pistón, que puede propagar altas temperaturas y fuego a otras habitaciones.",
+        "C": "La desaparición de los gases combustibles.",
+        "D": "La disminución de la presión atmosférica exterior."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 33,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "Un bombero necesita ingresar por una puerta asegurada. Antes de forzarla, ¿qué aspecto debe evaluar para seleccionar la técnica correcta?",
+      "alternativas": {
+        "A": "Únicamente el color de la puerta.",
+        "B": "La construcción, tipo de cerradura, dirección de apertura y ubicación del peligro.",
+        "C": "Solamente la antigüedad del inmueble.",
+        "D": "La cantidad de personas que observan la emergencia."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 34,
+      "modulo": "II",
+      "leccion": 17,
+      "pregunta": "Durante el transporte de una combinación de herramientas Halligan y hacha, ¿qué medida de seguridad recomienda el material?",
+      "alternativas": {
+        "A": "Llevarlas sueltas sobre el hombro.",
+        "B": "Unirlas y asegurarlas con una correa.",
+        "C": "Transportarlas con los filos hacia el cuerpo.",
+        "D": "Llevarlas sin comprobar su fijación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 35,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "Durante un incendio, el equipo decide aprovechar las corrientes naturales para evacuar el humo por una abertura ubicada en la parte superior de la estructura. ¿Qué tipo de ventilación está realizando?",
+      "alternativas": {
+        "A": "Ventilación natural vertical.",
+        "B": "Ventilación natural horizontal.",
+        "C": "Ventilación mecánica por succión.",
+        "D": "Ventilación hidráulica."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 36,
+      "modulo": "II",
+      "leccion": 18,
+      "pregunta": "¿Qué diferencia existe entre ventilación natural y ventilación forzada?",
+      "alternativas": {
+        "A": "La natural utiliza corrientes de convección, mientras que la forzada emplea medios mecánicos o hidráulicos.",
+        "B": "La natural utiliza siempre ventiladores y la forzada únicamente ventanas.",
+        "C": "Ambas son exactamente iguales.",
+        "D": "La forzada no permite retirar humo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 37,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "Dos bomberos deben bajar a una víctima utilizando dos escaleras similares colocadas una al lado de la otra. ¿Cómo deben distribuir el soporte de la víctima según el procedimiento del manual?",
+      "alternativas": {
+        "A": "Ambos deben sujetar únicamente las piernas.",
+        "B": "Uno sostiene la cadera y las piernas, mientras el otro sostiene la cabeza y el torso.",
+        "C": "Uno sostiene los brazos y el otro abandona la escalera para guiar.",
+        "D": "La víctima debe descender sin asistencia."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 38,
+      "modulo": "II",
+      "leccion": 19,
+      "pregunta": "Una escalera de extensión será utilizada para acceder a una zona elevada. ¿Qué debe realizarse antes de utilizarla?",
+      "alternativas": {
+        "A": "Verificar las condiciones de seguridad y realizar correctamente su levantamiento y aseguramiento.",
+        "B": "Colocarla sin revisar sus componentes.",
+        "C": "Apoyarla sobre cualquier superficie sin evaluar su estabilidad.",
+        "D": "Subir inmediatamente mientras otro bombero la transporta."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 39,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "Un incendio ya fue extinguido, pero todavía existen focos ocultos que podrían reactivarse. ¿Qué actividad corresponde realizar?",
+      "alternativas": {
+        "A": "Ventilación horizontal.",
+        "B": "Reacondicionamiento.",
+        "C": "Abastecimiento de agua.",
+        "D": "Entrada forzada."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 40,
+      "modulo": "II",
+      "leccion": 20,
+      "pregunta": "Una edificación presenta daños por las llamas y el humo, pero también por el agua utilizada durante la extinción. ¿Cómo se clasifican estos daños?",
+      "alternativas": {
+        "A": "Ambos son daños primarios.",
+        "B": "Los producidos por llamas y humo son primarios, mientras que los relacionados con las operaciones de extinción son secundarios.",
+        "C": "Ambos son daños secundarios.",
+        "D": "Ninguno corresponde a daños del incendio."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 41,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "Durante la evaluación de una estructura, un bombero identifica una viga y una columna. ¿Cuál es la diferencia funcional entre ambos elementos según el material?",
+      "alternativas": {
+        "A": "La viga trabaja fundamentalmente a flexión y la columna resiste principalmente fuerzas a lo largo de su eje central.",
+        "B": "Ambas tienen exclusivamente una función decorativa.",
+        "C": "La columna trabaja únicamente a flexión y la viga transmite cargas al suelo.",
+        "D": "La viga sostiene el suelo y la columna evacúa el humo."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 42,
+      "modulo": "II",
+      "leccion": 21,
+      "pregunta": "Durante la evaluación de un muro de albañilería se observa agrietamiento diagonal severo, piezas desplazadas y desprendimientos. ¿Qué nivel de daño corresponde según la clasificación del material?",
+      "alternativas": {
+        "A": "Ninguno o muy leve.",
+        "B": "Leve.",
+        "C": "Moderado.",
+        "D": "Fuerte."
+      },
+      "respuesta_correcta": "D"
+    },
+    {
+      "id": 43,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "Un equipo atiende un incendio en un edificio de diez pisos. ¿Qué factores deben considerarse especialmente al establecer la estrategia de intervención?",
+      "alternativas": {
+        "A": "Únicamente la ubicación de los vehículos.",
+        "B": "La evacuación de personas, compartimentación y dificultades de acceso a pisos elevados.",
+        "C": "Solamente el número de ventanas.",
+        "D": "La cantidad de compañías sin evaluar las condiciones del edificio."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 44,
+      "modulo": "III",
+      "leccion": 22,
+      "pregunta": "¿Por qué es importante considerar la compartimentación vertical y horizontal durante un incendio en un edificio elevado?",
+      "alternativas": {
+        "A": "Porque facilita el movimiento de los vehículos.",
+        "B": "Porque permite considerar la separación de sectores y la posible propagación del incendio entre espacios.",
+        "C": "Porque sustituye las operaciones de búsqueda y rescate.",
+        "D": "Porque elimina automáticamente todos los gases de combustión."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 45,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "Una compañía recibe información de un incendio en un sótano. ¿Qué información debe solicitar a la Central de Emergencias durante el desplazamiento?",
+      "alternativas": {
+        "A": "Solamente el nombre del propietario.",
+        "B": "El uso del sótano, la cantidad de niveles subterráneos y cuáles están comprometidos.",
+        "C": "Únicamente la antigüedad del edificio.",
+        "D": "La cantidad de vehículos estacionados, como único dato."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 46,
+      "modulo": "III",
+      "leccion": 23,
+      "pregunta": "¿Por qué el humo de un incendio en sótanos puede llegar a los pisos superiores?",
+      "alternativas": {
+        "A": "Porque desaparece la gravedad.",
+        "B": "Porque puede desplazarse por huecos de ascensores, canales de ventilación, aberturas y grietas estructurales.",
+        "C": "Porque los sótanos no tienen paredes.",
+        "D": "Porque el agua de extinción produce oxígeno."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 47,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "Una unidad llega a un incendio vehicular y no conoce si el vehículo utiliza gasolina, gas o energía eléctrica. ¿Qué debe considerar antes de definir su estrategia de intervención?",
+      "alternativas": {
+        "A": "Que todos los vehículos utilizan el mismo tipo de energía.",
+        "B": "Identificar el tipo de vehículo y sus fuentes de energía para considerar los riesgos y procedimientos correspondientes.",
+        "C": "Utilizar inmediatamente el mismo procedimiento para cualquier vehículo.",
+        "D": "Ignorar la identificación del sistema de alimentación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 48,
+      "modulo": "III",
+      "leccion": 24,
+      "pregunta": "¿Cuál es el propósito de establecer advertencias y señalización de vía durante un incendio vehicular en carretera?",
+      "alternativas": {
+        "A": "Facilitar únicamente el tránsito de las autobombas.",
+        "B": "Advertir a los usuarios de la vía y proteger la zona de intervención.",
+        "C": "Evitar que los bomberos utilicen EPP.",
+        "D": "Permitir el ingreso de vehículos particulares a la zona de ataque."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 49,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "En un tanque de petróleo crudo incendiado se presentan una onda de calor descendente y agua acumulada en el fondo. ¿Qué fenómeno puede producirse cuando la onda de calor alcanza esa agua?",
+      "alternativas": {
+        "A": "Frothover.",
+        "B": "Slopover.",
+        "C": "Boilover.",
+        "D": "Rollover."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 50,
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Cuál es la diferencia principal entre Slopover y Boilover según el material?",
+      "alternativas": {
+        "A": "El Slopover es un rebosamiento superficial parcial, mientras que el Boilover es un rebosamiento violento por ebullición del agua en el fondo del tanque.",
+        "B": "El Slopover ocurre exclusivamente en gases y el Boilover en sólidos.",
+        "C": "El Slopover siempre produce una explosión más violenta que el Boilover.",
+        "D": "Ambos son exactamente el mismo fenómeno."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 51,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "Una fuga de GLP se produce cerca del suelo y el producto comienza a acumularse en una zona baja. ¿Qué característica física del GLP explica este comportamiento?",
+      "alternativas": {
+        "A": "Es menos denso que el aire.",
+        "B": "Es más denso que el aire.",
+        "C": "Tiene la misma densidad que el oxígeno.",
+        "D": "Es un gas que no presenta movimiento."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 52,
+      "modulo": "III",
+      "leccion": 26,
+      "pregunta": "Un recipiente cerrado que contiene gas licuado recibe fuego directamente. ¿Qué fenómeno deben reconocer los bomberos por el riesgo de expansión explosiva del vapor del líquido en ebullición?",
+      "alternativas": {
+        "A": "Rollover.",
+        "B": "Backdraft.",
+        "C": "BLEVE.",
+        "D": "Cavitación."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 53,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "Durante un incendio de un líquido combustible, se aplica espuma sobre su superficie. ¿Por qué puede detener la combustión y reducir la posibilidad de reignición?",
+      "alternativas": {
+        "A": "Porque incrementa la salida de vapores inflamables.",
+        "B": "Porque forma una capa que separa el combustible del aire y reduce la liberación de vapores.",
+        "C": "Porque aumenta la temperatura del líquido.",
+        "D": "Porque incorpora más oxígeno al combustible."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 54,
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Cuál es la relación entre la expansión de la espuma y su aplicación contra incendios?",
+      "alternativas": {
+        "A": "La expansión permite que la espuma genere una mayor cantidad de volumen a partir de la solución y cubra la superficie.",
+        "B": "La expansión convierte la espuma en combustible.",
+        "C": "La expansión elimina la necesidad de un concentrado.",
+        "D": "La expansión incrementa la temperatura del líquido incendiado."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 55,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "Un bombero termina de extinguir un incendio y encuentra varios objetos desplazados por las operaciones. ¿Qué debe hacer para contribuir a la investigación?",
+      "alternativas": {
+        "A": "Continuar moviendo los objetos para despejar el lugar.",
+        "B": "Preservar la escena, reducir movimientos innecesarios y comunicar sus observaciones.",
+        "C": "Retirar todos los elementos sin registrarlos.",
+        "D": "Permitir el ingreso de personas ajenas a la investigación."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 56,
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Por qué el primer respondedor debe documentar sus observaciones y acciones durante la intervención?",
+      "alternativas": {
+        "A": "Para sustituir completamente la investigación científica.",
+        "B": "Para contribuir con información sobre la escena, el comportamiento del fuego y las operaciones realizadas.",
+        "C": "Para modificar los indicios del incendio.",
+        "D": "Para determinar directamente la responsabilidad penal."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 57,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "Durante un incendio estructural, un bombero queda atrapado y no puede salir por sus propios medios. ¿Cuál es una de las primeras acciones establecidas en el procedimiento del material?",
+      "alternativas": {
+        "A": "Esperar a que termine la extinción.",
+        "B": "Solicitar ayuda a los bomberos que se encuentran en el exterior.",
+        "C": "Continuar trabajando hasta agotar el aire.",
+        "D": "Abandonar el Sistema de Comando de Incidentes."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 58,
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "Cuando se activa el rescate de un bombero atrapado, ¿qué información ayuda a delimitar el área probable donde se encuentra?",
+      "alternativas": {
+        "A": "El último punto conocido del bombero.",
+        "B": "El número de compañías del departamento.",
+        "C": "La cantidad de agua utilizada.",
+        "D": "La ubicación del puesto de estacionamiento."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 59,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "Un ascensor utiliza cables de acero o fajas, una polea motriz y un contrapeso para desplazar su cabina. ¿Qué tipo de ascensor es?",
+      "alternativas": {
+        "A": "Hidráulico.",
+        "B": "Eléctrico.",
+        "C": "Manual.",
+        "D": "Neumático."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 60,
+      "modulo": "III",
+      "leccion": 30,
+      "pregunta": "Durante un rescate en ascensores, el personal encuentra las instrucciones del fabricante en el cuarto de máquinas. ¿Por qué debe utilizarlas?",
+      "alternativas": {
+        "A": "Porque contienen las indicaciones específicas para el funcionamiento del sistema y la intervención.",
+        "B": "Porque sustituyen la evaluación de seguridad.",
+        "C": "Porque permiten omitir la identificación del tipo de ascensor.",
+        "D": "Porque únicamente sirven para identificar al propietario."
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "id": 61,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "Un equipo necesita elevar una camilla con una víctima y utiliza un sistema de ventaja mecánica 4:1. ¿Qué significa esta configuración según el material?",
+      "alternativas": {
+        "A": "La carga requiere cuatro veces más fuerza.",
+        "B": "La fuerza necesaria se reduce a una cuarta parte de la carga ideal.",
+        "C": "La cuerda soporta únicamente una cuarta parte de su resistencia.",
+        "D": "El sistema elimina completamente el peso."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 62,
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "Después de una operación de rescate, una cuerda presenta zonas blandas y abultamientos. ¿Qué procedimiento corresponde según las recomendaciones de inspección?",
+      "alternativas": {
+        "A": "Guardarla inmediatamente sin revisarla.",
+        "B": "Inspeccionarla visual y manualmente y evaluar si debe retirarse del servicio.",
+        "C": "Continuar utilizándola hasta que se rompa.",
+        "D": "Lavarla y asumir que recuperó su resistencia."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 63,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "Un paciente presenta un traumatismo y requiere apertura de la vía aérea. ¿Qué maniobra corresponde utilizar según el material?",
+      "alternativas": {
+        "A": "Extensión de la cabeza y elevación mandibular (EXCELM).",
+        "B": "Empuje mandibular (EM).",
+        "C": "Compresión abdominal.",
+        "D": "Flexión forzada del cuello."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 64,
+      "modulo": "III",
+      "leccion": 32,
+      "pregunta": "Durante la evaluación inicial, un APH identifica una hemorragia importante. ¿Qué debe suceder?",
+      "alternativas": {
+        "A": "Ignorarla hasta completar todas las evaluaciones.",
+        "B": "Controlarla inmediatamente, asignando la intervención correspondiente al cuarto APH.",
+        "C": "Esperar hasta llegar al hospital.",
+        "D": "Realizar únicamente una evaluación verbal."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 65,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "Un adulto presenta una obstrucción grave de la vía aérea y no puede hablar ni respirar. ¿Qué característica permite diferenciar esta situación de una obstrucción leve?",
+      "alternativas": {
+        "A": "El paciente puede toser y hablar con dificultad.",
+        "B": "El paciente presenta tos inefectiva y no puede hablar ni respirar.",
+        "C": "El paciente respira normalmente.",
+        "D": "El paciente únicamente presenta dolor abdominal."
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "id": 66,
+      "modulo": "III",
+      "leccion": 33,
+      "pregunta": "Durante una RCP en un adulto, ¿qué relación entre compresiones y ventilaciones indica el material para un ciclo de RCP de buena calidad?",
+      "alternativas": {
+        "A": "15 compresiones y 1 ventilación.",
+        "B": "20 compresiones y 2 ventilaciones.",
+        "C": "30 compresiones y 2 ventilaciones.",
+        "D": "50 compresiones y 5 ventilaciones."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 67,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "Una unidad llega a un incidente donde observa un recipiente con una sustancia desconocida y no cuenta con personal especializado. ¿Cuál es la conducta que corresponde al primer nivel de competencia Advertencia?",
+      "alternativas": {
+        "A": "Ingresar inmediatamente para cerrar las válvulas.",
+        "B": "Acercarse al recipiente para tomar una muestra.",
+        "C": "Observar desde una localización segura, reconocer señales, consultar la GRE, proteger el área y solicitar asistencia calificada.",
+        "D": "Realizar directamente la contención de la sustancia."
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "id": 68,
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "Un respondedor necesita controlar la liberación de un producto peligroso mediante contención, cierre de válvulas y taponamiento. ¿Qué nivel de competencia corresponde a estas operaciones?",
+      "alternativas": {
+        "A": "Advertencia.",
+        "B": "Operaciones.",
+        "C": "Técnico MATPEL.",
+        "D": "Comandante de Incidente MATPEL."
+      },
+      "respuesta_correcta": "C"
+    }
+  ]
+}
