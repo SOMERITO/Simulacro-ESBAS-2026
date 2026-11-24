@@ -2906,6 +2906,8 @@
             transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s ease;
         }
         .bank-mode-real .bank-mode-symbol { color:#a51e2a; background:#fff0f1; }
+        .bank-mode-advanced-ai .bank-mode-symbol { color:#5555a5; background:#f0efff; }
+        .bank-mode-advanced-ai .bank-mode-count { color:#5555a5; background:#f0efff; }
         .bank-mode-basic-ai .bank-mode-symbol { color:#137b72; background:#e8f7f4; }
         .bank-mode-basic-ai .bank-mode-count { color:#137b72; background:#e8f7f4; }
         .bank-mode-intermediate-ai .bank-mode-symbol { color:#a65c16; background:#fff3e5; }
@@ -3672,12 +3674,12 @@
                     <span>Elige tu banco de preguntas</span>
                 </div>
                 <div class="bank-mode-grid" role="group" aria-label="Seleccionar banco de preguntas">
-                    <button class="bank-mode-card bank-mode-ai is-active" type="button" id="btn-bank-ai" aria-pressed="true" onclick="selectSimulationBank('ai', this)">
+                    <button class="bank-mode-card bank-mode-advanced-ai is-active" type="button" id="btn-bank-advanced-ai" aria-pressed="true" onclick="selectSimulationBank('advanced-ai', this)">
                         <span class="bank-mode-symbol" aria-hidden="true">✦</span>
                         <span class="bank-mode-card-copy">
-                            <span class="bank-mode-title">Preguntas con IA</span>
-                            <span class="bank-mode-description">Practica con el banco de preguntas generado con inteligencia artificial.</span>
-                            <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-ai-count">400 preguntas</span></span>
+                            <span class="bank-mode-title">Preguntas nivel avanzado con IA</span>
+                            <span class="bank-mode-description">Banco avanzado de 500 preguntas integradoras: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
+                            <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-advanced-ai-count">500 preguntas</span></span>
                         </span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
@@ -3696,7 +3698,7 @@
                     <button class="bank-mode-card bank-mode-basic-ai" type="button" id="btn-bank-basic-ai" aria-pressed="false" onclick="selectSimulationBank('basic-ai', this)">
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
-                            <span class="bank-mode-title">Preguntas Básicas con IA</span>
+                            <span class="bank-mode-title">Preguntas nivel básico con IA</span>
                             <span class="bank-mode-description">Banco completo de 500 preguntas: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
                             <span class="bank-mode-meta">
                                 <span class="bank-mode-count" id="bank-basic-ai-count">500 preguntas</span>
@@ -3707,7 +3709,7 @@
                     <button class="bank-mode-card bank-mode-intermediate-ai" type="button" id="btn-bank-intermediate-ai" aria-pressed="false" onclick="selectSimulationBank('intermediate-ai', this)">
                         <span class="bank-mode-symbol" aria-hidden="true">✧</span>
                         <span class="bank-mode-card-copy">
-                            <span class="bank-mode-title">Preguntas Intermedias con IA</span>
+                            <span class="bank-mode-title">Preguntas nivel intermedio con IA</span>
                             <span class="bank-mode-description">Banco intermedio completo de 500 preguntas: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
                             <span class="bank-mode-meta">
                                 <span class="bank-mode-count" id="bank-intermediate-ai-count">500 preguntas</span>
@@ -4415,8 +4417,9 @@
     let cachedRealQuestionBank = null;
     let cachedBasicAIQuestionBank = null;
     let cachedIntermediateAIQuestionBank = null;
-    let currentSimulationBankType = 'ai'; // ai | real | basic-ai | intermediate-ai
-    let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'ai' };
+    let cachedAdvancedAIQuestionBank = null;
+    let currentSimulationBankType = 'advanced-ai'; // advanced-ai | basic-ai | intermediate-ai | real | ai (legacy)
+    let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'advanced-ai' };
 
     function getActiveSimulationQuestionBank() {
         if (currentSimulationBankType === 'real') {
@@ -4427,6 +4430,9 @@
         }
         if (currentSimulationBankType === 'intermediate-ai') {
             return Array.isArray(cachedIntermediateAIQuestionBank) ? cachedIntermediateAIQuestionBank : [];
+        }
+        if (currentSimulationBankType === 'advanced-ai') {
+            return Array.isArray(cachedAdvancedAIQuestionBank) ? cachedAdvancedAIQuestionBank : [];
         }
         if (Array.isArray(appData.questions) && appData.questions.length) return appData.questions;
         return Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
@@ -4649,6 +4655,153 @@
         return cachedBasicAIQuestionBank;
     }
 
+    function normalizeAdvancedAIQuestionBank(rawBank) {
+        if (!rawBank || !Array.isArray(rawBank.preguntas) ||
+            Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
+            rawBank.preguntas.length !== 500 ||
+            !rawBank.titulos_lecciones || Object.keys(rawBank.titulos_lecciones).length !== 34) {
+            throw new Error('El banco de Preguntas nivel avanzado con IA debe contener 500 preguntas y los 34 títulos oficiales.');
+        }
+
+        const moduleNames = { I: 'Módulo I', II: 'Módulo II', III: 'Módulo III' };
+        const moduleNumbers = { I: 1, II: 2, III: 3 };
+        const ids = new Set();
+        const groupQuestionCounts = new Map();
+        const normalizedQuestions = rawBank.preguntas.map(question => {
+            const sourceId = String(question?.id ?? '').trim();
+            const sourceType = String(question?.tipo || '').trim();
+            const isLesson = sourceType === 'por_leccion';
+            const isModuleFinal = sourceType === 'examen_final_modulo';
+            const isGeneralFinal = sourceType === 'examen_final_general';
+            const isSupportedType = isLesson || isModuleFinal || isGeneralFinal;
+            const lessonNumber = isLesson ? Number(question?.leccion) : 0;
+            const lessonReference = isLesson ? lessonNumber : Number(question?.leccion_referencia);
+            const expectedModule = lessonReference <= 9 ? 'I' : (lessonReference <= 21 ? 'II' : 'III');
+            const rawModuleToken = String(question?.modulo || '').trim()
+                .replace(/^M[oó]dulo\s*/i, '').trim().toUpperCase();
+            const moduleToken = isGeneralFinal ? expectedModule : rawModuleToken;
+            const moduleName = moduleNames[moduleToken];
+            const answer = String(question?.respuesta_correcta || '').trim().toLowerCase();
+
+            if (!sourceId || ids.has(sourceId)) {
+                throw new Error('El banco avanzado contiene identificadores vacíos o duplicados.');
+            }
+            ids.add(sourceId);
+
+            if (!isSupportedType || !moduleName) {
+                throw new Error('El banco avanzado contiene un módulo o tipo de pregunta no válido.');
+            }
+            if (!Number.isInteger(lessonReference) || lessonReference < 1 || lessonReference > 34 ||
+                moduleToken !== expectedModule) {
+                throw new Error('El banco avanzado contiene una referencia de lección o módulo no válida.');
+            }
+            if (isGeneralFinal && rawModuleToken !== 'MIXTO') {
+                throw new Error('El examen general avanzado debe conservar su clasificación mixta.');
+            }
+            if (isLesson && (!Number.isInteger(lessonNumber) || lessonNumber < 1 || lessonNumber > 34)) {
+                throw new Error('El banco avanzado contiene un número de lección no válido.');
+            }
+            if (!question.pregunta || !question.alternativas ||
+                !['A','B','C','D'].every(key =>
+                    typeof question.alternativas[key] === 'string' && question.alternativas[key].trim().length
+                )) {
+                throw new Error('El banco avanzado contiene una pregunta sin sus cuatro alternativas.');
+            }
+            if (!['a','b','c','d'].includes(answer)) {
+                throw new Error('El banco avanzado contiene una clave de respuesta no válida.');
+            }
+            const relatedLessons = Array.isArray(question.lecciones_relacionadas)
+                ? question.lecciones_relacionadas.map(Number)
+                : [];
+            if (relatedLessons.length !== 2 ||
+                relatedLessons.some(number => !Number.isInteger(number) || number < 1 || number > 34)) {
+                throw new Error('El banco avanzado debe identificar las dos lecciones relacionadas de cada pregunta.');
+            }
+            if (isModuleFinal && String(question.examen || '') !== 'Examen final del ' + moduleName) {
+                throw new Error('El banco avanzado contiene un examen final de módulo sin identificar.');
+            }
+            if (isGeneralFinal && String(question.examen || '') !== 'Examen final general ESBAS') {
+                throw new Error('El banco avanzado contiene un examen final general sin identificar.');
+            }
+
+            const groupKey = isLesson
+                ? 'leccion-' + moduleToken + '-' + lessonNumber
+                : (isModuleFinal ? 'examen-modulo-' + moduleToken : 'examen-general');
+            const questionNumber = (groupQuestionCounts.get(groupKey) || 0) + 1;
+            groupQuestionCounts.set(groupKey, questionNumber);
+            const lessonTitle = String(rawBank.titulos_lecciones[String(lessonReference)] || '').trim();
+            if (!lessonTitle) {
+                throw new Error('El banco avanzado contiene una referencia sin título oficial de lección.');
+            }
+
+            return {
+                id: 'advanced-ai-' + sourceId,
+                modulo: moduleName,
+                tipo: isLesson ? 'leccion' : sourceType,
+                leccion_num: lessonNumber,
+                leccion_nombre: isLesson ? lessonTitle : String(question.examen || question.titulo_evaluacion || ''),
+                leccion_referencia: lessonReference,
+                leccion_referencia_nombre: lessonTitle,
+                lecciones_relacionadas: relatedLessons,
+                lecciones_relacionadas_nombres: relatedLessons.map(number =>
+                    String(rawBank.titulos_lecciones[String(number)] || '')
+                ),
+                examen_modulo_num: isModuleFinal ? moduleNumbers[moduleToken] : null,
+                pregunta_num: questionNumber,
+                pregunta_global: Number(sourceId),
+                pregunta: String(question.pregunta),
+                opciones: {
+                    a: String(question.alternativas.A),
+                    b: String(question.alternativas.B),
+                    c: String(question.alternativas.C),
+                    d: String(question.alternativas.D)
+                },
+                respuesta: answer,
+                sustento: typeof question.fundamento === 'string' ? question.fundamento.trim() : '',
+                criterio_de_analisis: typeof question.criterio_de_analisis === 'string'
+                    ? question.criterio_de_analisis.trim()
+                    : '',
+                nivel: 'Avanzado',
+                _source: 'advanced-ai-bank'
+            };
+        });
+
+        const lessonQuestions = normalizedQuestions.filter(question => question.tipo === 'leccion');
+        const moduleFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_modulo');
+        const generalFinalQuestions = normalizedQuestions.filter(question => question.tipo === 'examen_final_general');
+        const lessonCounts = new Map();
+        lessonQuestions.forEach(question => {
+            const key = question.modulo + '-' + question.leccion_num;
+            lessonCounts.set(key, (lessonCounts.get(key) || 0) + 1);
+        });
+        if (lessonQuestions.length !== 340 || lessonCounts.size !== 34 ||
+            Array.from(lessonCounts.values()).some(count => count !== 10)) {
+            throw new Error('El banco avanzado debe tener 10 preguntas en cada una de las 34 lecciones.');
+        }
+        if (moduleFinalQuestions.length !== 60 ||
+            ['Módulo I','Módulo II','Módulo III'].some(moduleName =>
+                moduleFinalQuestions.filter(question => question.modulo === moduleName).length !== 20
+            )) {
+            throw new Error('El banco avanzado debe tener 20 preguntas en cada examen final de módulo.');
+        }
+        if (generalFinalQuestions.length !== 100) {
+            throw new Error('El examen final general ESBAS debe contener exactamente 100 preguntas.');
+        }
+        return normalizedQuestions;
+    }
+
+    async function loadAdvancedAIQuestionBank() {
+        if (cachedAdvancedAIQuestionBank) return cachedAdvancedAIQuestionBank;
+        const response = await fetch('./data/ESBAS-2026-Preguntas-Avanzadas-con-IA.json', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('No se pudo cargar el banco de Preguntas nivel avanzado con IA (' + response.status + ').');
+        const rawBank = await response.json();
+        cachedAdvancedAIQuestionBank = normalizeAdvancedAIQuestionBank(rawBank);
+        return cachedAdvancedAIQuestionBank;
+    }
+
     function normalizeIntermediateAIQuestionBank(rawBank) {
         if (!rawBank || !Array.isArray(rawBank.preguntas) ||
             Number(rawBank.total_preguntas) !== rawBank.preguntas.length ||
@@ -4772,11 +4925,10 @@
     }
 
     window.selectSimulationBank = async function(type, button) {
-        const nextType = type === 'real' ? 'real'
-            : (type === 'basic-ai' ? 'basic-ai'
-            : (type === 'intermediate-ai' ? 'intermediate-ai' : 'ai'));
+        const allowedTypes = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'real'];
+        const nextType = allowedTypes.includes(type) ? type : 'advanced-ai';
         const buttons = [
-            document.getElementById('btn-bank-ai'),
+            document.getElementById('btn-bank-advanced-ai'),
             document.getElementById('btn-bank-real'),
             document.getElementById('btn-bank-basic-ai'),
             document.getElementById('btn-bank-intermediate-ai')
@@ -4786,15 +4938,19 @@
             item.classList.add('is-loading');
         });
         if (button) button.setAttribute('aria-busy', 'true');
-        if (nextType === 'real' && !cachedRealQuestionBank) {
+        if (nextType === 'advanced-ai' && !cachedAdvancedAIQuestionBank) {
+            setAppLoading(true, 'Cargando preguntas nivel avanzado con IA', 'Preparando las 500 preguntas integradoras y los exámenes finales…', '✧');
+        } else if (nextType === 'real' && !cachedRealQuestionBank) {
             setAppLoading(true, 'Cargando preguntas reales', 'Preparando las preguntas recopiladas de tus evaluaciones…', '📚');
         } else if (nextType === 'basic-ai' && !cachedBasicAIQuestionBank) {
-            setAppLoading(true, 'Cargando preguntas básicas con IA', 'Preparando las 500 preguntas básicas y los exámenes finales…', '✧');
+            setAppLoading(true, 'Cargando preguntas nivel básico con IA', 'Preparando las 500 preguntas básicas y los exámenes finales…', '✧');
         } else if (nextType === 'intermediate-ai' && !cachedIntermediateAIQuestionBank) {
-            setAppLoading(true, 'Cargando preguntas intermedias con IA', 'Preparando las 500 preguntas intermedias y los exámenes finales…', '✧');
+            setAppLoading(true, 'Cargando preguntas nivel intermedio con IA', 'Preparando las 500 preguntas intermedias y los exámenes finales…', '✧');
         }
         try {
-            if (nextType === 'real') {
+            if (nextType === 'advanced-ai') {
+                await loadAdvancedAIQuestionBank();
+            } else if (nextType === 'real') {
                 await loadRealQuestionBank();
             } else if (nextType === 'basic-ai') {
                 await loadBasicAIQuestionBank();
@@ -4806,20 +4962,19 @@
                 window.updateIndexesAndCounters();
             }
             currentSimulationBankType = nextType;
-            const activeButtonId = nextType === 'real'
-                ? 'btn-bank-real'
-                : (nextType === 'basic-ai' ? 'btn-bank-basic-ai'
-                : (nextType === 'intermediate-ai' ? 'btn-bank-intermediate-ai' : 'btn-bank-ai'));
+            const activeButtonId = nextType === 'advanced-ai'
+                ? 'btn-bank-advanced-ai'
+                : (nextType === 'real' ? 'btn-bank-real'
+                : (nextType === 'basic-ai' ? 'btn-bank-basic-ai' : 'btn-bank-intermediate-ai'));
             buttons.forEach(item => {
                 const active = item.id === activeButtonId;
                 item.classList.toggle('is-active', active);
                 item.setAttribute('aria-pressed', String(active));
             });
-            const activeBank = getActiveSimulationQuestionBank();
-            const aiCount = document.getElementById('bank-ai-count');
-            if (aiCount && appData.questions.length) aiCount.textContent = appData.questions.length + ' preguntas';
             const realCount = document.getElementById('bank-real-count');
             if (realCount && cachedRealQuestionBank) realCount.textContent = cachedRealQuestionBank.length + ' preguntas registradas';
+            const advancedCount = document.getElementById('bank-advanced-ai-count');
+            if (advancedCount && cachedAdvancedAIQuestionBank) advancedCount.textContent = cachedAdvancedAIQuestionBank.length + ' preguntas';
             const basicCount = document.getElementById('bank-basic-ai-count');
             if (basicCount && cachedBasicAIQuestionBank) basicCount.textContent = cachedBasicAIQuestionBank.length + ' preguntas';
             const intermediateCount = document.getElementById('bank-intermediate-ai-count');
@@ -5060,6 +5215,8 @@
             document.getElementById('main-container').style.display = 'block';
             document.body.classList.toggle('role-admin', currentUserRole === 'admin');
 
+            await loadAdvancedAIQuestionBank();
+            currentSimulationBankType = 'advanced-ai';
             if (currentUserRole === 'admin') {
                 await fetchQuestions();
                 await fetchUsers();
@@ -5098,6 +5255,8 @@
         try {
             const questions = await loadBundledQuestionBank();
             appData.questions = questions.map(question => ({ ...question, _source: 'bundle' }));
+            await loadAdvancedAIQuestionBank();
+            currentSimulationBankType = 'advanced-ai';
             window.__ESBASBootProgress?.update(96, 'PREPARANDO LA INTERFAZ', 'Organizando los módulos, lecciones y controles…');
             window.updateIndexesAndCounters();
             window.refreshSimulationModuleDropdown('all');
@@ -5719,7 +5878,7 @@
         const moduleSelect = document.getElementById('sim-module');
         if (!moduleSelect) return;
         const bank = getActiveSimulationQuestionBank();
-        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai'].includes(currentSimulationBankType);
         const availableModules = Object.keys(moduleLessonsMap).filter(moduleName =>
             bank.some(question => question.modulo === moduleName)
         );
@@ -5744,7 +5903,7 @@
     window.updateSimLessonDropdown = function(moduleName) {
         const lessonSelect = document.getElementById('sim-lesson');
         const bank = getActiveSimulationQuestionBank();
-        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai'].includes(currentSimulationBankType);
 
         if (isStructuredAI && moduleName === 'all') {
             const practiceCount = bank.filter(question => question.tipo === 'leccion').length;
@@ -5813,7 +5972,7 @@
     }
 
     function getLocalSimulationQuestions(moduleFilter, lessonFilter) {
-        const isStructuredAI = currentSimulationBankType === 'basic-ai' || currentSimulationBankType === 'intermediate-ai';
+        const isStructuredAI = ['advanced-ai', 'basic-ai', 'intermediate-ai'].includes(currentSimulationBankType);
         const selectedModuleFinal = /^final-(I|II|III)$/.exec(String(lessonFilter || ''));
         const selectedModuleFinalName = selectedModuleFinal ? 'Módulo ' + selectedModuleFinal[1] : null;
         const selected = getActiveSimulationQuestionBank().filter(question => {
@@ -6420,7 +6579,9 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
 
         try {
             if (currentSimulationBankType !== 'ai' || currentUser.isPublicVisitor) {
-                if (currentSimulationBankType === 'real') {
+                if (currentSimulationBankType === 'advanced-ai') {
+                    await loadAdvancedAIQuestionBank();
+                } else if (currentSimulationBankType === 'real') {
                     await loadRealQuestionBank();
                 } else if (currentSimulationBankType === 'basic-ai') {
                     await loadBasicAIQuestionBank();
@@ -6481,17 +6642,21 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
                 const timeText = timeLimitMinutes
                     ? ' Tiempo límite: ' + timeLimitMinutes + ' minutos.'
                     : ' Esta práctica combinada no tiene un límite de tiempo asignado.';
-                modeNote.textContent = currentSimulationBankType === 'real'
-                    ? 'Preguntas reales: se utilizaron únicamente preguntas de tu banco real. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
-                    : (currentSimulationBankType === 'basic-ai'
-                        ? 'Preguntas Básicas con IA: se utilizaron únicamente preguntas de tu banco básico. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
-                        : (currentSimulationBankType === 'intermediate-ai'
-                            ? 'Preguntas Intermedias con IA: se utilizaron únicamente preguntas de tu banco intermedio. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText
-                            : (currentUser.isPublicVisitor
-                            ? 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText
-                            : (currentSimulationMode === 'local'
-                                ? 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText
-                                : 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText))));
+                if (currentSimulationBankType === 'advanced-ai') {
+                    modeNote.textContent = 'Preguntas nivel avanzado con IA: se utilizaron únicamente preguntas de tu banco avanzado. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
+                } else if (currentSimulationBankType === 'real') {
+                    modeNote.textContent = 'Preguntas reales: se utilizaron únicamente preguntas de tu banco real. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
+                } else if (currentSimulationBankType === 'basic-ai') {
+                    modeNote.textContent = 'Preguntas nivel básico con IA: se utilizaron únicamente preguntas de tu banco básico. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
+                } else if (currentSimulationBankType === 'intermediate-ai') {
+                    modeNote.textContent = 'Preguntas nivel intermedio con IA: se utilizaron únicamente preguntas de tu banco intermedio. Este intento se corrige en este dispositivo y no se guarda en Firebase.' + timeText;
+                } else if (currentUser.isPublicVisitor) {
+                    modeNote.textContent = 'Acceso público: este simulacro se ejecuta en tu navegador. No necesitas cuenta y el resultado no se guarda en Firebase.' + timeText;
+                } else if (currentSimulationMode === 'local') {
+                    modeNote.textContent = 'Modo práctica local: ' + currentSimulationQuestions.length + ' preguntas. La corrección se realizará en este dispositivo; este intento no se guardará en Firebase.' + timeText;
+                } else {
+                    modeNote.textContent = 'Simulacro conectado a Firebase. Tu intento se corregirá en el servidor.' + timeText;
+                }
             }
             window.updateSimulationSessionHeading();
             window.renderSimulationQuestions();
@@ -6513,6 +6678,13 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
         const applyAttemptOrder = source => simQuestion?._optionsShuffledForAttempt
             ? { ...source, opciones: simQuestion.opciones, respuesta: simQuestion.respuesta }
             : source;
+        if (currentSimulationBankType === 'advanced-ai') {
+            const advancedBank = Array.isArray(cachedAdvancedAIQuestionBank) ? cachedAdvancedAIQuestionBank : [];
+            const source = advancedBank.find(question =>
+                String(question.id) === String(simQuestion.id) && hasAnswerKey(question)
+            ) || simQuestion;
+            return applyAttemptOrder(source);
+        }
         if (currentSimulationBankType === 'real') {
             const realBank = Array.isArray(cachedRealQuestionBank) ? cachedRealQuestionBank : [];
             const source = realBank.find(question =>
