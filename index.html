@@ -2933,8 +2933,6 @@
         .bank-mode-card.is-loading { opacity:.75; cursor:progress; }
         .bank-mode-card.is-loading .bank-mode-symbol { animation:bankModePulse .75s ease-in-out infinite alternate; }
         @keyframes bankModePulse { from { transform:scale(.94); opacity:.65; } to { transform:scale(1.06); opacity:1; } }
-        .bank-mode-note { display:flex; align-items:flex-start; gap:.5rem; margin-top:.72rem; color:#718096; font-size:.72rem; line-height:1.5; }
-        .bank-mode-note::before { content:"ⓘ"; color:#a52a35; font-weight:900; }
         @media (max-width:1050px) {
             .bank-mode-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
         }
@@ -3718,7 +3716,6 @@
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                 </div>
-                <p class="bank-mode-note" id="sim-bank-mode-note" role="status" aria-live="polite">Estás utilizando el banco de práctica con IA. Los cuatro bancos se mantienen separados.</p>
             </section>
             <div class="sim-fields">
                 <div class="form-group">
@@ -4704,16 +4701,6 @@
                 item.setAttribute('aria-pressed', String(active));
             });
             const activeBank = getActiveSimulationQuestionBank();
-            const note = document.getElementById('sim-bank-mode-note');
-            if (note) {
-                note.textContent = nextType === 'real'
-                    ? 'Modalidad de preguntas reales: se utilizan solo las ' + activeBank.length + ' preguntas registradas en este banco; no se mezclan con las otras modalidades.'
-                    : (nextType === 'basic-ai'
-                        ? 'Modalidad de Preguntas Básicas con IA: se utilizan únicamente las ' + activeBank.length + ' preguntas del banco básico; permanece separado de los demás bancos.'
-                        : (nextType === 'intermediate-ai'
-                            ? 'Modalidad de Preguntas Intermedias con IA: se utilizan únicamente las ' + activeBank.length + ' preguntas del banco intermedio; permanece separado de los demás bancos.'
-                            : 'Modalidad de preguntas con IA: se utiliza únicamente el banco principal. Preguntas Reales, Preguntas Básicas con IA y Preguntas Intermedias con IA permanecen separados.'));
-            }
             const aiCount = document.getElementById('bank-ai-count');
             if (aiCount && appData.questions.length) aiCount.textContent = appData.questions.length + ' preguntas';
             const realCount = document.getElementById('bank-real-count');
