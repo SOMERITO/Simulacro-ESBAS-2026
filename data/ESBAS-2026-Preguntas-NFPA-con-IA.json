@@ -1,0 +1,551 @@
+{
+  "titulo": "Preguntas NFPA con IA",
+  "descripcion": "Banco de práctica dedicado exclusivamente a las normas NFPA mencionadas en el Manual ESBAS 2026-1 y el documento independiente de la Lección 34 MATPEL.",
+  "nivel": "Mixto",
+  "total_preguntas": 33,
+  "alternativas_por_pregunta": 4,
+  "fuentes": [
+    "Manual ESBAS 2026-1",
+    "Documento independiente de la Lección 34 - Respuesta a incidentes con MATPEL"
+  ],
+  "normas_identificadas": [
+    {
+      "codigo": "NFPA 1061",
+      "tema_en_manual": "Calificaciones para teleoperadores de seguridad pública; guía de calificación para teleoperadores de la CEEM."
+    },
+    {
+      "codigo": "NFPA 1561",
+      "tema_en_manual": "Requisitos para la estructura y operaciones de un sistema de gestión de incidentes; relación con el SCI."
+    },
+    {
+      "codigo": "NFPA 1404",
+      "tema_en_manual": "Capacitación en protección respiratoria del servicio de bomberos; gestión individual del suministro de aire del EPRA."
+    },
+    {
+      "codigo": "NFPA 10",
+      "tema_en_manual": "Norma citada como base para la implementación de las NTP relacionadas con extintores portátiles."
+    },
+    {
+      "codigo": "NFPA 30",
+      "tema_en_manual": "Clasificación de líquidos inflamables y combustibles según el punto de inflamación."
+    },
+    {
+      "codigo": "NFPA 11",
+      "tema_en_manual": "Valores de expansión para espumas de baja, media y alta expansión."
+    },
+    {
+      "codigo": "NFPA 921",
+      "tema_en_manual": "Preservación de la escena, conservación de pruebas y tareas del primer respondedor en investigación de incendios."
+    },
+    {
+      "codigo": "NFPA 1500",
+      "tema_en_manual": "Recomendación citada para el mínimo de integrantes en operaciones interiores de búsqueda y rescate."
+    },
+    {
+      "codigo": "NFPA 1983",
+      "tema_en_manual": "Aparece listada entre las normas técnicas relacionadas con cuerdas de rescate."
+    },
+    {
+      "codigo": "NFPA 470",
+      "tema_en_manual": "Definición de material peligroso y competencias iniciales para responder a incidentes MATPEL."
+    }
+  ],
+  "nota_de_alcance": "Las preguntas se limitan a la información que los documentos atribuyen expresamente a cada NFPA. No se amplían los alcances con ediciones externas ni con contenido no desarrollado por el manual.",
+  "preguntas": [
+    {
+      "id": 1,
+      "norma": "NFPA 1061",
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Qué aspecto regula la NFPA 1061 según el Manual ESBAS?",
+      "alternativas": {
+        "A": "La investigación del origen de incendios.",
+        "B": "La estructura de un sistema de gestión de incidentes.",
+        "C": "Las calificaciones para teleoperadores de seguridad pública.",
+        "D": "La capacitación en protección respiratoria."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual identifica la NFPA 1061 como la norma sobre las calificaciones para teleoperadores de seguridad pública."
+    },
+    {
+      "id": 2,
+      "norma": "NFPA 1061",
+      "modulo": "I",
+      "leccion": 5,
+      "pregunta": "¿Cómo utiliza el CGBVP la NFPA 1061 para el personal de la Central de Emergencias?",
+      "alternativas": {
+        "A": "Como requisito para certificar cuerdas de rescate.",
+        "B": "Como procedimiento para investigar incendios.",
+        "C": "Como norma para seleccionar extintores.",
+        "D": "Como guía para calificar al teleoperador de la Central de Emergencias."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual señala que el CGBVP toma esta norma como guía de calificación para un teleoperador de la Central de Emergencias."
+    },
+    {
+      "id": 3,
+      "norma": "NFPA 1561",
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Con qué herramienta de gestión de emergencias se relaciona la NFPA 1561 en el manual?",
+      "alternativas": {
+        "A": "El sistema de abastecimiento de agua.",
+        "B": "El sistema de ventilación hidráulica.",
+        "C": "El Equipo de Protección Respiratoria Autónoma.",
+        "D": "El Sistema de Comando de Incidentes (SCI)."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual indica que la NFPA 1561 contiene requisitos para la estructura y las operaciones de un sistema de gestión de incidentes; el SCI es la herramienta utilizada para ese fin."
+    },
+    {
+      "id": 4,
+      "norma": "NFPA 1561",
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "¿Qué tipo de requisitos atribuye el manual a la NFPA 1561?",
+      "alternativas": {
+        "A": "Requisitos para seleccionar concentrados de espuma.",
+        "B": "Requisitos para clasificar líquidos inflamables.",
+        "C": "Requisitos para fabricar extintores portátiles.",
+        "D": "Requisitos para la estructura y las operaciones de un sistema de gestión de incidentes."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "La descripción de la NFPA 1561 en el manual se refiere a la estructura y a las operaciones del sistema de gestión de incidentes."
+    },
+    {
+      "id": 5,
+      "norma": "NFPA 1561",
+      "modulo": "I",
+      "leccion": 8,
+      "pregunta": "En el apartado de contabilidad del personal, ¿qué permite el sistema descrito en el manual?",
+      "alternativas": {
+        "A": "Conocer y controlar organizadamente la ubicación del personal durante el incidente.",
+        "B": "Establecer la dosificación de espuma.",
+        "C": "Determinar el punto de inflamación de una sustancia.",
+        "D": "Calcular el consumo de combustible de las unidades."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El Sistema de Contabilidad del Personal es descrito como una herramienta del SCI para manejar de manera organizada y controlada el incidente, incluido el control del personal."
+    },
+    {
+      "id": 6,
+      "norma": "NFPA 1404",
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿A qué tema corresponde la NFPA 1404 citada en el Manual ESBAS?",
+      "alternativas": {
+        "A": "Extintores portátiles.",
+        "B": "Investigación de incendios y explosiones.",
+        "C": "Cuerdas para rescate.",
+        "D": "Capacitación en protección respiratoria del servicio de bomberos."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual la identifica como el estándar para la capacitación en protección respiratoria del servicio de bomberos."
+    },
+    {
+      "id": 7,
+      "norma": "NFPA 1404",
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "Según los requisitos sobre el suministro individual de aire mencionados para NFPA 1404, ¿qué indica la alarma de aire bajo del EPRA?",
+      "alternativas": {
+        "A": "Que puede permanecer en la atmósfera peligrosa sin límite.",
+        "B": "Que el bombero está consumiendo el aire de reserva.",
+        "C": "Que el cilindro está completamente lleno.",
+        "D": "Que el equipo ya no necesita inspección."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual indica que la alarma de aire bajo notifica que se está consumiendo el suministro de reserva."
+    },
+    {
+      "id": 8,
+      "norma": "NFPA 1404",
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué acción exige la activación de la alarma de aire bajo, según el texto del manual?",
+      "alternativas": {
+        "A": "Acción inmediata.",
+        "B": "Desconectar la alarma para evitar distracciones.",
+        "C": "Esperar hasta terminar la tarea asignada.",
+        "D": "Aumentar el caudal de la manguera."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El material señala expresamente que la activación de la alarma es una indicación de acción inmediata."
+    },
+    {
+      "id": 9,
+      "norma": "NFPA 1404",
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué debe hacer el usuario del EPRA antes de comenzar a consumir su aire de supervivencia de emergencia?",
+      "alternativas": {
+        "A": "Permanecer dentro de la atmósfera peligrosa.",
+        "B": "Salir de la atmósfera peligrosa.",
+        "C": "Desconectar el regulador.",
+        "D": "Esperar a que otro bombero active la alarma."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "Entre los requisitos enumerados para NFPA 1404, el manual indica que el individuo debe salir de la atmósfera peligrosa antes de iniciar el consumo del aire de supervivencia de emergencia."
+    },
+    {
+      "id": 10,
+      "norma": "NFPA 1404",
+      "modulo": "I",
+      "leccion": 9,
+      "pregunta": "¿Qué carga mínima de cilindro deben considerar las inspecciones preventivas mencionadas en el apartado de NFPA 1404?",
+      "alternativas": {
+        "A": "90 % o más.",
+        "B": "80 %.",
+        "C": "70 %.",
+        "D": "50 %."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual indica que las inspecciones preventivas deben considerar una carga mínima del cilindro de 90 % o más."
+    },
+    {
+      "id": 11,
+      "norma": "NFPA 10",
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Con qué equipo se relaciona la NFPA 10 en el Manual ESBAS?",
+      "alternativas": {
+        "A": "Extintores portátiles.",
+        "B": "Equipos de comunicación radial.",
+        "C": "Equipos de respiración autónoma.",
+        "D": "Sistemas de rescate con cuerdas."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual cita NFPA 10 en el apartado de normas sobre extintores portátiles."
+    },
+    {
+      "id": 12,
+      "norma": "NFPA 10",
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Qué relación establece el manual entre NFPA 10 y la NTP 350.043-1?",
+      "alternativas": {
+        "A": "La NTP 350.043-1 sirve de base para elaborar NFPA 10.",
+        "B": "Ambas se aplican exclusivamente a espumas.",
+        "C": "Ambas regulan únicamente la investigación de incendios.",
+        "D": "NFPA 10 sirve de base para la implementación de las NTP en el país."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual indica que la NTP 350.043-1 regula los aspectos técnicos de los extintores portátiles y que NFPA 10 sirve de base para la implementación de las NTP en el país."
+    },
+    {
+      "id": 13,
+      "norma": "NFPA 10",
+      "modulo": "II",
+      "leccion": 12,
+      "pregunta": "¿Cuál de las siguientes actividades se incluye en el alcance de la NTP 350.043-1 que el manual relaciona con NFPA 10?",
+      "alternativas": {
+        "A": "Clasificación de gases y monitoreo del aire.",
+        "B": "Selección, distribución, inspección, mantenimiento, recarga y prueba hidrostática.",
+        "C": "Diseño de escaleras y evaluación de estructuras.",
+        "D": "Ventilación, búsqueda, rescate y descontaminación."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual enumera esas actividades al describir la NTP 350.043-1 y su relación con NFPA 10."
+    },
+    {
+      "id": 14,
+      "norma": "NFPA 30",
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Para qué utiliza el manual la NFPA 30?",
+      "alternativas": {
+        "A": "Para establecer la cantidad mínima de bomberos en una búsqueda.",
+        "B": "Para definir la capacitación de operadores CEEM.",
+        "C": "Para determinar el uso de cuerdas de rescate.",
+        "D": "Para clasificar líquidos inflamables y combustibles según su punto de inflamación."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El apartado identificado como clasificación bajo NFPA 30 presenta los líquidos inflamables y combustibles según su punto de inflamación."
+    },
+    {
+      "id": 15,
+      "norma": "NFPA 30",
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "Según la clasificación presentada bajo NFPA 30, ¿qué característica corresponde a un líquido inflamable Clase IA?",
+      "alternativas": {
+        "A": "Punto de inflamación entre 37,8 °C y 60 °C.",
+        "B": "Punto de inflamación mayor o igual que 22,8 °C y menor que 37,8 °C.",
+        "C": "Punto de inflamación menor que 22,8 °C y punto de ebullición menor que 37,8 °C.",
+        "D": "Punto de inflamación igual o mayor que 93,3 °C."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El cuadro del manual define la Clase IA con punto de inflamación menor que 22,8 °C y punto de ebullición menor que 37,8 °C."
+    },
+    {
+      "id": 16,
+      "norma": "NFPA 30",
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Qué condición distingue a los líquidos inflamables Clase IB en la clasificación mostrada por el manual?",
+      "alternativas": {
+        "A": "Punto de inflamación igual o mayor que 93,3 °C.",
+        "B": "Punto de inflamación menor que 22,8 °C y punto de ebullición igual o mayor que 37,8 °C.",
+        "C": "Punto de ebullición menor que 0 °C.",
+        "D": "Punto de inflamación igual o mayor que 22,8 °C y menor que 37,8 °C."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El cuadro de NFPA 30 del manual define la Clase IB por un punto de inflamación menor que 22,8 °C y punto de ebullición igual o mayor que 37,8 °C."
+    },
+    {
+      "id": 17,
+      "norma": "NFPA 30",
+      "modulo": "III",
+      "leccion": 25,
+      "pregunta": "¿Qué intervalo de punto de inflamación corresponde a los líquidos inflamables Clase IC en el cuadro del manual?",
+      "alternativas": {
+        "A": "Igual o mayor que 93,3 °C.",
+        "B": "Igual o mayor que 37,8 °C y menor que 60 °C.",
+        "C": "Igual o mayor que 22,8 °C y menor que 37,8 °C.",
+        "D": "Menor que 0 °C."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El cuadro del manual clasifica los líquidos Clase IC con punto de inflamación igual o mayor que 22,8 °C y menor que 37,8 °C."
+    },
+    {
+      "id": 18,
+      "norma": "NFPA 11",
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Qué aspecto de las espumas contra incendios cita el manual al mencionar la NFPA 11?",
+      "alternativas": {
+        "A": "La inspección de las cuerdas.",
+        "B": "La ubicación de los hidrantes.",
+        "C": "Los valores de expansión de los tipos de espuma.",
+        "D": "La clasificación de los EPRA."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual introduce los valores de expansión de las espumas con la frase: 'La NFPA 11 establece los siguientes valores para cada tipo de espuma'."
+    },
+    {
+      "id": 19,
+      "norma": "NFPA 11",
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Qué valor de expansión asigna el manual a la espuma de baja expansión según NFPA 11?",
+      "alternativas": {
+        "A": "1:5.",
+        "B": "1:20.",
+        "C": "1:1000.",
+        "D": "1:200."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El cuadro del manual establece 1:20 para espuma de baja expansión."
+    },
+    {
+      "id": 20,
+      "norma": "NFPA 11",
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Qué rango de expansión corresponde a la espuma de media expansión según los valores citados de NFPA 11?",
+      "alternativas": {
+        "A": "1:20 a 1:200.",
+        "B": "1:200 a 1:1000.",
+        "C": "1:1 a 1:10.",
+        "D": "1:1000 a 1:2000."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual presenta para la espuma de media expansión el rango de 1:20 a 1:200."
+    },
+    {
+      "id": 21,
+      "norma": "NFPA 11",
+      "modulo": "III",
+      "leccion": 27,
+      "pregunta": "¿Qué rango de expansión corresponde a la espuma de alta expansión según los valores citados de NFPA 11?",
+      "alternativas": {
+        "A": "1:1000 a 1:2000.",
+        "B": "1:20 a 1:200.",
+        "C": "1:200 a 1:1000.",
+        "D": "1:1 a 1:20."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual presenta para la espuma de alta expansión el rango de 1:200 a 1:1000."
+    },
+    {
+      "id": 22,
+      "norma": "NFPA 921",
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Qué guía de actuación para el primer respondedor relaciona el manual con la NFPA 921?",
+      "alternativas": {
+        "A": "Modificar la ubicación de los indicios para fotografiarlos.",
+        "B": "Proteger y preservar el lugar del incendio lo más intacto e inalterado posible.",
+        "C": "Retirar y desechar todos los objetos antes de documentar.",
+        "D": "Permitir que se altere la escena para facilitar el acceso."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual cita NFPA 921 al indicar que se debe proteger y preservar el lugar del incendio tan intacto e inalterado como sea posible."
+    },
+    {
+      "id": 23,
+      "norma": "NFPA 921",
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "Según los objetivos del primer respondedor vinculados a NFPA 921, ¿qué debe hacerse con las observaciones de la escena?",
+      "alternativas": {
+        "A": "Presentarlas objetivamente, preservando la escena y comunicándolas al equipo de investigación.",
+        "B": "Modificar los datos para completar los espacios del informe.",
+        "C": "Omitirlas si el incendio ya fue extinguido.",
+        "D": "Transformarlas en conclusiones definitivas sobre culpabilidad."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El manual destaca las observaciones objetivas, la preservación, documentación y comunicación, además del contacto estrecho con el equipo de investigación."
+    },
+    {
+      "id": 24,
+      "norma": "NFPA 921",
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "¿Qué afirma el texto de NFPA 921 citado en el manual sobre los bomberos en la escena?",
+      "alternativas": {
+        "A": "No deben comunicar sus observaciones.",
+        "B": "Solo participan después de la investigación.",
+        "C": "Deben retirar las evidencias sin registro.",
+        "D": "Son responsables de la conservación de las pruebas."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual cita expresamente que los bomberos son responsables de la conservación de las pruebas."
+    },
+    {
+      "id": 25,
+      "norma": "NFPA 921",
+      "modulo": "III",
+      "leccion": 28,
+      "pregunta": "Según el material, ¿qué puede ayudar a determinar el análisis del fuego relacionado con NFPA 921?",
+      "alternativas": {
+        "A": "El número de unidades que deben permanecer en la estación.",
+        "B": "La ruta de propagación, el origen y los combustibles que intervinieron.",
+        "C": "La cantidad de espuma necesaria en todos los incendios.",
+        "D": "La presión de entrada de una bomba desde un hidrante."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "El manual afirma que el análisis del fuego ayuda a determinar la ruta de propagación, el origen y los combustibles que intervinieron."
+    },
+    {
+      "id": 26,
+      "norma": "NFPA 1500",
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "¿Qué cantidad mínima de integrantes operando en el interior señala el manual al citar NFPA 1500 para búsqueda y rescate?",
+      "alternativas": {
+        "A": "Seis integrantes.",
+        "B": "Tres integrantes.",
+        "C": "Cuatro integrantes.",
+        "D": "Dos integrantes."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El manual cita NFPA 1500, numerales 8.5.4 al 8.5.7, y señala un mínimo de cuatro integrantes operando en el interior."
+    },
+    {
+      "id": 27,
+      "norma": "NFPA 1500",
+      "modulo": "III",
+      "leccion": 29,
+      "pregunta": "En el pasaje de búsqueda y rescate, ¿a qué documento atribuye expresamente el manual el respaldo del principio 2-IN / 2-OUT?",
+      "alternativas": {
+        "A": "NFPA 11.",
+        "B": "NFPA 10.",
+        "C": "OSHA 29 CFR 1910-134.",
+        "D": "NFPA 921."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "El texto menciona NFPA 1500 para el mínimo de integrantes y señala por separado que el principio 2-IN / 2-OUT está respaldado por OSHA 29 CFR 1910-134."
+    },
+    {
+      "id": 28,
+      "norma": "NFPA 1983",
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "¿En qué tema aparece citada la NFPA 1983 en el Manual ESBAS?",
+      "alternativas": {
+        "A": "Calificación de teleoperadores.",
+        "B": "Espumas contra incendios.",
+        "C": "Clasificación de líquidos inflamables.",
+        "D": "Normas técnicas relacionadas con cuerdas de rescate."
+      },
+      "respuesta_correcta": "D",
+      "fundamento": "El manual la incluye entre las normas técnicas junto con UIAA y CE EN 1891 en el apartado de características de cuerdas de rescate."
+    },
+    {
+      "id": 29,
+      "norma": "NFPA 1983",
+      "modulo": "III",
+      "leccion": 31,
+      "pregunta": "Según la comparación del manual, ¿qué diferencia existe entre una cuerda de rescate y una cuerda utilitaria respecto a la normativa citada?",
+      "alternativas": {
+        "A": "La cuerda de rescate no necesita inspección.",
+        "B": "La cuerda de rescate soporta carga de vida y se presenta como certificada bajo normas como NFPA 1983; la utilitaria se destina a tareas auxiliares y no requiere certificación de vida.",
+        "C": "Ambas se utilizan indistintamente para sostener personas.",
+        "D": "La cuerda utilitaria requiere mayor resistencia que la cuerda de rescate."
+      },
+      "respuesta_correcta": "B",
+      "fundamento": "La tabla del manual diferencia la cuerda de rescate, destinada a cargas de vida y certificada bajo normas internacionales, de la utilitaria, destinada a tareas auxiliares."
+    },
+    {
+      "id": 30,
+      "norma": "NFPA 470",
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Cómo define el documento de la Lección 34 un material peligroso al citar NFPA 470?",
+      "alternativas": {
+        "A": "Una sustancia en estado sólido, líquido o gaseoso que puede provocar daños a personas, bienes y ambiente.",
+        "B": "Un producto que solo causa daños materiales.",
+        "C": "Únicamente un líquido inflamable transportado en cisterna.",
+        "D": "Cualquier objeto que tenga una etiqueta de transporte."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "La Lección 34 reproduce la definición de material peligroso asociada a NFPA 470 e incluye los estados sólido, líquido y gaseoso y los daños a personas, bienes y ambiente."
+    },
+    {
+      "id": 31,
+      "norma": "NFPA 470",
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "¿Qué propósito atribuye la Lección 34 a la competencia del nivel inicial en incidentes MATPEL?",
+      "alternativas": {
+        "A": "Proporcionar al personal presente en la escena conocimientos y habilidades para desempeñarse de manera segura y eficiente.",
+        "B": "Autorizar a todo bombero a realizar contención ofensiva sin entrenamiento adicional.",
+        "C": "Limitar la respuesta a la elaboración de informes posteriores.",
+        "D": "Reemplazar a los equipos especializados en MATPEL."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El documento indica que la competencia inicial debe proporcionar al personal que ya está en la escena conocimientos y habilidades para responder de manera segura y eficiente."
+    },
+    {
+      "id": 32,
+      "norma": "NFPA 470",
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "En la respuesta inicial a un incidente MATPEL, ¿qué conjunto de acciones espera el documento de los respondedores?",
+      "alternativas": {
+        "A": "Retirar los contenedores sin identificar la sustancia.",
+        "B": "Ingresar al área de liberación, manipular el producto y cerrar válvulas sin evaluación.",
+        "C": "Reconocer o identificar MATPEL, protegerse y proteger a terceros, solicitar personal entrenado y proteger el área.",
+        "D": "Tomar muestras antes de establecer medidas de protección."
+      },
+      "respuesta_correcta": "C",
+      "fundamento": "La introducción de la Lección 34 enumera estas acciones como expectativas para el personal del CGBVP al encontrarse con incidentes MATPEL."
+    },
+    {
+      "id": 33,
+      "norma": "NFPA 470",
+      "modulo": "III",
+      "leccion": 34,
+      "pregunta": "Un respondedor llega a un incidente con una sustancia desconocida. Según las competencias iniciales descritas junto a NFPA 470, ¿qué actuación es coherente con el material?",
+      "alternativas": {
+        "A": "Reconocer desde una ubicación segura, proteger el área y solicitar personal entrenado.",
+        "B": "Ignorar la señalización del contenedor.",
+        "C": "Comenzar la contención ofensiva sin identificar el producto.",
+        "D": "Acercarse para tocar o probar la sustancia."
+      },
+      "respuesta_correcta": "A",
+      "fundamento": "El material exige reconocer o identificar la presencia de MATPEL, protegerse y proteger a terceros, asegurar el área y solicitar personal entrenado."
+    }
+  ]
+}
