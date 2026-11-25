@@ -3496,26 +3496,20 @@
         }
     
         /* Orden personalizable de los bancos, sincronizado por cuenta */
-        .bank-mode-drag-handle {
-            display:grid; place-items:center; flex:0 0 28px; width:28px; height:34px;
-            margin-left:.25rem; border-radius:8px; color:#8491a3; background:#f5f7fa;
-            font-size:1.25rem; line-height:1; letter-spacing:-.18em; padding-right:.16em;
-            cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;
-            align-self:center; transition:background .18s ease,color .18s ease,opacity .18s ease;
+        /* Mantén presionada cualquier ficha para reordenarla */
+        .bank-mode-card { -webkit-touch-callout:none; }
+        .bank-mode-card.is-drag-armed {
+            cursor:grabbing; user-select:none; -webkit-user-select:none;
+            border-color:#b52a34; box-shadow:0 0 0 3px rgba(189,41,49,.12),0 10px 24px rgba(20,35,55,.1);
         }
-        .bank-mode-drag-handle:hover { color:#26364b; background:#e9edf3; }
-        .bank-mode-drag-handle.is-disabled { opacity:.48; cursor:not-allowed; }
         .bank-mode-card.is-dragging {
-            opacity:.58; z-index:3; transform:scale(.985); border-color:#b52a34;
-            box-shadow:0 12px 28px rgba(20,35,55,.16); transition:none;
+            opacity:.62; z-index:3; transform:scale(.985); border-color:#b52a34;
+            box-shadow:0 12px 28px rgba(20,35,55,.16); transition:none; cursor:grabbing;
         }
         .bank-mode-grid.is-reordering .bank-mode-card:not(.is-dragging) {
             transition:transform .12s ease, border-color .18s ease, box-shadow .18s ease;
         }
         .bank-mode-heading #bank-order-sync-label { text-align:right; }
-        @media(max-width:620px) {
-            .bank-mode-drag-handle { flex-basis:30px; width:30px; height:38px; }
-        }
 
     </style>
 </head>
@@ -3698,7 +3692,7 @@
             <section class="bank-mode-section" aria-label="Modalidad de preguntas">
                 <div class="bank-mode-heading">
                     <strong>MODALIDAD DE PRÁCTICA</strong>
-                    <span id="bank-order-sync-label">Arrastra el icono ⠿ para cambiar el orden</span>
+                    <span id="bank-order-sync-label">Mantén presionada una ficha para cambiar el orden</span>
                 </div>
                 <div class="bank-mode-grid" role="group" aria-label="Seleccionar banco de preguntas">
                     <button class="bank-mode-card bank-mode-ai" type="button" id="btn-bank-ai" aria-pressed="false" onclick="selectSimulationBank('ai', this)">
@@ -3708,7 +3702,6 @@
                             <span class="bank-mode-description">Practica con el banco de preguntas generado con inteligencia artificial.</span>
                             <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-ai-count">400 preguntas</span></span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-advanced-ai is-active" type="button" id="btn-bank-advanced-ai" aria-pressed="true" onclick="selectSimulationBank('advanced-ai', this)">
@@ -3718,7 +3711,6 @@
                             <span class="bank-mode-description">Banco avanzado de 500 preguntas integradoras: 340 de práctica por lección, 60 de exámenes finales de módulo y 100 del examen general ESBAS.</span>
                             <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-advanced-ai-count">500 preguntas</span></span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-real" type="button" id="btn-bank-real" aria-pressed="false" onclick="selectSimulationBank('real', this)">
@@ -3731,7 +3723,6 @@
                                 <span class="bank-mode-badge">BANCO INCOMPLETO</span>
                             </span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-basic-ai" type="button" id="btn-bank-basic-ai" aria-pressed="false" onclick="selectSimulationBank('basic-ai', this)">
@@ -3743,7 +3734,6 @@
                                 <span class="bank-mode-count" id="bank-basic-ai-count">500 preguntas</span>
                             </span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-intermediate-ai" type="button" id="btn-bank-intermediate-ai" aria-pressed="false" onclick="selectSimulationBank('intermediate-ai', this)">
@@ -3755,7 +3745,6 @@
                                 <span class="bank-mode-count" id="bank-intermediate-ai-count">500 preguntas</span>
                             </span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-dates-ai" type="button" id="btn-bank-dates-ai" aria-pressed="false" onclick="selectSimulationBank('dates-ai', this)">
@@ -3765,7 +3754,6 @@
                             <span class="bank-mode-description">Banco especializado de 77 preguntas sobre fechas, años y periodos cronológicos. Incluye contenido de las lecciones 1, 3, 4 y 34.</span>
                             <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-dates-ai-count">77 preguntas</span></span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                     <button class="bank-mode-card bank-mode-nfpa-ai" type="button" id="btn-bank-nfpa-ai" aria-pressed="false" onclick="selectSimulationBank('nfpa-ai', this)">
@@ -3775,7 +3763,6 @@
                             <span class="bank-mode-description">Banco especializado de 33 preguntas sobre 10 normas NFPA mencionadas en el material ESBAS. Incluye contenido de las lecciones 5, 8, 9, 12, 25, 27, 28, 29, 31 y 34.</span>
                             <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-nfpa-ai-count">33 preguntas</span></span>
                         </span>
-                        <span class="bank-mode-drag-handle" title="Arrastra para cambiar el orden" aria-label="Arrastrar para cambiar el orden" aria-hidden="false">⠿</span>
                         <span class="bank-mode-check" aria-hidden="true">✓</span>
                     </button>
                 </div>
@@ -5596,14 +5583,10 @@
     function updateBankOrderAccess() {
         const label = document.getElementById('bank-order-sync-label');
         const authenticated = !!currentUser && !currentUser.isPublicVisitor && !currentUser.isAnonymous;
-        document.querySelectorAll('.bank-mode-drag-handle').forEach(handle => {
-            handle.classList.toggle('is-disabled', !authenticated);
-            handle.setAttribute('aria-disabled', authenticated ? 'false' : 'true');
-        });
         if (label) {
             label.textContent = authenticated
-                ? 'Arrastra ⠿ para ordenar · se guarda en tu cuenta'
-                : 'Inicia sesión para sincronizar tu orden';
+                ? 'Mantén presionada una ficha y muévela · se sincroniza en tu cuenta'
+                : 'Inicia sesión para mover y sincronizar las fichas';
         }
     }
 
@@ -5679,10 +5662,9 @@
             card.setAttribute('aria-keyshortcuts', 'Alt+ArrowUp Alt+ArrowDown');
         });
 
-        // Evita que tocar el asa seleccione el banco; el asa se utiliza solo para ordenar.
+        // Un clic breve elige el banco; mantener presionada la ficha activa el movimiento.
         grid.addEventListener('click', event => {
-            const onHandle = event.target.closest('.bank-mode-drag-handle');
-            if (onHandle || Date.now() < suppressBankCardClickUntil) {
+            if (Date.now() < suppressBankCardClickUntil) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
             }
@@ -5708,38 +5690,55 @@
         });
 
         grid.addEventListener('pointerdown', event => {
-            const handle = event.target.closest('.bank-mode-drag-handle');
-            if (!handle || !event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+            const card = event.target.closest('.bank-mode-card');
+            if (!card || !event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
             if (!currentUser || currentUser.isPublicVisitor || currentUser.isAnonymous) {
-                event.preventDefault();
-                window.showToast('Inicia sesión con tu cuenta ESBAS para guardar y sincronizar el orden.', 'error');
-                return;
+                return; // El clic normal puede seguir seleccionando el banco en modo público.
             }
             if (bankOrderPointerState) return;
-            const card = handle.closest('.bank-mode-card');
-            if (!card) return;
-            event.preventDefault();
-            bankOrderPointerState = {
+
+            const state = {
                 card,
                 pointerId: event.pointerId,
+                pointerType: event.pointerType,
                 startX: event.clientX,
                 startY: event.clientY,
-                moved: false
+                armed: false,
+                moved: false,
+                holdTimer: null
             };
-            try { handle.setPointerCapture(event.pointerId); } catch (error) { /* Captura opcional del puntero. */ }
+            bankOrderPointerState = state;
+
+            state.holdTimer = window.setTimeout(() => {
+                if (bankOrderPointerState !== state) return;
+                state.armed = true;
+                state.card.classList.add('is-drag-armed');
+                try { state.card.setPointerCapture(state.pointerId); } catch (error) { /* Captura opcional. */ }
+            }, 380);
         });
 
         document.addEventListener('pointermove', event => {
             const state = bankOrderPointerState;
             if (!state || event.pointerId !== state.pointerId) return;
             const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
-            if (!state.moved && distance < 7) return;
+
+            // Antes de completar la pulsación sostenida, un movimiento normal cancela el arrastre.
+            if (!state.armed) {
+                if (distance > 9) {
+                    window.clearTimeout(state.holdTimer);
+                    bankOrderPointerState = null;
+                }
+                return;
+            }
+
+            if (distance < 5 && !state.moved) return;
             if (!state.moved) {
                 state.moved = true;
                 state.card.classList.add('is-dragging');
                 grid.classList.add('is-reordering');
             }
             event.preventDefault();
+
             const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.bank-mode-card');
             if (!target || target === state.card || target.parentElement !== grid) return;
             const rect = target.getBoundingClientRect();
@@ -5751,16 +5750,24 @@
             else grid.insertBefore(state.card, target.nextElementSibling);
         }, { passive: false });
 
+        // En pantallas táctiles, evita que el navegador desplace la página una vez iniciado el arrastre.
+        document.addEventListener('touchmove', event => {
+            if (bankOrderPointerState?.armed) event.preventDefault();
+        }, { passive: false });
+
         const finishPointerReorder = event => {
             const state = bankOrderPointerState;
             if (!state || (event && event.pointerId !== state.pointerId)) return;
-            state.card.classList.remove('is-dragging');
+            window.clearTimeout(state.holdTimer);
+            state.card.classList.remove('is-drag-armed', 'is-dragging');
             grid.classList.remove('is-reordering');
             bankOrderPointerState = null;
-            if (state.moved) {
+
+            if (state.armed) {
+                // Un gesto sostenido nunca debe activar además el clic de selección.
                 suppressBankCardClickUntil = Date.now() + 500;
-                saveBankCardOrderToCloud();
             }
+            if (state.moved) saveBankCardOrderToCloud();
         };
         document.addEventListener('pointerup', finishPointerReorder);
         document.addEventListener('pointercancel', finishPointerReorder);
