@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- VERSIÓN: V67 (Banco NFPA con IA) -->
+    <!-- VERSIÓN: V68 (Restaurado banco original de 400 preguntas con IA) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro ESBAS</title>
@@ -3678,6 +3678,15 @@
                     <span>Elige tu banco de preguntas</span>
                 </div>
                 <div class="bank-mode-grid" role="group" aria-label="Seleccionar banco de preguntas">
+                    <button class="bank-mode-card bank-mode-ai" type="button" id="btn-bank-ai" aria-pressed="false" onclick="selectSimulationBank('ai', this)">
+                        <span class="bank-mode-symbol" aria-hidden="true">✦</span>
+                        <span class="bank-mode-card-copy">
+                            <span class="bank-mode-title">Preguntas con IA</span>
+                            <span class="bank-mode-description">Practica con el banco de preguntas generado con inteligencia artificial.</span>
+                            <span class="bank-mode-meta"><span class="bank-mode-count" id="bank-ai-count">400 preguntas</span></span>
+                        </span>
+                        <span class="bank-mode-check" aria-hidden="true">✓</span>
+                    </button>
                     <button class="bank-mode-card bank-mode-advanced-ai is-active" type="button" id="btn-bank-advanced-ai" aria-pressed="true" onclick="selectSimulationBank('advanced-ai', this)">
                         <span class="bank-mode-symbol" aria-hidden="true">✦</span>
                         <span class="bank-mode-card-copy">
@@ -4442,10 +4451,13 @@
     let cachedAdvancedAIQuestionBank = null;
     let cachedDateAIQuestionBank = null;
     let cachedNFPAQuestionBank = null;
-    let currentSimulationBankType = 'advanced-ai'; // advanced-ai | basic-ai | intermediate-ai | dates-ai | nfpa-ai | real | ai (legacy)
+    let currentSimulationBankType = 'advanced-ai'; // ai (banco original de 400) | advanced-ai | basic-ai | intermediate-ai | dates-ai | nfpa-ai | real
     let currentSimulationContext = { module: 'all', lesson: 'all', bankType: 'advanced-ai' };
 
     function getActiveSimulationQuestionBank() {
+        if (currentSimulationBankType === 'ai') {
+            return Array.isArray(cachedPublicQuestionBank) ? cachedPublicQuestionBank : [];
+        }
         if (currentSimulationBankType === 'real') {
             return Array.isArray(cachedRealQuestionBank) ? cachedRealQuestionBank : [];
         }
@@ -5118,9 +5130,10 @@
     }
 
     window.selectSimulationBank = async function(type, button) {
-        const allowedTypes = ['advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai', 'real'];
+        const allowedTypes = ['ai', 'advanced-ai', 'basic-ai', 'intermediate-ai', 'dates-ai', 'nfpa-ai', 'real'];
         const nextType = allowedTypes.includes(type) ? type : 'advanced-ai';
         const buttons = [
+            document.getElementById('btn-bank-ai'),
             document.getElementById('btn-bank-advanced-ai'),
             document.getElementById('btn-bank-real'),
             document.getElementById('btn-bank-basic-ai'),
@@ -5133,7 +5146,9 @@
             item.classList.add('is-loading');
         });
         if (button) button.setAttribute('aria-busy', 'true');
-        if (nextType === 'advanced-ai' && !cachedAdvancedAIQuestionBank) {
+        if (nextType === 'ai' && !cachedPublicQuestionBank) {
+            setAppLoading(true, 'Cargando preguntas con IA', 'Preparando las 400 preguntas del banco original…', '✦');
+        } else if (nextType === 'advanced-ai' && !cachedAdvancedAIQuestionBank) {
             setAppLoading(true, 'Cargando preguntas nivel avanzado con IA', 'Preparando las 500 preguntas integradoras y los exámenes finales…', '✧');
         } else if (nextType === 'real' && !cachedRealQuestionBank) {
             setAppLoading(true, 'Cargando preguntas reales', 'Preparando las preguntas recopiladas de tus evaluaciones…', '📚');
@@ -5147,7 +5162,9 @@
             setAppLoading(true, 'Cargando preguntas NFPA con IA', 'Preparando las 33 preguntas de normas NFPA…', '⚑');
         }
         try {
-            if (nextType === 'advanced-ai') {
+            if (nextType === 'ai') {
+                await loadBundledQuestionBank();
+            } else if (nextType === 'advanced-ai') {
                 await loadAdvancedAIQuestionBank();
             } else if (nextType === 'real') {
                 await loadRealQuestionBank();
@@ -5165,17 +5182,22 @@
                 window.updateIndexesAndCounters();
             }
             currentSimulationBankType = nextType;
-            const activeButtonId = nextType === 'advanced-ai'
-                ? 'btn-bank-advanced-ai'
-                : (nextType === 'real' ? 'btn-bank-real'
-                : (nextType === 'basic-ai' ? 'btn-bank-basic-ai'
-                : (nextType === 'intermediate-ai' ? 'btn-bank-intermediate-ai'
-                : (nextType === 'dates-ai' ? 'btn-bank-dates-ai' : 'btn-bank-nfpa-ai'))));
+            const activeButtonId = ({
+                'ai': 'btn-bank-ai',
+                'advanced-ai': 'btn-bank-advanced-ai',
+                'real': 'btn-bank-real',
+                'basic-ai': 'btn-bank-basic-ai',
+                'intermediate-ai': 'btn-bank-intermediate-ai',
+                'dates-ai': 'btn-bank-dates-ai',
+                'nfpa-ai': 'btn-bank-nfpa-ai'
+            })[nextType];
             buttons.forEach(item => {
                 const active = item.id === activeButtonId;
                 item.classList.toggle('is-active', active);
                 item.setAttribute('aria-pressed', String(active));
             });
+            const aiCount = document.getElementById('bank-ai-count');
+            if (aiCount && cachedPublicQuestionBank) aiCount.textContent = cachedPublicQuestionBank.length + ' preguntas';
             const realCount = document.getElementById('bank-real-count');
             if (realCount && cachedRealQuestionBank) realCount.textContent = cachedRealQuestionBank.length + ' preguntas registradas';
             const advancedCount = document.getElementById('bank-advanced-ai-count');
@@ -6788,7 +6810,9 @@ const OFFICIAL_ESBAS_LESSON_TITLES = Object.freeze({
 
         try {
             if (currentSimulationBankType !== 'ai' || currentUser.isPublicVisitor) {
-                if (currentSimulationBankType === 'advanced-ai') {
+                if (currentSimulationBankType === 'ai') {
+                    await loadBundledQuestionBank();
+                } else if (currentSimulationBankType === 'advanced-ai') {
                     await loadAdvancedAIQuestionBank();
                 } else if (currentSimulationBankType === 'real') {
                     await loadRealQuestionBank();
