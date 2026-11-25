@@ -3497,7 +3497,7 @@
     
         /* Orden personalizable de los bancos, sincronizado por cuenta */
         /* Mantén presionada cualquier ficha para reordenarla */
-        .bank-mode-card { -webkit-touch-callout:none; }
+        .bank-mode-card { -webkit-touch-callout:none; touch-action:none; }
         .bank-mode-card.is-drag-armed {
             cursor:grabbing; user-select:none; -webkit-user-select:none;
             border-color:#b52a34; box-shadow:0 0 0 3px rgba(189,41,49,.12),0 10px 24px rgba(20,35,55,.1);
@@ -5489,6 +5489,8 @@
         publicVisitorInitialized = true;
         currentUser = { uid: 'public-link-visitor', isAnonymous: true, isPublicVisitor: true };
         currentUserRole = 'estudiante';
+        const localBankOrder = readLocalBankCardOrder();
+        if (localBankOrder) applyBankCardOrder(localBankOrder);
         updateBankOrderAccess();
         currentSimulationMode = 'local';
         document.body.classList.remove('role-admin');
@@ -5580,13 +5582,38 @@
         bankOrderLastSynced = normalized.slice();
     }
 
+    function isBankOrderCloudUser() {
+        return !!currentUser && !currentUser.isPublicVisitor && !currentUser.isAnonymous;
+    }
+
+    const BANK_ORDER_LOCAL_STORAGE_KEY = 'esbas-simulation-bank-order-v1';
+
+    function readLocalBankCardOrder() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(BANK_ORDER_LOCAL_STORAGE_KEY) || 'null');
+            return Array.isArray(saved) ? normalizeBankCardOrder(saved) : null;
+        } catch (error) {
+            console.warn('No se pudo leer el orden local de los bancos:', error);
+            return null;
+        }
+    }
+
+    function saveLocalBankCardOrder(order) {
+        try {
+            localStorage.setItem(BANK_ORDER_LOCAL_STORAGE_KEY, JSON.stringify(normalizeBankCardOrder(order)));
+            return true;
+        } catch (error) {
+            console.error('No se pudo guardar localmente el orden de los bancos:', error);
+            return false;
+        }
+    }
+
     function updateBankOrderAccess() {
         const label = document.getElementById('bank-order-sync-label');
-        const authenticated = !!currentUser && !currentUser.isPublicVisitor && !currentUser.isAnonymous;
         if (label) {
-            label.textContent = authenticated
+            label.textContent = isBankOrderCloudUser()
                 ? 'Mantén presionada una ficha y muévela · se sincroniza en tu cuenta'
-                : 'Inicia sesión para mover y sincronizar las fichas';
+                : 'Mantén presionada una ficha para reordenarla';
         }
     }
 
@@ -5601,6 +5628,12 @@
         const savedOrder = profileData?.simulationPreferences?.bankOrder;
         if (Array.isArray(savedOrder)) {
             applyBankCardOrder(savedOrder);
+        } else {
+            const localOrder = readLocalBankCardOrder();
+            if (localOrder) {
+                applyBankCardOrder(localOrder);
+                saveBankCardOrderToCloud();
+            }
         }
 
         bankOrderProfileUnsubscribe = onSnapshot(userRef, snapshot => {
@@ -5619,13 +5652,21 @@
     }
 
     async function saveBankCardOrderToCloud() {
-        if (!currentUser || currentUser.isPublicVisitor || currentUser.isAnonymous) {
-            updateBankOrderAccess();
-            window.showToast('Inicia sesión con tu cuenta ESBAS para guardar y sincronizar el orden de las casillas.', 'error');
-            return false;
+        const order = normalizeBankCardOrder(getBankCardOrderFromDOM());
+
+        // El simulador se abre públicamente sin iniciar sesión. Permitir reordenar igualmente,
+        // guardando en el navegador hasta que haya una identidad de cuenta para sincronizar.
+        if (!isBankOrderCloudUser()) {
+            if (!saveLocalBankCardOrder(order)) {
+                window.showToast('No se pudo guardar el orden en este navegador. Comprueba el espacio disponible.', 'error');
+                return false;
+            }
+            bankOrderLastSynced = order.slice();
+            const label = document.getElementById('bank-order-sync-label');
+            if (label) label.textContent = 'Orden guardado en este dispositivo ✓';
+            return true;
         }
 
-        const order = normalizeBankCardOrder(getBankCardOrderFromDOM());
         const userRef = doc(db, 'users', currentUser.uid);
         const write = () => setDoc(userRef, {
             simulationPreferences: { bankOrder: order }
@@ -5636,6 +5677,7 @@
         try {
             await pendingWrite;
             bankOrderLastSynced = order.slice();
+            saveLocalBankCardOrder(order);
             const label = document.getElementById('bank-order-sync-label');
             if (label) label.textContent = 'Orden guardado y sincronizado ✓';
             return true;
@@ -5692,9 +5734,6 @@
         grid.addEventListener('pointerdown', event => {
             const card = event.target.closest('.bank-mode-card');
             if (!card || !event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
-            if (!currentUser || currentUser.isPublicVisitor || currentUser.isAnonymous) {
-                return; // El clic normal puede seguir seleccionando el banco en modo público.
-            }
             if (bankOrderPointerState) return;
 
             const state = {
@@ -5708,6 +5747,7 @@
                 holdTimer: null
             };
             bankOrderPointerState = state;
+            try { card.setPointerCapture(event.pointerId); } catch (error) { /* Captura opcional. */ }
 
             state.holdTimer = window.setTimeout(() => {
                 if (bankOrderPointerState !== state) return;
